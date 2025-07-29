@@ -52,7 +52,7 @@
 						<!-- Dashboard -->
     <!-- Dashboard -->
     <li class="active">
-        <a class="sidenav-item-link" href="{{ route('dashboard') }}">
+        <a class="sidenav-item-link" href="">
             <i class="mdi mdi-view-dashboard-outline"></i>
             <span class="nav-text">Dashboard</span>
         </a>
@@ -61,7 +61,7 @@
 
     <!-- My Profile -->
     <li>
-        <a class="sidenav-item-link" href="{{ route('user.profile') }}">
+        <a class="sidenav-item-link" href="">
             <i class="mdi mdi-account-circle-outline"></i>
             <span class="nav-text">My Profile</span>
         </a>
@@ -70,7 +70,7 @@
     
     <!-- Apply for Foodstuff Plan -->
     <li>
-        <a class="sidenav-item-link" href="{{ route('user.apply.plan') }}">
+        <a class="sidenav-item-link" href="">
         <i class="fas fa-file-signature"></i>
             <span class="nav-text">Apply for Plan</span>
         </a>
@@ -85,12 +85,12 @@
         <div class="collapse">
             <ul class="sub-menu" id="foodstuff" data-parent="#sidebar-menu">
                 <li>
-                    <a class="sidenav-item-link" href="{{ route('user.packages') }}">
+                    <a class="sidenav-item-link" href="">
                         <span class="nav-text">Browse Packages</span>
                     </a>
                 </li>
                 <li>
-                    <a class="sidenav-item-link" href="{{ route('user.my.packages') }}">
+                    <a class="sidenav-item-link" href="">
                         <span class="nav-text">My Packages</span>
                     </a>
                 </li>
@@ -107,12 +107,12 @@
         <div class="collapse">
             <ul class="sub-menu" id="repayment" data-parent="#sidebar-menu">
                 <li>
-                    <a class="sidenav-item-link" href="{{ route('user.repayments.schedule') }}">
+                    <a class="sidenav-item-link" href="">
                         <span class="nav-text">Repayment Schedule</span>
                     </a>
                 </li>
                 <li>
-                    <a class="sidenav-item-link" href="{{ route('user.repayments.history') }}">
+                    <a class="sidenav-item-link" href="">
                         <span class="nav-text">Payment History</span>
                     </a>
                 </li>
@@ -122,7 +122,7 @@
 
     <!-- Delivery Status -->
     <li>
-        <a class="sidenav-item-link" href="{{ route('user.delivery.status') }}">
+        <a class="sidenav-item-link" href="">
         <i class="fas fa-truck"></i>
             <span class="nav-text">Delivery Status</span>
         </a>
@@ -130,7 +130,7 @@
 
     <!-- Notifications -->
     <li>
-        <a class="sidenav-item-link" href="{{ route('user.notifications') }}">
+        <a class="sidenav-item-link" href="">
             <i class="mdi mdi-bell-outline"></i>
             <span class="nav-text">Notifications</span>
         </a>
@@ -138,7 +138,7 @@
 
     <!-- Support -->
     <li>
-        <a class="sidenav-item-link" href="{{ route('user.support') }}">
+        <a class="sidenav-item-link" href="">
             <i class="mdi mdi-lifebuoy"></i>
             <span class="nav-text">Support</span>
         </a>
