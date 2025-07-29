@@ -26,8 +26,7 @@ class PackageController extends Controller
 
     private function createFincraPayment($user, $reference)
 {
-    $baseUrl = "https://b8f08e06f882.ngrok-free.app";
-    $redirectUrl = $baseUrl . "/payment/callback";
+    $redirectUrl = route('package.callback');
 
     $response = Http::withHeaders([
         'accept' => 'application/json',

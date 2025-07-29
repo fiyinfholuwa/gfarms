@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Schema;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -25,7 +26,10 @@ URL::forceRootUrl(request()->getSchemeAndHttpHost());
 // Ensure HTTPS is enforced when using ngrok
 if (str_contains(request()->getHost(), 'ngrok')) {
     URL::forceScheme('https');
-}}
+}
+Schema::defaultStringLength(191);
+
+}
 
 
 }
