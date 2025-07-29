@@ -6,7 +6,14 @@
         <div class="col-lg-12 col-md-10">
             <div class="card shadow-lg border-0">
                 <div class="card-header bg-primary text-center">
-                    <h3 class="text-white mb-0">Verify OTP</h3>
+<div class="card-header bg-primary">
+							<div class="ec-brand">
+								<a href="" title="Ekka">
+                                                            
+									<img class="ec-brand-icon" src="https://fingo.smartrobtech.co.uk/wp-content/uploads/2025/07/Fingo-Aurelius-LTD-Logo.png" alt="" />
+								</a>
+							</div>
+						</div>
                 </div>
                 <div class="card-body p-5 text-center">
                     <p class="mb-4">Enter the 6-digit OTP sent to your email</p>

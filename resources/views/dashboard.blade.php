@@ -38,11 +38,8 @@
 		<div class="ec-left-sidebar ec-bg-sidebar">
 			<div id="sidebar" class="sidebar ec-sidebar-footer">
 
-				<div class="ec-brand">
-					<a href="index.html" title="Ekka">
-						<img class="ec-brand-icon" src="assets/img/logo/ec-site-logo.png" alt="" />
-						<span class="ec-brand-name text-truncate">Aurelious</span>
-					</a>
+				<div style="padding:5px;" class="ec-brand text-center">
+									<img style="width:100px !important" class="ec-brand-icon" src="https://fingo.smartrobtech.co.uk/wp-content/uploads/2025/07/Fingo-Aurelius-LTD-Logo.png" alt="" />
 				</div>
 
 				<!-- begin sidebar scrollbar -->

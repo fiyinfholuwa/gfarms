@@ -9,7 +9,7 @@
                 <div class="card-header bg-primary">
                     <div class="ec-brand">
                         <a href="" title="Ekka">
-                            <h3 class="text-white">Aurelious</h3>
+									<img class="ec-brand-icon" src="https://fingo.smartrobtech.co.uk/wp-content/uploads/2025/07/Fingo-Aurelius-LTD-Logo.png" alt="" />
                         </a>
                     </div>
                 </div>
@@ -77,9 +77,12 @@
 
                             <!-- Submit -->
                             <div class="col-md-12">
-                                <button type="submit" class="btn btn-primary btn-block mb-3">
+                                <button type="submit" class="btn btn-primary  mb-3">
                                     <i class="fa fa-user-plus"></i> Sign Up
                                 </button>
+                                <p class="sign-upp">You Already have an account?
+                <a class="text-blue" href="{{ route('login') }}">Sign In</a>
+            </p>
                             </div>
                         </div>
                     </form>

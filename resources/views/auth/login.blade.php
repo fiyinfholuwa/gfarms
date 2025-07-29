@@ -9,9 +9,8 @@
 						<div class="card-header bg-primary">
 							<div class="ec-brand">
 								<a href="" title="Ekka">
-                                                            <h3 class="text-white">Aurelious</h3>
-
-									{{-- <img class="ec-brand-icon" src="assets/img/logo/logo-login.png" alt="" /> --}}
+                                                            
+									<img class="ec-brand-icon" src="https://fingo.smartrobtech.co.uk/wp-content/uploads/2025/07/Fingo-Aurelius-LTD-Logo.png" alt="" />
 								</a>
 							</div>
 						</div>
@@ -46,7 +45,7 @@
                 <p><a class="text-blue" href="{{ route('password.request') }}">Forgot Password?</a></p>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block mb-4">Sign In</button>
+            <button type="submit" class="btn btn-primary  mb-4">Sign In</button>
 
             <p class="sign-upp">Don't have an account yet ?
                 <a class="text-blue" href="{{ route('register') }}">Sign Up</a>
