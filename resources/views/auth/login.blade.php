@@ -10,7 +10,7 @@
 							<div class="ec-brand">
 								<a href="" title="Ekka">
                                                             
-									<img class="ec-brand-icon" src="https://fingo.smartrobtech.co.uk/wp-content/uploads/2025/07/Fingo-Aurelius-LTD-Logo.png" alt="" />
+									<img style="padding:10px;" class="ec-brand-icon" src="https://fingo.smartrobtech.co.uk/wp-content/uploads/2025/07/Fingo-Aurelius-LTD-Logo.png" alt="" />
 								</a>
 							</div>
 						</div>
