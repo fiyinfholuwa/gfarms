@@ -6,7 +6,7 @@
 			<div class="row justify-content-center">
 				<div class="col-lg-6 col-md-10">
 					<div class="card">
-						<div class="card-header bg-primary">
+						<div class="card-header ">
 							<div class="ec-brand">
 								<a href="" title="Ekka">
                                                             

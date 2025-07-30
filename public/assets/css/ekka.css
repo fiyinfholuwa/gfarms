@@ -17598,8 +17598,9 @@ a.badge-purple:focus, a.badge-purple.focus {
 }
 .btn.btn-primary {
   color: #ffffff;
-  background-color: #333;
+  background-color:#e95835 ;
   border-color: black;
+  border: none;
 }
 .btn.btn-primary:hover, .btn.btn-outline-primary:hover {
   color: #ffffff;

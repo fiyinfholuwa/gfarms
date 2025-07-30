@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-10">
             <div class="card">
-                <div class="card-header bg-primary">
+                <div class="card-header">
                     <div class="ec-brand">
                         <a href="" title="Ekka">
 									<img class="ec-brand-icon" src="https://fingo.smartrobtech.co.uk/wp-content/uploads/2025/07/Fingo-Aurelius-LTD-Logo.png" alt="" />
