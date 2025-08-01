@@ -28,7 +28,7 @@ class AuthController extends Controller
         if (Cache::get('otp_' . $email) == $enteredOtp) {
             Cache::forget('otp_' . $email);
             User::findOrFail(Auth::user()->id)->update(['has_verified_email' => 'yes']);
-            return redirect()->route('package.form')->with('success', 'OTP verified successfully!');
+            return redirect()->route('check_login')->with('success', 'OTP verified successfully!');
         }
 
         return back()->withErrors(['otp' => 'Invalid or expired OTP']);
@@ -54,10 +54,7 @@ class AuthController extends Controller
         if (Auth::id()) {
             if (Auth::user()->has_verified_email=='no') {
                 return redirect()->route('otp.verify');
-            }elseif(Auth::user()->has_paid_onboarding=='no'){
-             return redirect()->route('package.form');
-            }
-             elseif(Auth::user()->has_paid_onboarding=='yes'){
+            }elseif(Auth::user()->has_paid_onboarding=='yes'){
                 return redirect()->route('dashboard');
              }
             else{

@@ -21,7 +21,7 @@
 		<!-- FAVICON -->
 		{{-- <link href="assets/img/favicon.png" rel="shortcut icon" /> --}}
 	</head>
-    <body class="sign-inup" id="body">
+    <body class="" id="">
 
 	
 	@yield('content')
