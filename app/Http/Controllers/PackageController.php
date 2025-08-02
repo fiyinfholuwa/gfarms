@@ -7,9 +7,88 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Dojah\Client; // the correct SDK class
+
 
 class PackageController extends Controller
 {
+
+    protected $dojah;
+
+    /**
+     * Initialize Dojah SDK only when needed
+     */
+    private function getDojahClient(): Client
+{
+    if (!$this->dojah) {
+        $this->dojah = new Client(
+            Authorization: env('DOJAH_API_KEY'),
+            AppId: env('DOJAH_APP_ID'),
+        );
+    }
+    return $this->dojah;
+}
+
+
+
+
+public function launch(Request $request)
+{
+    $package = $request->get('package', 'basic');
+
+    $widgetId = env(match ($package) {
+        'medium'    => 'DOJAH_WIDGET_MEDIIUM',
+        'market_woman'   => 'DOJAH_WIDGET_BUSINESS',
+        'high' => 'DOJAH_WIDGET_HIGH',
+        default      => 'DOJAH_WIDGET_BASIC',
+    });
+    $user = auth()->user();
+    $reference = $user->id.'_'.\Illuminate\Support\Str::uuid();
+
+    $user->update([
+        'kyc_reference' => $reference,
+        'kyc_status'    => 'pending',
+    ]);
+
+    return view('user.kyc_start', [
+        'reference' => $reference,
+        'widgetId'  => $widgetId,
+        'appId'     => env('DOJAH_APP_ID'),
+        'publicKey' => env('DOJAH_PUBLIC_KEY'),
+        'user'      => $user
+    ]);
+
+
+    return redirect()->away($url);
+}
+
+
+
+
+
+public function complete(Request $request)
+{
+    $user = Auth::user();
+    $reference = $user->kyc_reference;
+
+    $client = new \GuzzleHttp\Client([
+        'headers' => [
+            'Authorization' => env('DOJAH_API_KEY'),
+            'AppId'         => env('DOJAH_APP_ID'),
+        ]
+    ]);
+
+    $response = $client->get("https://sandbox.dojah.io/api/v1/kyc/verification?reference=$reference");
+    $data = json_decode($response->getBody(), true);
+
+    $user->kyc_response = json_encode($data);
+    $user->has_done_kyc = 'yes';
+    $user->save();
+
+    return GeneralController::sendNotification('dashboard', 'success', 'Onboarding Complete!', 'Your onboarding payment was successful. You can now complete KYC.');
+}
+
+
     private static function get_base_url(){
         return 'https://sandboxapi.fincra.com';
     }
@@ -36,7 +115,7 @@ class PackageController extends Controller
         'content-type' => 'application/json'
     ])->post('https://sandboxapi.fincra.com/checkout/payments', [
         "currency"       => "NGN",
-        "amount"         => 500,
+        "amount"         => 1500,
         "customer"       => [
             "name"  => $user->name,
             "email" => $user->email
@@ -71,26 +150,16 @@ class PackageController extends Controller
      */
     public function startPayment(Request $request)
     {
-        $request->validate([
-            'package' => 'required|string',
-            'id_card' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048'
-        ]);
-
-        // Upload ID card
-        $filename = time() . '_' . $request->file('id_card')->getClientOriginalName();
-        $path = public_path('uploads/id_cards');
-        if (!file_exists($path)) mkdir($path, 0755, true);
-        $request->file('id_card')->move($path, $filename);
-
+    
         // Store initial payment record
         $reference = 'FINCRA_' . Str::uuid();
         $user = Auth::user();
 
         DB::table('payments')->insert([
             'user_id' => $user->id,
-            'package' => $request->package,
+            'package' => 'onboarding',
             'reference' => $reference,
-            'amount' => 50000,
+            'amount' => 1500,
             'status' => 'pending',
             'created_at' => now(),
             'updated_at' => now(),
@@ -98,9 +167,8 @@ class PackageController extends Controller
 
         // Call reusable method to create Fincra payment
         $paymentResponse = $this->createFincraPayment($user, $reference);
-
         if (empty($paymentResponse['data']['link'])) {
-            return back()->with('error', 'Payment link could not be generated.');
+            return GeneralController::sendNotification('', 'error', 'Onboarding Payment!', 'Payment Service is Down,Kindly Try Again Later or Reach out to Admin for Assistance');
         }
 
         return redirect($paymentResponse['data']['link']);
@@ -135,6 +203,25 @@ class PackageController extends Controller
             return redirect()->route('package.form')->with('error', 'Payment verification failed.');
         }
     }
+
+
+
+    public function webhook(Request $request)
+{
+    $data = $request->all();
+
+    $user =User::where('kyc_reference', $data['metadata']['reference'] ?? null)->first();
+
+    if ($user) {
+        $user->update([
+            'kyc_status'   => $data['status'] ?? 'failed',
+            'kyc_response' => json_encode($data),
+        ]);
+    }
+
+    return response()->json(['success' => true]);
+}
+
 }
 
 ?>

@@ -8,7 +8,8 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12.0",
-        "laravel/tinker": "^2.10.1"
+        "laravel/tinker": "^2.10.1",
+        "konfig/dojah-php-sdk": "4.1.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -26,7 +27,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/helpers/general_helper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -72,6 +76,12 @@
             "php-http/discovery": true
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/dojah-inc/dojah-php-sdk.git"
+        }
+    ],
     "minimum-stability": "stable",
     "prefer-stable": true
 }

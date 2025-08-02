@@ -85,9 +85,13 @@
             <form method="POST" action="{{ route('register') }}">
                 @csrf
                 <div class="row">
-                    <div class="form-group col-md-12 mb-3">
-                        <input type="text" name="name" class="form-control" placeholder="Full Name" value="{{ old('name') }}">
-                        @error('name')<small class="text-danger">{{ $message }}</small>@enderror
+                    <div class="form-group col-md-6 mb-3">
+                        <input type="text" name="first_name" class="form-control" placeholder="First Name" value="{{ old('first_name') }}">
+                        @error('first_name')<small class="text-danger">{{ $message }}</small>@enderror
+                    </div>
+                    <div class="form-group col-md-6 mb-3">
+                        <input type="text" name="last_name" class="form-control" placeholder="Last Name" value="{{ old('last_name') }}">
+                        @error('last_name')<small class="text-danger">{{ $message }}</small>@enderror
                     </div>
 
                     <div class="form-group col-md-12 mb-3">

@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('user.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -70,12 +70,16 @@ Route::middleware(['auth'])->group(function () {
 
     // Logout
     Route::get('/logout', [UserDashboardController::class, 'logout'])->name('logout');
+    Route::get('/pay/onboarding', [PackageController::class, 'startPayment'])->name('pay.onboarding');
+Route::get('/payment/callback', [PackageController::class, 'paymentCallback'])->name('package.callback');
 });
+Route::post('/kyc/webhook', [PackageController::class, 'webhook'])->name('kyc.webhook');
 
+Route::post('/kyc/process/{level}', [PackageController::class, 'launch'])->name('kyc.process');
+Route::match(['get', 'post'], '/kyc/complete', [PackageController::class, 'complete'])->name('kyc.complete');
 
 Route::get('/select-package', [PackageController::class, 'showForm'])->name('package.form');
-Route::post('/select-package', [PackageController::class, 'startPayment'])->name('package.submit');
-Route::get('/payment/callback', [PackageController::class, 'paymentCallback'])->name('package.callback');
+
 Route::post('/payment/webhook', [PackageController::class, 'webhook'])->name('package.webhook');
 
 require __DIR__.'/auth.php';
