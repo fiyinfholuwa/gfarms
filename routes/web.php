@@ -70,9 +70,12 @@ Route::middleware(['auth', 'onboard_kyc'])->group(function () {
 
     // Logout
     Route::get('/logout', [UserDashboardController::class, 'logout'])->name('logout');
-    Route::get('/pay/onboarding', [PackageController::class, 'startPayment'])->name('pay.onboarding');
-Route::get('/payment/callback', [PackageController::class, 'paymentCallback'])->name('package.callback');
+    
 });
+
+Route::get('/pay/onboarding', [PackageController::class, 'startPayment'])->name('pay.onboarding');
+Route::get('/payment/callback', [PackageController::class, 'paymentCallback'])->name('package.callback');
+
 Route::post('/kyc/webhook', [PackageController::class, 'webhook'])->name('kyc.webhook');
 
 Route::post('/kyc/process/{level}', [PackageController::class, 'launch'])->name('kyc.process');
