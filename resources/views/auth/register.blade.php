@@ -83,69 +83,89 @@
             <h4>Sign Up</h4>
 
             <form method="POST" action="{{ route('register') }}">
-                @csrf
-                <div class="row">
-                    <div class="form-group col-md-6 mb-3">
-                        <input type="text" name="first_name" class="form-control" placeholder="First Name" value="{{ old('first_name') }}">
-                        @error('first_name')<small class="text-danger">{{ $message }}</small>@enderror
-                    </div>
-                    <div class="form-group col-md-6 mb-3">
-                        <input type="text" name="last_name" class="form-control" placeholder="Last Name" value="{{ old('last_name') }}">
-                        @error('last_name')<small class="text-danger">{{ $message }}</small>@enderror
-                    </div>
+    @csrf
+    <div class="row">
 
-                    <div class="form-group col-md-12 mb-3">
-                        <input type="email" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}">
-                        @error('email')<small class="text-danger">{{ $message }}</small>@enderror
-                    </div>
+        <div class="form-group col-md-6 mb-3">
+            <label for="first_name" class="fw-bold">First Name 
+                <small class="text-muted d-block">* Must match the name on your BVN</small>
+            </label>
+            <input type="text" id="first_name" name="first_name" class="form-control" placeholder="Enter First Name" value="{{ old('first_name') }}">
+            @error('first_name')<small class="text-danger">{{ $message }}</small>@enderror
+        </div>
 
-                    <div class="form-group col-md-12 mb-3">
-                        <input type="text" name="phone" class="form-control" placeholder="Phone" value="{{ old('phone') }}">
-                        @error('phone')<small class="text-danger">{{ $message }}</small>@enderror
-                    </div>
+        <div class="form-group col-md-6 mb-3">
+            <label for="last_name" class="fw-bold">Last Name 
+                <small class="text-muted d-block">* Must match the name on your BVN</small>
+            </label>
+            <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Enter Last Name" value="{{ old('last_name') }}">
+            @error('last_name')<small class="text-danger">{{ $message }}</small>@enderror
+        </div>
 
-                    <div class="form-group col-md-12 mb-3">
-                        <select name="state" id="state" class="form-control">
-                            <option value="">Loading States...</option>
-                        </select>
-                        @error('state')<small class="text-danger">{{ $message }}</small>@enderror
-                    </div>
+        <div class="form-group col-md-12 mb-3">
+            <label for="email" class="fw-bold">Email Address</label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="Enter Email" value="{{ old('email') }}">
+            @error('email')<small class="text-danger">{{ $message }}</small>@enderror
+        </div>
 
-                    <div class="form-group col-md-12 mb-3">
-                        <select name="lga" id="lga" class="form-control">
-                            <option value="">Select State First</option>
-                        </select>
-                        @error('lga')<small class="text-danger">{{ $message }}</small>@enderror
-                    </div>
+        <div class="form-group col-md-12 mb-3">
+            <label for="phone" class="fw-bold">Phone Number 
+                <small class="text-muted d-block">* Use the same number linked to your BVN</small>
+            </label>
+            <input type="text" id="phone" name="phone" class="form-control" placeholder="Enter Phone Number" value="{{ old('phone') }}">
+            @error('phone')<small class="text-danger">{{ $message }}</small>@enderror
+        </div>
 
-                    <div style="display:none;" class="form-group col-md-12 mb-3">
-                        <input type="text" name="country" class="form-control" value="Nigeria" readonly>
-                    </div>
+        <div class="form-group col-md-12 mb-3">
+            <label for="state" class="fw-bold">State</label>
+            <select name="state" id="state" class="form-control">
+                <option value="">Loading States...</option>
+            </select>
+            @error('state')<small class="text-danger">{{ $message }}</small>@enderror
+        </div>
 
-                    <div class="form-group col-md-12 mb-3">
-                        <input type="password" name="password" class="form-control" placeholder="Password">
-                        @error('password')<small class="text-danger">{{ $message }}</small>@enderror
-                    </div>
+        <div class="form-group col-md-12 mb-3">
+            <label for="lga" class="fw-bold">Local Government Area (LGA)</label>
+            <select name="lga" id="lga" class="form-control">
+                <option value="">Select State First</option>
+            </select>
+            @error('lga')<small class="text-danger">{{ $message }}</small>@enderror
+        </div>
 
-                    <div class="form-group col-md-12 mb-3">
-                        <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm Password">
-                    </div>
+        <div style="display:none;" class="form-group col-md-12 mb-3">
+            <input type="text" name="country" class="form-control" value="Nigeria" readonly>
+        </div>
 
-                    <div class="col-md-12 mb-3">
-                        <label><input type="checkbox" name="terms"> I Agree to the Terms</label>
-                        @error('terms')<small class="text-danger">{{ $message }}</small>@enderror
-                    </div>
+        <div class="form-group col-md-12 mb-3">
+            <label for="password" class="fw-bold">Password</label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="Enter Password">
+            @error('password')<small class="text-danger">{{ $message }}</small>@enderror
+        </div>
 
-                    <div class="col-md-12">
-                        <button type="submit" class="btn btn-primary mb-3">
-                            <i class="fa fa-user-plus"></i> Sign Up
-                        </button>
-                        <p>You already have an account?
-                            <a class="text-blue" href="{{ route('login') }}">Sign In</a>
-                        </p>
-                    </div>
-                </div>
-            </form>
+        <div class="form-group col-md-12 mb-3">
+            <label for="password_confirmation" class="fw-bold">Confirm Password</label>
+            <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Re-enter Password">
+        </div>
+
+        <div class="col-md-12 mb-3">
+            <label>
+                <input type="checkbox" name="terms"> I Agree to the Terms
+            </label>
+            @error('terms')<small class="text-danger">{{ $message }}</small>@enderror
+        </div>
+
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-primary mb-3">
+                <i class="fa fa-user-plus"></i> Sign Up
+            </button>
+            <p>Already have an account?
+                <a class="text-blue" href="{{ route('login') }}">Sign In</a>
+            </p>
+        </div>
+
+    </div>
+</form>
+
         </div>
     </div>
 </div>
