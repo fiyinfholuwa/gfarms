@@ -844,26 +844,51 @@
     <!-- Hidden trigger -->
     <button type="button" class="btn btn-primary d-none" id="notifTrigger" data-bs-toggle="modal" data-bs-target="#notifModal"></button>
 
-    <!-- Fancy Notification Modal -->
+    <!-- Modern Notification Modal -->
     <div class="modal fade" id="notifModal" tabindex="-1">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content" style="border-radius:20px;">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content shadow-lg border-0" style="border-radius: 20px; overflow: hidden;">
+                <!-- Header with gradient background -->
                 <div class="modal-header 
-                    @if($notif['type']=='success') bg-success 
-                    @elseif($notif['type']=='error') bg-danger 
-                    @else bg-info @endif 
-                    text-white">
-                    <h5 class="modal-title">{{ $notif['title'] }}</h5>
+                    @if($notif['type']=='success') bg-gradient-success 
+                    @elseif($notif['type']=='error') bg-gradient-danger 
+                    @else bg-gradient-info @endif 
+                    text-white border-0">
+                    <h5 class="modal-title w-100 text-center">{{ $notif['title'] }}</h5>
                 </div>
-                <div class="modal-body">
-                    <p>{{ $notif['message'] }}</p>
+
+                <!-- Body -->
+                <div class="modal-body text-center p-4" style="font-size: 1.1rem; color: #333;">
+                    <p class="mb-0">{{ $notif['message'] }}</p>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-light" data-bs-dismiss="modal">OK</button>
+
+                <!-- Footer -->
+                <div class="modal-footer justify-content-center border-0 pb-4">
+                    <button class="btn btn-outline-dark px-4 rounded-pill" data-bs-dismiss="modal">OK</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Extra Styles -->
+    <style>
+        .bg-gradient-success {
+            background: linear-gradient(135deg, #28a745, #218838);
+        }
+        .bg-gradient-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+        .bg-gradient-info {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+        }
+        #notifModal .modal-content {
+            animation: pop-in 0.3s ease-out;
+        }
+        @keyframes pop-in {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
 
     <!-- Auto-show script -->
     <script>

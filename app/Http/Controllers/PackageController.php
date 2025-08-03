@@ -113,18 +113,23 @@ public function complete(Request $request)
         'x-business-id' => env('FINCRA_BUSINESS_ID'),
         'x-pub-key' => env('FINCRA_PUBLIC_KEY'),
         'content-type' => 'application/json'
-    ])->post('https://sandboxapi.fincra.com/checkout/payments', [
+    ])->post($this->get_base_url() .'/checkout/payments', [
         "currency"       => "NGN",
         "amount"         => 1500,
         "customer"       => [
-            "name"  => $user->name,
+            "name"  => $user->first_name . " ". $user->last_name,
             "email" => $user->email
         ],
         "paymentMethods" => ["card", "bank_transfer"],
-        "feeBearer"      => "business",
+        "feeBearer"      => "customer",
         "redirectUrl"    => $redirectUrl,
         "reference"      => $reference, // ✅ Send as field also
     ]);
+
+    // if ($response->failed()) {
+    //     dd('Fincra Payment Creation Failed', ['body' => $response->body()]);
+    // }
+
 
     return $response->json();
 }

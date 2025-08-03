@@ -38,7 +38,7 @@ Route::post('/resend-otp', [AuthController::class, 'resend'])->name('otp.resend'
 
 
 // ✅ User Dashboard
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'onboard_kyc'])->group(function () {
 
     // Dashboard
 
