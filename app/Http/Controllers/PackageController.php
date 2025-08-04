@@ -104,108 +104,153 @@ public function complete(Request $request)
     }
 
     private function createFincraPayment($user, $reference)
+    {
+        $redirectUrl = route('package.callback');
+    
+        $response = Http::withHeaders([
+            'accept' => 'application/json',
+            'api-key' => env('FINCRA_SECRET_KEY'),
+            'x-business-id' => env('FINCRA_BUSINESS_ID'),
+            'x-pub-key' => env('FINCRA_PUBLIC_KEY'),
+            'content-type' => 'application/json'
+        ])->post($this->get_base_url() . '/checkout/payments', [
+            "currency"       => "NGN",
+            "amount"         => 1500,
+            "customer"       => [
+                "name"  => $user->first_name . " ". $user->last_name,
+                "email" => $user->email
+            ],
+            "paymentMethods" => ["bank_transfer"],
+            "feeBearer"      => "customer",
+            "redirectUrl"    => $redirectUrl,
+            "reference"      => $reference,
+        ])->json();
+    
+        return isset($response['data']['link'])
+            ? ['url' => $response['data']['link']]
+            : [];
+    }
+    
+
+    private function createPaystackPayment($user, $reference)
 {
     $redirectUrl = route('package.callback');
 
-    $response = Http::withHeaders([
-        'accept' => 'application/json',
-        'api-key' => env('FINCRA_SECRET_KEY'),
-        'x-business-id' => env('FINCRA_BUSINESS_ID'),
-        'x-pub-key' => env('FINCRA_PUBLIC_KEY'),
-        'content-type' => 'application/json'
-    ])->post($this->get_base_url() .'/checkout/payments', [
-        "currency"       => "NGN",
-        "amount"         => 1500,
-        "customer"       => [
-            "name"  => $user->first_name . " ". $user->last_name,
-            "email" => $user->email
-        ],
-        "paymentMethods" => ["card", "bank_transfer"],
-        "feeBearer"      => "customer",
-        "redirectUrl"    => $redirectUrl,
-        "reference"      => $reference, // ✅ Send as field also
+    $response = Http::withToken(env('PAYSTACK_SECRET_KEY'))
+        ->post('https://api.paystack.co/transaction/initialize', [
+            "email"        => $user->email,
+            "amount"       => 1500 * 100,
+            "reference"    => $reference,
+            "callback_url" => $redirectUrl,
+        ])->json();
+
+    return (isset($response['status']) && $response['status'] === true)
+        ? ['url' => $response['data']['authorization_url']]
+        : [];
+}
+
+
+ 
+
+    public function startPayment(Request $request)
+{
+    $gateway = $request->query('gateway', 'fincra'); // Default gateway is Fincra
+    $user = Auth::user();
+
+    // Generate reference with gateway prefix
+    $reference = strtoupper($gateway) . '_' . Str::uuid();
+
+    // Save pending payment
+    DB::table('payments')->insert([
+        'user_id'    => $user->id,
+        'package'    => 'onboarding',
+        'reference'  => $reference,
+        'amount'     => 1500,
+        'status'     => 'pending',
+        'gateway'    => $gateway,
+        'created_at' => now(),
+        'updated_at' => now(),
     ]);
 
-    // if ($response->failed()) {
-    //     dd('Fincra Payment Creation Failed', ['body' => $response->body()]);
-    // }
+    // ✅ Call the correct payment creation method
+    $paymentResponse = ($gateway === 'paystack') 
+        ? $this->createPaystackPayment($user, $reference) 
+        : $this->createFincraPayment($user, $reference);
 
+    // ✅ Normalize the payment URL (both methods must return ['url' => '...'])
+    if (empty($paymentResponse['url'])) {
+        return GeneralController::sendNotification('', 'error', 'Onboarding Payment!', 'Payment Service is Down, Kindly Try Again Later or Reach out to Admin for Assistance');
+    }
 
-    return $response->json();
+    // ✅ Redirect to gateway URL
+    return redirect($paymentResponse['url']);
 }
 
 
     /**
-     * ✅ Verify Payment from Fincra
+     * ✅ Handle Fincra Payment Callback
+     */
+    private function verifyPaystackPayment($reference)
+    {
+        $response = Http::withToken(env('PAYSTACK_SECRET_KEY'))
+            ->get("https://api.paystack.co/transaction/verify/{$reference}")
+            ->json();
+
+        if (isset($response['status']) && $response['status'] === true && $response['data']['status'] === 'success') {
+            return ['status' => true];
+        }
+        return ['status' => false];
+    }
+
+    /**
+     * ✅ Verify Fincra Payment
      */
     private function verifyFincraPayment($reference)
     {
         $response = Http::withHeaders([
             'accept' => 'application/json',
             'api-key' => env('FINCRA_SECRET_KEY'),
-            'x-business-id' => env('FINCRA_BUSINESS_ID')
-        ])->get($this->get_base_url() . "/checkout/payments/merchant-reference/{$reference}");
-
-        return $response->json();
-    }
-
-    
-    /**
-     * ✅ Start Payment Process
-     */
-    public function startPayment(Request $request)
-    {
-    
-        // Store initial payment record
-        $reference = 'FINCRA_' . Str::uuid();
-        $user = Auth::user();
-
-        DB::table('payments')->insert([
-            'user_id' => $user->id,
-            'package' => 'onboarding',
-            'reference' => $reference,
-            'amount' => 1500,
-            'status' => 'pending',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        // Call reusable method to create Fincra payment
-        $paymentResponse = $this->createFincraPayment($user, $reference);
-        if (empty($paymentResponse['data']['link'])) {
-            return GeneralController::sendNotification('', 'error', 'Onboarding Payment!', 'Payment Service is Down,Kindly Try Again Later or Reach out to Admin for Assistance');
+            'x-business-id' => env('FINCRA_BUSINESS_ID'),
+            'x-pub-key' => env('FINCRA_PUBLIC_KEY'),
+        ])->get($this->get_base_url() . '/checkout/payments/merchant-reference/' . $reference)
+          ->json();
+        if (isset($response['status']) && $response['status'] === true) {
+            $status = strtolower($response['data']['status'] ?? '');
+            return ['status' => ($status === 'success' || $status === 'pending')];
         }
-
-        return redirect($paymentResponse['data']['link']);
+        return ['status' => false];
     }
 
     /**
-     * ✅ Handle Fincra Payment Callback
+     * ✅ Callback for Both Paystack & Fincra
      */
     public function paymentCallback(Request $request)
     {
         $reference = $request->query('reference');
         $payment = DB::table('payments')->where('reference', $reference)->first();
+
         if (!$payment) {
-            return redirect()->route('package.form')->with('error', 'Payment not found.');
+            return GeneralController::sendNotification('', 'error', 'Onboarding Payment!', 'Payment record not found.');
         }
 
-        // Verify with reusable method
-        $verifyResponse = $this->verifyFincraPayment($reference);
+        // ✅ Determine which gateway to verify
+        $verifyResponse = ($payment->gateway === 'paystack') 
+            ? $this->verifyPaystackPayment($reference)
+            : $this->verifyFincraPayment($reference);
 
-        if (!empty($verifyResponse['status']) && $verifyResponse['status'] === true) {
+        if ($verifyResponse['status']) {
             DB::table('payments')->where('reference', $reference)->update([
-                'status' => 'success',
+                'status'     => 'success',
                 'updated_at' => now()
             ]);
             User::findOrFail($payment->user_id)->update(['has_paid_onboarding' => 'yes']);
-            return redirect()->route('dashboard')->with('success', 'Payment successful, package activated!');
+            return GeneralController::sendNotification('', 'success', 'Onboarding Payment!', 'Payment successful!');
         } else {
             DB::table('payments')->where('reference', $reference)->update([
-                'status' => 'failed',
+                'status'     => 'failed',
                 'updated_at' => now()
             ]);
-            return redirect()->route('package.form')->with('error', 'Payment verification failed.');
+            return GeneralController::sendNotification('dashboard', 'error', 'Onboarding Payment!', 'Payment verification failed.');
         }
     }
 

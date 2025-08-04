@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('package');
+            $table->string('gateway')->nullable();
             $table->string('reference')->unique();
             $table->integer('amount');
             $table->string('status')->default('pending'); // pending, successful, failed

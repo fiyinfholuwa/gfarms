@@ -725,8 +725,9 @@ $kycLevels = kyc_levels();
 @if(!$has_paid_onboarding)
     <button type="button" class="btn btn-warning d-none" id="showOnboardingModal" data-bs-toggle="modal" data-bs-target="#onboardingModal"></button>
 
-   {{-- ✅ Perfectly Aligned Fancy Onboarding Modal --}}
-<div class="modal fade" id="onboardingModal" tabindex="-1" aria-labelledby="onboardingLabel" aria-hidden="true">
+   {{-- ✅ Fancy Onboarding Modal (Uncancelable + Two Payment Options) --}}
+<div class="modal fade" id="onboardingModal" tabindex="-1" aria-labelledby="onboardingLabel" aria-hidden="true" 
+     data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-md">
         <div class="modal-content border-0 shadow-lg" 
              style="border-radius:25px; overflow:hidden; background:#fff;">
@@ -754,17 +755,21 @@ $kycLevels = kyc_levels();
                     <li class="mb-2">✅ Priority support & exclusive benefits</li>
                 </ul>
 
-                <!-- Buttons -->
-                <div class="mt-2">
-                    <a href="{{ route('pay.onboarding') }}" class="btn btn-lg fw-bold text-white shadow-sm me-2"
-                       style="background:linear-gradient(135deg,#ff7e00,#ff5500); border:none; border-radius:50px; padding:12px 40px; font-size:1.1rem; transition:transform 0.3s;">
-                        💳 Pay ₦1500 Now
-                    </a>
-                    <button type="button" class="btn btn-primary rounded-pill" 
-                            data-bs-dismiss="modal" style="transition:0.3s;">
-                        Cancel
-                    </button>
-                </div>
+                <!-- ✅ Two Payment Options -->
+                <!-- ✅ Two Payment Options (Always Side by Side) -->
+<div class="mt-3 d-flex justify-content-center gap-3 flex-wrap">
+    <a href="{{ route('pay.onboarding', ['gateway' => 'paystack']) }}" 
+       class="btn btn-lg fw-bold text-white shadow-sm"
+       style="background:linear-gradient(135deg,#00b9f1,#007ad9); border:none; border-radius:50px; padding:12px 40px; font-size:1.1rem; min-width:180px;">
+         Pay with Paystack
+    </a>
+    <a href="{{ route('pay.onboarding', ['gateway' => 'fincra']) }}" 
+       class="btn btn-lg fw-bold text-white shadow-sm"
+       style="background:linear-gradient(135deg,#ff7e00,#ff5500); border:none; border-radius:50px; padding:12px 40px; font-size:1.1rem; min-width:180px;">
+        Pay with Fincra
+    </a>
+</div>
+
             </div>
         </div>
     </div>
@@ -794,8 +799,9 @@ $kycLevels = kyc_levels();
     <!-- Hidden Trigger Button -->
 <button type="button" class="btn btn-warning d-none" id="showKycModal" data-bs-toggle="modal" data-bs-target="#kycModal"></button>
 
-{{-- ✅ Modern Fancy KYC Modal --}}
-<div class="modal fade" id="kycModal" tabindex="-1" aria-hidden="true">
+{{-- ✅ Fancy KYC Modal (Uncancelable) --}}
+<div class="modal fade" id="kycModal" tabindex="-1" aria-hidden="true" 
+     data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-md">
         <div class="modal-content border-0 shadow-lg" style="border-radius:25px; overflow:hidden; background:#fff;">
 
@@ -809,9 +815,8 @@ $kycLevels = kyc_levels();
             <!-- Body -->
             <div class="modal-body px-4 py-5" style="background:#fffaf5;">
 
-                <!-- Instructions -->
                 <p class="fw-bold text-center mb-4" style="color:#ff5500; font-size:1.1rem;">
-                    Select a Acccount level below to see its details and start verification.
+                    Select an Account level below to see its details and start verification.
                 </p>
 
                 <!-- Fancy KYC Level Cards -->
@@ -834,13 +839,9 @@ $kycLevels = kyc_levels();
 
                     <form id="kyc-form" method="POST">
                         @csrf
-                        <button type="submit" class="btn btn-lg fw-bold text-white shadow-sm me-2"
+                        <button type="submit" class="btn btn-lg fw-bold text-white shadow-sm"
                                 style="background:linear-gradient(135deg,#ff7e00,#ff5500); border:none; border-radius:50px; padding:5px 40px; font-size:1rem; transition:0.3s;">
                              Proceed
-                        </button>
-                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4 py-2" 
-                                data-bs-dismiss="modal" style="transition:0.3s;">
-                            Cancel
                         </button>
                     </form>
                 </div>
@@ -861,17 +862,12 @@ $kycLevels = kyc_levels();
     box-shadow: 0 6px 20px rgba(255, 85, 0, 0.15);
     border-color: #ff7e00;
 }
-
-</style>
-
-<style>
 .active-card {
     border: 2px solid #ff7e00 !important;
     box-shadow: 0 6px 20px rgba(255, 85, 0, 0.15) !important;
     transform: translateY(-3px);
 }
 </style>
-
 
     {{-- ✅ Auto-show KYC modal & dynamic behavior --}}
 <script>
@@ -884,20 +880,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById('kyc-form');
     const details = document.getElementById('kyc-details');
 
-    // ✅ Attach click event to all KYC cards
     document.querySelectorAll('.kyc-level-card').forEach(card => {
         card.addEventListener('click', () => {
             const data = kycData[card.dataset.level];
-
-            // ✅ Populate details (render HTML properly)
             title.textContent = data.title;
-            desc.innerHTML = data.description; // <-- changed here
+            desc.innerHTML = data.description; 
             form.action = data.endpoint || "#";
-
-            // ✅ Show details
             details.style.display = 'block';
-
-            // ✅ Optional: highlight selected card
             document.querySelectorAll('.kyc-level-card').forEach(c => c.classList.remove('active-card'));
             card.classList.add('active-card');
         });
@@ -905,14 +894,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
-
 @endif
 
 {{-- ✅ Custom Styles --}}
 <style>
-    @keyframes gradientFlow {
-        0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}
-    }
     .kyc-level-btn {
         background:linear-gradient(135deg,#ff7e00,#ff5500);
         color:white; font-weight:bold; border:none;
@@ -926,6 +911,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 </style>
 
-
-
-	@endsection
+@endsection
