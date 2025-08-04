@@ -745,7 +745,7 @@ $kycLevels = kyc_levels();
                 
                 <!-- Payment Info -->
                 <p class="fw-bold mb-3" style="color:#ff5500; font-size:1.3rem;">
-                    Pay <span style="font-size:1.6rem;">₦1500</span> to enjoy premium benefits
+                    Pay N500 & N,1000 for both activation fee and KYC  to get your account fully activated
                 </p>
 
                 <!-- Features -->
