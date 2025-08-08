@@ -18,11 +18,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 	<!-- PLUGINS CSS STYLE -->
-	<link href="assets/plugins/daterangepicker/daterangepicker.css" rel="stylesheet">
-	<link href="assets/plugins/simplebar/simplebar.css" rel="stylesheet" />
+	<link href="{{ asset('assets/plugins/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
+	<link href="{{ asset('assets/plugins/simplebar/simplebar.css') }}" rel="stylesheet" />
 
 	<!-- Ekka CSS -->
-	<link id="ekka-css" href="assets/css/ekka.css" rel="stylesheet" />
+	<link id="ekka-css" href="{{ asset('assets/css/ekka.css') }}" rel="stylesheet" />
 
 	<!-- FAVICON -->
 	<link href="assets/img/favicon.png" rel="shortcut icon" />
@@ -56,91 +56,31 @@
         <hr>
     </li>
 
-    <!-- My Profile -->
-    <li>
-        <a class="sidenav-item-link" href="">
-            <i class="mdi mdi-account-circle-outline"></i>
-            <span class="nav-text">My Profile</span>
-        </a>
-    </li>
-
     
-    <!-- Apply for Foodstuff Plan -->
-    <li>
-        <a class="sidenav-item-link" href="">
-        <i class="fas fa-file-signature"></i>
-            <span class="nav-text">Apply for Plan</span>
-        </a>
-    </li>
 
     <!-- Foodstuff Packages (Dropdown) -->
     <li class="has-sub">
         <a class="sidenav-item-link" href="javascript:void(0)">
             <i class="mdi mdi-basket-outline"></i>
-            <span class="nav-text">Foodstuff Packages</span> <b class="caret"></b>
+            <span class="nav-text">Manage Foods</span> <b class="caret"></b>
         </a>
         <div class="collapse">
             <ul class="sub-menu" id="foodstuff" data-parent="#sidebar-menu">
                 <li>
-                    <a class="sidenav-item-link" href="{{ route('user.packages') }}">
-                        <span class="nav-text">Browse Packages</span>
+                    <a class="sidenav-item-link" href="{{ route('admin.product.add') }}">
+                        <span class="nav-text">Add Food</span>
                     </a>
                 </li>
                 <li>
-                    <a class="sidenav-item-link" href="">
-                        <span class="nav-text">My Packages</span>
+                    <a class="sidenav-item-link" href="{{ route('foods.all') }}">
+                        <span class="nav-text">All Foods</span>
                     </a>
                 </li>
             </ul>
         </div>
     </li>
 
-    <!-- Repayment (Dropdown) -->
-    <li class="has-sub">
-        <a class="sidenav-item-link" href="javascript:void(0)">
-            <i class="mdi mdi-cash-multiple"></i>
-            <span class="nav-text">Repayment</span> <b class="caret"></b>
-        </a>
-        <div class="collapse">
-            <ul class="sub-menu" id="repayment" data-parent="#sidebar-menu">
-                <li>
-                    <a class="sidenav-item-link" href="">
-                        <span class="nav-text">Repayment Schedule</span>
-                    </a>
-                </li>
-                <li>
-                    <a class="sidenav-item-link" href="">
-                        <span class="nav-text">Payment History</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </li>
-
-    <!-- Delivery Status -->
-    <li>
-        <a class="sidenav-item-link" href="">
-        <i class="fas fa-truck"></i>
-            <span class="nav-text">Delivery Status</span>
-        </a>
-    </li>
-
-    <!-- Notifications -->
-    <li>
-        <a class="sidenav-item-link" href="">
-            <i class="mdi mdi-bell-outline"></i>
-            <span class="nav-text">Notifications</span>
-        </a>
-    </li>
-
-    <!-- Support -->
-    <li>
-        <a class="sidenav-item-link" href="">
-            <i class="mdi mdi-lifebuoy"></i>
-            <span class="nav-text">Support</span>
-        </a>
-    </li>
-
+   
     <!-- Logout -->
     <li>
     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
@@ -812,30 +752,30 @@
         
 
 	<!-- Common Javascript -->
-	<script src="assets/plugins/jquery/jquery-3.5.1.min.js"></script>
-	<script src="assets/js/bootstrap.bundle.min.js"></script>
-	<script src="assets/plugins/simplebar/simplebar.min.js"></script>
-	<script src="assets/plugins/jquery-zoom/jquery.zoom.min.js"></script>
-	<script src="assets/plugins/slick/slick.min.js"></script>
+	<script src="{{ asset('assets/plugins/jquery/jquery-3.5.1.min.js') }}"></script>
+	<script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
+	<script src="{{ asset('assets/plugins/simplebar/simplebar.min.js') }}"></script>
+	<script src="{{ asset('assets/plugins/jquery-zoom/jquery.zoom.min.js') }}"></script>
+	<script src="{{ asset('assets/plugins/slick/slick.min.js') }}"></script>
 
 	<!-- Chart -->
-	<script src="assets/plugins/charts/Chart.min.js"></script>
-	<script src="assets/js/chart.js"></script>
+	<script src="{{ asset('assets/plugins/charts/Chart.min.js') }}"></script>
+	<script src="{{ asset('assets/js/chart.js') }}"></script>
 
 	<!-- Google map chart -->
-	<script src="assets/plugins/charts/google-map-loader.js"></script>
-	<script src="assets/plugins/charts/google-map.js"></script>
+	<script src="{{ asset('assets/plugins/charts/google-map-loader.js') }}"></script>
+	<script src="{{ asset('assets/plugins/charts/google-map.js') }}"></script>
 
 	<!-- Date Range Picker -->
-	<script src="assets/plugins/daterangepicker/moment.min.js"></script>
-    <script src="assets/plugins/daterangepicker/daterangepicker.js"></script>
-	<script src="assets/js/date-range.js"></script>
+	<script src="{{ asset('assets/plugins/daterangepicker/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/daterangepicker/daterangepicker.js') }}"></script>
+	<script src="{{ asset('assets/js/date-range.js') }}"></script>
 
 	<!-- Option Switcher -->
-	<script src="assets/plugins/options-sidebar/optionswitcher.js"></script>
+	<script src="{{ asset('assets/plugins/options-sidebar/optionswitcher.js') }}"></script>
 
 	<!-- Ekka Custom -->
-	<script src="assets/js/ekka.js"></script>
+	<script src="{{ asset('assets/js/ekka.js') }}"></script>
 </body>
 
 @if(session('notification'))
