@@ -9,298 +9,242 @@
 			<div class="ec-content-wrapper">
 				<div class="content">
 					<!-- Top Statistics -->
-					<div class="row">
-						<div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
-							<div class="card card-mini dash-card card-1">
-								<div class="card-body">
-									<h2 class="mb-1">1,503</h2>
-									<p>Daily Signups</p>
-									<span class="mdi mdi-account-arrow-left"></span>
-								</div>
-							</div>
-						</div>
-						<div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
-							<div class="card card-mini dash-card card-2">
-								<div class="card-body">
-									<h2 class="mb-1">79,503</h2>
-									<p>Daily Visitors</p>
-									<span class="mdi mdi-account-clock"></span>
-								</div>
-							</div>
-						</div>
-						<div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
-							<div class="card card-mini dash-card card-3">
-								<div class="card-body">
-									<h2 class="mb-1">15,503</h2>
-									<p>Daily Order</p>
-									<span class="mdi mdi-package-variant"></span>
-								</div>
-							</div>
-						</div>
-						<div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
-							<div class="card card-mini dash-card card-4">
-								<div class="card-body">
-									<h2 class="mb-1">$98,503</h2>
-									<p>Daily Revenue</p>
-									<span class="mdi mdi-currency-usd"></span>
-								</div>
-							</div>
-						</div>
-					</div>
+					
+    <style>
+       
+        
+        .dash-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dash-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .card-1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .card-2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .card-3 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        .card-4 {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+        
+        .card-body {
+            position: relative;
+            z-index: 2;
+            padding: 1.5rem;
+        }
+        
+        .card-body h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-body p {
+            font-size: 0.95rem;
+            margin-bottom: 0;
+            opacity: 0.9;
+        }
+        
+        .card-icon {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 2rem;
+            opacity: 0.3;
+        }
+        
+        .account-section {
+            position: relative;
+        }
+        
+        .account-number {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 50px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            border-radius: 6px;
+            padding: 5px 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.8rem;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+        
+        .copy-btn.copied {
+            background: rgba(76, 175, 80, 0.8);
+        }
+        
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+        
+		.card-body h2{
+			color:#fff !important;
+		}
+        .custom-toast {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+        }
+        
+        @media (max-width: 576px) {
+            .card-body h2 {
+                font-size: 1.4rem;
+            }
+            .card-icon {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 
-					<div class="row">
-						<div class="col-xl-8 col-md-12 p-b-15">
-							<!-- Sales Graph -->
-							<div id="user-acquisition" class="card card-default">
-								<div class="card-header">
-									<h2>Sales Report</h2>
-								</div>
-								<div class="card-body">
-									<ul class="nav nav-tabs nav-style-border justify-content-between justify-content-lg-start border-bottom"
-										role="tablist">
-										<li class="nav-item">
-											<a class="nav-link active" data-bs-toggle="tab" href="#todays" role="tab"
-												aria-selected="true">Today's</a>
-										</li>
-										<li class="nav-item">
-											<a class="nav-link" data-bs-toggle="tab" href="#monthly" role="tab"
-												aria-selected="false">Monthly </a>
-										</li>
-										<li class="nav-item">
-											<a class="nav-link" data-bs-toggle="tab" href="#yearly" role="tab"
-												aria-selected="false">Yearly</a>
-										</li>
-									</ul>
-									<div class="tab-content pt-4" id="salesReport">
-										<div class="tab-pane fade show active" id="source-medium" role="tabpanel">
-											<div class="mb-6" style="max-height:247px">
-												<canvas id="acquisition" class="chartjs2"></canvas>
-												<div id="acqLegend" class="customLegend mb-2"></div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-3 col-sm-6 p-3">
+                <div class="card card-mini dash-card card-1">
+                    <div class="card-body">
+                        <i class="fas fa-wallet card-icon"></i>
+                        <h2 class="mb-1">₦1,503</h2>
+                        <p>Wallet Balance</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-sm-6 p-3">
+                <div class="card card-mini dash-card card-2">
+                    <div class="card-body">
+                        <i class="fas fa-chart-line card-icon"></i>
+                        <h2 class="mb-1">₦79,503</h2>
+                        <p>Loan Balance</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-sm-6 p-3">
+                <div class="card card-mini dash-card card-3">
+                    <div class="card-body account-section">
+                        <i class="fas fa-university card-icon"></i>
+                        <button class="copy-btn" onclick="copyAccountNumber()" id="copyBtn">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                        <h2 class="mb-1 account-number" id="accountNumber">2300221232</h2>
+                        <p>GTB Account</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-sm-6 p-3">
+                <div class="card card-mini dash-card card-4">
+                    <div class="card-body">
+                        <i class="fas fa-user-circle card-icon"></i>
+                        <h2 class="mb-1">Active</h2>
+                        <p>User Account</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-						<div class="col-xl-4 col-md-12 p-b-15">
-							<!-- Doughnut Chart -->
-							<div class="card card-default">
-								<div class="card-header justify-content-center">
-									<h2>Orders Overview</h2>
-								</div>
-								<div class="card-body">
-									<canvas id="doChart"></canvas>
-								</div>
-								<a href="#" class="pb-5 d-block text-center text-muted"><i
-										class="mdi mdi-download mr-2"></i> Download overall report</a>
-								<div class="card-footer d-flex flex-wrap bg-white p-0">
-									<div class="col-6">
-										<div class="p-20">
-											<ul class="d-flex flex-column justify-content-between">
-												<li class="mb-2"><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
-														style="color: #4c84ff"></i>Order Completed</li>
-												<li class="mb-2"><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
-														style="color: #80e1c1 "></i>Order Unpaid</li>
-												<li><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
-														style="color: #ff7b7b "></i>Order returned</li>
-											</ul>
-										</div>
-									</div>
-									<div class="col-6 border-left">
-										<div class="p-20">
-											<ul class="d-flex flex-column justify-content-between">
-												<li class="mb-2"><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
-														style="color: #8061ef"></i>Order Pending</li>
-												<li class="mb-2"><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
-														style="color: #ffa128"></i>Order Canceled</li>
-												<li><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
-														style="color: #7be6ff"></i>Order Broken</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+    <!-- Toast Container -->
+    <div class="toast-container">
+        <div id="copyToast" class="toast custom-toast" role="alert">
+            <div class="toast-body d-flex align-items-center">
+                <i class="fas fa-check-circle me-2"></i>
+                Account number copied to clipboard!
+            </div>
+        </div>
+    </div>
 
-					<div class="row">
-						<div class="col-xl-8 col-md-12 p-b-15">
-							<!-- User activity statistics -->
-							<div class="card card-default" id="user-activity">
-								<div class="no-gutters">
-									<div>
-										<div class="card-header justify-content-between">
-											<h2>User Activity</h2>
-											<div class="date-range-report ">
-												<span></span>
-											</div>
-										</div>
-										<div class="card-body">
-											<div class="tab-content" id="userActivityContent"> 
-												<div class="tab-pane fade show active" id="user" role="tabpanel">
-													<canvas id="activity" class="chartjs"></canvas>
-												</div>
-											</div>
-										</div>
-										<div class="card-footer d-flex flex-wrap bg-white border-top">
-											<a href="#" class="text-uppercase py-3">In-Detail Overview</a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-xl-4 col-md-12 p-b-15">
-							<div class="card card-default">
-								<div class="card-header flex-column align-items-start">
-									<h2>Current Users</h2>
-								</div>
-								<div class="card-body">
-									<canvas id="currentUser" class="chartjs"></canvas>
-								</div>
-								<div class="card-footer d-flex flex-wrap bg-white border-top">
-									<a href="#" class="text-uppercase py-3">In-Detail Overview</a>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-xl-8 col-12 p-b-15">
-							<!-- World Chart -->
-							<div class="card card-default" id="analytics-country">
-								<div class="card-header justify-content-between">
-									<h2>Purchased by Country</h2>
-									<div class="date-range-report ">
-										<span></span>
-									</div>
-								</div>
-								<div class="card-body vector-map-world-2">
-									<div id="regions_purchase" style="height: 100%; width: 100%;"></div>
-								</div>
-								<div class="border-top mt-3">
-									<div class="row no-gutters">
-										<div class="col-lg-6">
-											<div class="world-data-chart border-bottom pt-15px pb-15px">
-												<canvas id="hbar1" class="chartjs"></canvas>
-											</div>
-										</div>
-										<div class="col-lg-6">
-											<div class="world-data-chart pt-15px pb-15px">
-												<canvas id="hbar2" class="chartjs"></canvas>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="card-footer d-flex flex-wrap bg-white">
-									<a href="#" class="text-uppercase py-3">In-Detail Overview</a>
-								</div>
-							</div>
-						</div>
-						<div class="col-xl-4 col-12 p-b-15">
-							<!-- Top Sell Table -->
-							<div class="card card-default Sold-card-table">
-								<div class="card-header justify-content-between">
-									<h2>Sold by Items</h2>
-									<div class="tools">
-										<button class="text-black-50 mr-2 font-size-20"><i
-												class="mdi mdi-cached"></i></button>
-										<div class="dropdown show d-inline-block widget-dropdown">
-											<a class="dropdown-toggle icon-burger-mini" href="#" role="button"
-												id="dropdown-units" data-bs-toggle="dropdown" aria-haspopup="true"
-												aria-expanded="false" data-display="static"></a>
-											<ul class="dropdown-menu dropdown-menu-right">
-												<li class="dropdown-item"><a href="#">Action</a></li>
-												<li class="dropdown-item"><a href="#">Another action</a></li>
-												<li class="dropdown-item"><a href="#">Something else here</a></li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div class="card-body py-0 compact-units" data-simplebar style="height: 534px;">
-									<table class="table ">
-										<tbody>
-											<tr>
-												<td class="text-dark">Backpack</td>
-												<td class="text-center">9</td>
-												<td class="text-right">33% <i
-														class="mdi mdi-arrow-up-bold text-success pl-1 font-size-12"></i>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-dark">T-Shirt</td>
-												<td class="text-center">6</td>
-												<td class="text-right">150% <i
-														class="mdi mdi-arrow-up-bold text-success pl-1 font-size-12"></i>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-dark">Coat</td>
-												<td class="text-center">3</td>
-												<td class="text-right">50% <i
-														class="mdi mdi-arrow-up-bold text-success pl-1 font-size-12"></i>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-dark">Necklace</td>
-												<td class="text-center">7</td>
-												<td class="text-right">150% <i
-														class="mdi mdi-arrow-up-bold text-success pl-1 font-size-12"></i>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-dark">Jeans Pant</td>
-												<td class="text-center">10</td>
-												<td class="text-right">300% <i
-														class="mdi mdi-arrow-down-bold text-danger pl-1 font-size-12"></i>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-dark">Shoes</td>
-												<td class="text-center">5</td>
-												<td class="text-right">100% <i
-														class="mdi mdi-arrow-up-bold text-success pl-1 font-size-12"></i>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-dark">T-Shirt</td>
-												<td class="text-center">6</td>
-												<td class="text-right">150% <i
-														class="mdi mdi-arrow-up-bold text-success pl-1 font-size-12"></i>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-dark">Watches</td>
-												<td class="text-center">18</td>
-												<td class="text-right">160% <i
-														class="mdi mdi-arrow-up-bold text-success pl-1 font-size-12"></i>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-dark">Inner</td>
-												<td class="text-center">156</td>
-												<td class="text-right">120% <i
-														class="mdi mdi-arrow-up-bold text-success pl-1 font-size-12"></i>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-dark">T-Shirt</td>
-												<td class="text-center">6</td>
-												<td class="text-right">150% <i
-														class="mdi mdi-arrow-up-bold text-success pl-1 font-size-12"></i>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-
-								</div>
-								<div class="card-footer d-flex flex-wrap bg-white">
-									<a href="#" class="text-uppercase py-3">View Report</a>
-								</div>
-							</div>
-						</div>
-					</div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function copyAccountNumber() {
+            const accountNumber = document.getElementById('accountNumber').textContent;
+            const copyBtn = document.getElementById('copyBtn');
+            const toast = new bootstrap.Toast(document.getElementById('copyToast'));
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(accountNumber).then(function() {
+                // Change button appearance
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                copyBtn.classList.add('copied');
+                
+                // Show toast
+                toast.show();
+                
+                // Reset button after 2 seconds
+                setTimeout(() => {
+                    copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+                
+            }).catch(function(err) {
+                console.error('Could not copy text: ', err);
+                
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = accountNumber;
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    copyBtn.classList.add('copied');
+                    toast.show();
+                    
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+                } catch (err) {
+                    console.error('Fallback copy failed: ', err);
+                }
+                
+                document.body.removeChild(textArea);
+            });
+        }
+    </script>
+</body>
+</html>
+					
+					
+					
 					<div class="row">
 						<div class="col-12 p-b-15">
 							<!-- Recent Order Table -->
@@ -474,163 +418,7 @@
 					</div>
 
 					<div class="row">
-						<div class="col-xl-5">
-							<!-- New Customers -->
-							<div class="card ec-cust-card card-table-border-none card-default">
-								<div class="card-header justify-content-between ">
-									<h2>New Customers</h2>
-									<div>
-										<button class="text-black-50 mr-2 font-size-20">
-											<i class="mdi mdi-cached"></i>
-										</button>
-										<div class="dropdown show d-inline-block widget-dropdown">
-											<a class="dropdown-toggle icon-burger-mini" href="#" role="button"
-												id="dropdown-customar" data-bs-toggle="dropdown" aria-haspopup="true"
-												aria-expanded="false" data-display="static">
-											</a>
-											<ul class="dropdown-menu dropdown-menu-right">
-												<li class="dropdown-item"><a href="#">Action</a></li>
-												<li class="dropdown-item"><a href="#">Another action</a></li>
-												<li class="dropdown-item"><a href="#">Something else here</a></li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div class="card-body pt-0 pb-15px">
-									<table class="table ">
-										<tbody>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="media-image mr-3 rounded-circle">
-															<a href="profile.html"><img
-																	class="profile-img rounded-circle w-45"
-																	src="assets/img/user/u1.jpg"
-																	alt="customer image"></a>
-														</div>
-														<div class="media-body align-self-center">
-															<a href="profile.html">
-																<h6 class="mt-0 text-dark font-weight-medium">Selena
-																	Wagner</h6>
-															</a>
-															<small>@selena.oi</small>
-														</div>
-													</div>
-												</td>
-												<td>2 Orders</td>
-												<td class="text-dark d-none d-md-block">$150</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="media-image mr-3 rounded-circle">
-															<a href="profile.html"><img
-																	class="profile-img rounded-circle w-45"
-																	src="assets/img/user/u2.jpg"
-																	alt="customer image"></a>
-														</div>
-														<div class="media-body align-self-center">
-															<a href="profile.html">
-																<h6 class="mt-0 text-dark font-weight-medium">Walter
-																	Reuter</h6>
-															</a>
-															<small>@walter.me</small>
-														</div>
-													</div>
-												</td>
-												<td>5 Orders</td>
-												<td class="text-dark d-none d-md-block">$200</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="media-image mr-3 rounded-circle">
-															<a href="profile.html"><img
-																	class="profile-img rounded-circle w-45"
-																	src="assets/img/user/u3.jpg"
-																	alt="customer image"></a>
-														</div>
-														<div class="media-body align-self-center">
-															<a href="profile.html">
-																<h6 class="mt-0 text-dark font-weight-medium">Larissa
-																	Gebhardt</h6>
-															</a>
-															<small>@larissa.gb</small>
-														</div>
-													</div>
-												</td>
-												<td>1 Order</td>
-												<td class="text-dark d-none d-md-block">$50</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="media-image mr-3 rounded-circle">
-															<a href="profile.html"><img
-																	class="profile-img rounded-circle w-45"
-																	src="assets/img/user/u4.jpg"
-																	alt="customer image"></a>
-														</div>
-														<div class="media-body align-self-center">
-															<a href="profile.html">
-																<h6 class="mt-0 text-dark font-weight-medium">Albrecht
-																	Straub</h6>
-															</a>
-															<small>@albrech.as</small>
-														</div>
-													</div>
-												</td>
-												<td>2 Orders</td>
-												<td class="text-dark d-none d-md-block">$100</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="media-image mr-3 rounded-circle">
-															<a href="profile.html"><img
-																	class="profile-img rounded-circle w-45"
-																	src="assets/img/user/u5.jpg"
-																	alt="customer image"></a>
-														</div>
-														<div class="media-body align-self-center">
-															<a href="profile.html">
-																<h6 class="mt-0 text-dark font-weight-medium">Leopold
-																	Ebert</h6>
-															</a>
-															<small>@leopold.et</small>
-														</div>
-													</div>
-												</td>
-												<td>1 Order</td>
-												<td class="text-dark d-none d-md-block">$60</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="media-image mr-3 rounded-circle">
-															<a href="profile.html"><img
-																	class="profile-img rounded-circle w-45"
-																	src="assets/img/user/u3.jpg"
-																	alt="customer image"></a>
-														</div>
-														<div class="media-body align-self-center">
-															<a href="profile.html">
-																<h6 class="mt-0 text-dark font-weight-medium">Larissa
-																	Gebhardt</h6>
-															</a>
-															<small>@larissa.gb</small>
-														</div>
-													</div>
-												</td>
-												<td>1 Order</td>
-												<td class="text-dark d-none d-md-block">$50</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-
+{{-- 						
 						<div class="col-xl-7">
 							<!-- Top Products -->
 							<div class="card card-default ec-card-top-prod">
@@ -710,7 +498,7 @@
 									</div>
 								</div>
 							</div>
-						</div>
+						</div> --}}
 					</div>
 				</div> <!-- End Content -->
 			</div> <!-- End Content Wrapper -->

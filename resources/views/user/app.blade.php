@@ -49,90 +49,44 @@
 						<!-- Dashboard -->
     <!-- Dashboard -->
     <li class="active">
-        <a class="sidenav-item-link" href="">
+        <a class="sidenav-item-link" href="{{ route('dashboard') }}">
             <i class="mdi mdi-view-dashboard-outline"></i>
             <span class="nav-text">Dashboard</span>
         </a>
         <hr>
     </li>
 
-    <!-- My Profile -->
+   
+    <!-- Delivery Status -->
     <li>
-        <a class="sidenav-item-link" href="">
-            <i class="mdi mdi-account-circle-outline"></i>
-            <span class="nav-text">My Profile</span>
+        <a class="sidenav-item-link" href="{{ route('user.packages') }}">
+        <i class="mdi mdi-basket-outline"></i>
+            <span class="nav-text">Food Markets</span>
         </a>
     </li>
-
-    
-    <!-- Apply for Foodstuff Plan -->
-    <li>
-        <a class="sidenav-item-link" href="">
-        <i class="fas fa-file-signature"></i>
-            <span class="nav-text">Apply for Plan</span>
-        </a>
-    </li>
-
-    <!-- Foodstuff Packages (Dropdown) -->
-    <li class="has-sub">
-        <a class="sidenav-item-link" href="javascript:void(0)">
-            <i class="mdi mdi-basket-outline"></i>
-            <span class="nav-text">Foodstuff Packages</span> <b class="caret"></b>
-        </a>
-        <div class="collapse">
-            <ul class="sub-menu" id="foodstuff" data-parent="#sidebar-menu">
-                <li>
-                    <a class="sidenav-item-link" href="{{ route('user.packages') }}">
-                        <span class="nav-text">Browse Packages</span>
-                    </a>
-                </li>
-                <li>
-                    <a class="sidenav-item-link" href="">
-                        <span class="nav-text">My Packages</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </li>
-
-    <!-- Repayment (Dropdown) -->
-    <li class="has-sub">
-        <a class="sidenav-item-link" href="javascript:void(0)">
-            <i class="mdi mdi-cash-multiple"></i>
-            <span class="nav-text">Repayment</span> <b class="caret"></b>
-        </a>
-        <div class="collapse">
-            <ul class="sub-menu" id="repayment" data-parent="#sidebar-menu">
-                <li>
-                    <a class="sidenav-item-link" href="">
-                        <span class="nav-text">Repayment Schedule</span>
-                    </a>
-                </li>
-                <li>
-                    <a class="sidenav-item-link" href="">
-                        <span class="nav-text">Payment History</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </li>
-
     <!-- Delivery Status -->
     <li>
         <a class="sidenav-item-link" href="">
         <i class="fas fa-truck"></i>
-            <span class="nav-text">Delivery Status</span>
+            <span class="nav-text">My Orders</span>
         </a>
     </li>
 
     <!-- Notifications -->
+    
+   
+   
+   
+    <!-- Delivery Status -->
     <li>
         <a class="sidenav-item-link" href="">
-            <i class="mdi mdi-bell-outline"></i>
-            <span class="nav-text">Notifications</span>
+<i class="fas fa-credit-card"></i> <!-- For credit/debit card -->
+            <span class="nav-text">Payment History</span>
         </a>
     </li>
 
+    <!-- Notifications -->
+   
     <!-- Support -->
     <li>
         <a class="sidenav-item-link" href="">
@@ -170,7 +124,7 @@
 					<button id="sidebar-toggler" class="sidebar-toggle"></button>
 					<!-- search form -->
 					<div class="search-form d-lg-inline-block">
-						<div class="input-group">
+						{{-- <div class="input-group">
 							<input type="text" name="query" id="search-input" class="form-control"
 								placeholder="search.." autofocus autocomplete="off" />
 							<button type="button" name="search" id="search-btn" class="btn btn-flat">
@@ -179,7 +133,7 @@
 						</div>
 						<div id="search-results-container">
 							<ul id="search-results"></ul>
-						</div>
+						</div> --}}
 					</div>
 
 					<!-- navbar right -->
@@ -199,7 +153,7 @@
 											John Deo <small class="pt-1">john.example@gmail.com</small>
 										</div>
 									</li>
-									<li>
+									{{-- <li>
 										<a href="user-profile.html">
 											<i class="mdi mdi-account"></i> My Profile
 										</a>
@@ -214,7 +168,7 @@
 									</li>
 									<li class="right-sidebar-in">
 										<a href="javascript:0"> <i class="mdi mdi-settings-outline"></i> Setting </a>
-									</li>
+									</li> --}}
 									<li class="dropdown-footer">
 										<a href="index.html"> <i class="mdi mdi-logout"></i> Log Out </a>
 									</li>
@@ -784,9 +738,9 @@
 									</li>
 								</ul>
 							</li>
-							<li class="right-sidebar-in right-sidebar-2-menu">
+							{{-- <li class="right-sidebar-in right-sidebar-2-menu">
 								<i class="mdi mdi-settings-outline mdi-spin"></i>
-							</li>
+							</li> --}}
 						</ul>
 					</div>
 				</nav>
