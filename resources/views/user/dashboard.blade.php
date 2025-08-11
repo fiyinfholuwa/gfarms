@@ -163,7 +163,7 @@
                             <i class="fas fa-copy"></i> Copy
                         </button>
                         <h2 class="mb-1 account-number" id="accountNumber">2300221232</h2>
-                        <p>GTB Account</p>
+                        <p>Wema Bank</p>
                     </div>
                 </div>
             </div>

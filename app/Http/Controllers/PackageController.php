@@ -244,7 +244,7 @@ public function complete(Request $request)
                 'updated_at' => now()
             ]);
             User::findOrFail($payment->user_id)->update(['has_paid_onboarding' => 'yes']);
-            return GeneralController::sendNotification('', 'success', 'Onboarding Payment!', 'Payment successful!');
+            return GeneralController::sendNotification('dashboard', 'success', 'Onboarding Payment!', 'Payment successful!');
         } else {
             DB::table('payments')->where('reference', $reference)->update([
                 'status'     => 'failed',
