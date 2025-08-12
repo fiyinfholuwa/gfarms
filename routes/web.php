@@ -110,6 +110,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Apply for Foodstuff Plan
     Route::get('/admin/product/add', [AdminController::class, 'product_view'])->name('admin.product.add');
+    Route::get('/admin/dashboard', [AdminController::class, 'admin_dashboard'])->name('admin.dashboard');
 
     
     // Foodstuff Packages
