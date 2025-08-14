@@ -531,17 +531,17 @@ $kycLevels = kyc_levels();
             <div class="modal-body d-flex flex-column justify-content-center align-items-center text-center px-5 py-4" 
                  style="background:#fffaf5;">
                 
-                <!-- Payment Info -->
-                <p class="fw-bold mb-3" style="color:#ff5500; font-size:1.3rem;">
-                    Pay N500 & N,1000 for both activation fee and KYC  to get your account fully activated
-                </p>
+               <!-- Payment Info -->
+<p class="fw-bold mb-3" style="color:#ff5500; font-size:1.3rem;">
+    Pay only ₦500 for account activation.  
+    <br>Complete your KYC later to fully unlock all features.
+</p>
 
-                <!-- Features -->
-                <ul class="list-unstyled mb-4 text-start" style="max-width:400px; font-size:1rem; color:#444;">
-                    <li class="mb-2">✅ Full access to all platform features</li>
-                    <li class="mb-2">✅ Eligibility for KYC verification</li>
-                    <li class="mb-2">✅ Priority support & exclusive benefits</li>
-                </ul>
+<!-- Features -->
+<ul class="list-unstyled mb-4 text-start" style="max-width:400px; font-size:1rem; color:#444;">
+    <li class="mb-2">✅ Full access to all basic platform features after activation</li>
+    <li class="mb-2">✅ Option to complete KYC for advanced benefits</li>
+</ul>
 
                 <!-- ✅ Two Payment Options -->
                 <!-- ✅ Two Payment Options (Always Side by Side) -->

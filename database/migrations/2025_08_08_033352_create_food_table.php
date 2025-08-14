@@ -11,17 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('foods', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('category');
-            $table->string('amount');
-            $table->string('slug')->unique();
-            $table->string('image')->nullable();
-            $table->text('short_description')->nullable();
-            $table->longText('full_description')->nullable();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('foods')) {
+            Schema::create('foods', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->string('category');
+                $table->string('amount');
+                $table->string('slug');
+                $table->string('image')->nullable();
+                $table->text('short_description')->nullable();
+                $table->longText('full_description')->nullable();
+                $table->timestamps();
+            });
+        }
+
     }
 
     /**

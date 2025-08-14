@@ -1,12 +1,16 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PackageController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserDashboardController;
+use Illuminate\Support\Facades\Route;
+
+
 
 
 
@@ -133,6 +137,19 @@ Route::middleware(['auth'])->group(function () {
     // Logout
     Route::get('/logout', [UserDashboardController::class, 'logout'])->name('logout');
     
+    Route::get('/orders', [OrderController::class, 'index'])->name('user.orders');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('user.orders.show');
+    Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('user.orders.cancel');
+
+    Route::get('/cart', [CartController::class, 'index']);
+    Route::post('/cart', [CartController::class, 'store']);
+    Route::delete('/cart', [CartController::class, 'destroy']);
+    
+    // Order API routes
+    Route::post('/orders/checkout', [OrderController::class, 'checkout']);
+    
+    // Assuming you have a food market route
+    Route::get('/food-market', 'YourFoodMarketController@index')->name('food-market');
 });
 
 require __DIR__.'/auth.php';

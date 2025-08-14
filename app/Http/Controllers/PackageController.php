@@ -37,12 +37,14 @@ public function launch(Request $request)
     $package = $request->get('package', 'basic');
 
     $widgetId = env(match ($package) {
-        'medium'    => 'DOJAH_WIDGET_MEDIIUM',
-        'market_woman'   => 'DOJAH_WIDGET_BUSINESS',
-        'high' => 'DOJAH_WIDGET_HIGH',
-        default      => 'DOJAH_WIDGET_BASIC',
+        'medium'       => 'DOJAH_WIDGET_MEDIIUM',
+        'market_woman' => 'DOJAH_WIDGET_BUSINESS',
+        'high'         => 'DOJAH_WIDGET_HIGH',
+        default        => 'DOJAH_WIDGET_BASIC',
     });
-    $user = auth()->user();
+
+    $user = Auth::user();
+    
     $reference = $user->id.'_'.\Illuminate\Support\Str::uuid();
 
     $user->update([
@@ -57,10 +59,8 @@ public function launch(Request $request)
         'publicKey' => env('DOJAH_PUBLIC_KEY'),
         'user'      => $user
     ]);
-
-
-    return redirect()->away($url);
 }
+
 
 
 
@@ -115,7 +115,7 @@ public function complete(Request $request)
             'content-type' => 'application/json'
         ])->post($this->get_base_url() . '/checkout/payments', [
             "currency"       => "NGN",
-            "amount"         => 1500,
+            "amount"         => 500,
             "customer"       => [
                 "name"  => $user->first_name . " ". $user->last_name,
                 "email" => $user->email
@@ -139,7 +139,7 @@ public function complete(Request $request)
     $response = Http::withToken(env('PAYSTACK_SECRET_KEY'))
         ->post('https://api.paystack.co/transaction/initialize', [
             "email"        => $user->email,
-            "amount"       => 1500 * 100,
+            "amount"       => 500 * 100,
             "reference"    => $reference,
             "callback_url" => $redirectUrl,
         ])->json();

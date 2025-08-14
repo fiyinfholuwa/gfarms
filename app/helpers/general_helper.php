@@ -85,7 +85,7 @@ if (!function_exists('kyc_levels')) {
                 'endpoint' => route('kyc.process', ['level' => 'high']),
             ],
             'market_woman' => [
-                'title' => 'Market Woman Account',
+                'title' => 'Market Women/ Men Account',
                 'description' => '
                     <p>Special verification for traders, food vendors, and small market business owners. Requires simplified documents.</p>
                     <p><strong>Credit Limit:</strong> Flexible (determined by admin based on business size & turnover)</p>
