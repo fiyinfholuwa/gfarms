@@ -650,7 +650,7 @@
             <div class="empty-icon">🍽️</div>
             <h3>No orders yet</h3>
             <p>When you place your first order, it will appear here.</p>
-            <a href="{{ route('user.food-market') }}" class="back-btn" style="margin-top: 1.5rem;">
+            <a href="{{ route('user.packages') }}" class="back-btn" style="margin-top: 1.5rem;">
                 <i class="fas fa-shopping-cart"></i>
                 Start Shopping
             </a>
