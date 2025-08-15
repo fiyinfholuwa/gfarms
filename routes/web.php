@@ -75,7 +75,8 @@ Route::middleware(['auth', 'onboard_kyc'])->group(function () {
 
     // Logout
     Route::get('/logout', [UserDashboardController::class, 'logout'])->name('logout');
-    
+    Route::get('/user/payment', [PackageController::class, 'payment_user'])->name('user.payment');
+
 });
 
 
@@ -102,6 +103,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/foods/edit/{id}', [AdminController::class, 'product_edit'])->name('foods.edit');
     Route::delete('/foods/delete/{id}', [AdminController::class, 'product_delete'])->name('foods.destroy');
     Route::get('/foods/all', [AdminController::class, 'product_all'])->name('foods.all');
+
 });
 
 

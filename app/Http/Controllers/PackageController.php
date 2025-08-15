@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -271,6 +272,61 @@ public function complete(Request $request)
 
     return response()->json(['success' => true]);
 }
+
+
+
+public function payment_user(Request $request)
+    {
+        $user = Auth::user();
+        
+        // Base query for user's payments
+        $query = Payment::where('user_id', $user->id);
+        
+        // Apply filters
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        
+        if ($request->filled('gateway')) {
+            $query->where('gateway', $request->gateway);
+        }
+        
+        if ($request->filled('package')) {
+            $query->where('package', $request->package);
+        }
+        
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+        
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+        
+        if ($request->filled('amount_min')) {
+            $query->where('amount', '>=', $request->amount_min);
+        }
+        
+        if ($request->filled('amount_max')) {
+            $query->where('amount', '<=', $request->amount_max);
+        }
+        
+        // Get payments with pagination
+        $payments = $query->orderBy('created_at', 'desc')->paginate(15);
+        
+        // Calculate statistics
+        $allUserPayments = Payment::where('user_id', $user->id);
+        $totalAmount = $allUserPayments->where('status', 'success')->sum('amount');
+        $totalPayments = $allUserPayments->count();
+        $successfulPayments = $allUserPayments->where('status', 'success')->count();
+        
+        return view('user.payment', compact(
+            'payments', 
+            'totalAmount', 
+            'totalPayments', 
+            'successfulPayments'
+        ));
+    }
 
 }
 

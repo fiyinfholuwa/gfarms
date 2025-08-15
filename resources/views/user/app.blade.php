@@ -18,11 +18,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 	<!-- PLUGINS CSS STYLE -->
-	<link href="assets/plugins/daterangepicker/daterangepicker.css" rel="stylesheet">
-	<link href="assets/plugins/simplebar/simplebar.css" rel="stylesheet" />
+	<link href="{{ asset('assets/plugins/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
+	<link href="{{ asset('assets/plugins/simplebar/simplebar.css') }}" rel="stylesheet" />
 
 	<!-- Ekka CSS -->
-	<link id="ekka-css" href="assets/css/ekka.css" rel="stylesheet" />
+	<link id="ekka-css" href="{{ asset('assets/css/ekka.css') }}" rel="stylesheet" />
 
 	<!-- FAVICON -->
 	<link href="assets/img/favicon.png" rel="shortcut icon" />
@@ -66,7 +66,7 @@
     </li>
     <!-- Delivery Status -->
     <li>
-        <a class="sidenav-item-link" href="">
+        <a class="sidenav-item-link" href="{{ route('user.orders') }}">
         <i class="fas fa-truck"></i>
             <span class="nav-text">My Orders</span>
         </a>
@@ -79,7 +79,7 @@
    
     <!-- Delivery Status -->
     <li>
-        <a class="sidenav-item-link" href="">
+        <a class="sidenav-item-link" href="{{ route('user.payment') }}">
 <i class="fas fa-credit-card"></i> <!-- For credit/debit card -->
             <span class="nav-text">Payment History</span>
         </a>
@@ -766,30 +766,31 @@
         
 
 	<!-- Common Javascript -->
-	<script src="assets/plugins/jquery/jquery-3.5.1.min.js"></script>
-	<script src="assets/js/bootstrap.bundle.min.js"></script>
-	<script src="assets/plugins/simplebar/simplebar.min.js"></script>
-	<script src="assets/plugins/jquery-zoom/jquery.zoom.min.js"></script>
-	<script src="assets/plugins/slick/slick.min.js"></script>
+	<script src="{{ asset('assets/plugins/jquery/jquery-3.5.1.min.js') }}"></script>
+<script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/simplebar/simplebar.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/jquery-zoom/jquery.zoom.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/slick/slick.min.js') }}"></script>
 
-	<!-- Chart -->
-	<script src="assets/plugins/charts/Chart.min.js"></script>
-	<script src="assets/js/chart.js"></script>
+<!-- Chart -->
+<script src="{{ asset('assets/plugins/charts/Chart.min.js') }}"></script>
+<script src="{{ asset('assets/js/chart.js') }}"></script>
 
-	<!-- Google map chart -->
-	<script src="assets/plugins/charts/google-map-loader.js"></script>
-	<script src="assets/plugins/charts/google-map.js"></script>
+<!-- Google map chart -->
+<script src="{{ asset('assets/plugins/charts/google-map-loader.js') }}"></script>
+<script src="{{ asset('assets/plugins/charts/google-map.js') }}"></script>
 
-	<!-- Date Range Picker -->
-	<script src="assets/plugins/daterangepicker/moment.min.js"></script>
-    <script src="assets/plugins/daterangepicker/daterangepicker.js"></script>
-	<script src="assets/js/date-range.js"></script>
+<!-- Date Range Picker -->
+<script src="{{ asset('assets/plugins/daterangepicker/moment.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/daterangepicker/daterangepicker.js') }}"></script>
+<script src="{{ asset('assets/js/date-range.js') }}"></script>
 
-	<!-- Option Switcher -->
-	<script src="assets/plugins/options-sidebar/optionswitcher.js"></script>
+<!-- Option Switcher -->
+<script src="{{ asset('assets/plugins/options-sidebar/optionswitcher.js') }}"></script>
 
-	<!-- Ekka Custom -->
-	<script src="assets/js/ekka.js"></script>
+<!-- Ekka Custom -->
+<script src="{{ asset('assets/js/ekka.js') }}"></script>
+
 </body>
 
 @if(session('notification'))

@@ -246,176 +246,130 @@
 					
 					
 					<div class="row">
-						<div class="col-12 p-b-15">
-							<!-- Recent Order Table -->
-							<div class="card card-table-border-none card-default recent-orders" id="recent-orders">
-								<div class="card-header justify-content-between">
-									<h2>Recent Orders</h2>
-									<div class="date-range-report">
-										<span></span>
-									</div>
-								</div>
-								<div class="card-body pt-0 pb-5">
-									<table class="table card-table table-responsive table-responsive-large"
-										style="width:100%">
-										<thead>
-											<tr>
-												<th>Order ID</th>
-												<th>Product Name</th>
-												<th class="d-none d-lg-table-cell">Units</th>
-												<th class="d-none d-lg-table-cell">Order Date</th>
-												<th class="d-none d-lg-table-cell">Order Cost</th>
-												<th>Status</th>
-												<th></th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>24541</td>
-												<td>
-													<a class="text-dark" href=""> Coach Swagger</a>
-												</td>
-												<td class="d-none d-lg-table-cell">1 Unit</td>
-												<td class="d-none d-lg-table-cell">Oct 20, 2018</td>
-												<td class="d-none d-lg-table-cell">$230</td>
-												<td>
-													<span class="badge badge-success">Completed</span>
-												</td>
-												<td class="text-right">
-													<div class="dropdown show d-inline-block widget-dropdown">
-														<a class="dropdown-toggle icon-burger-mini" href=""
-															role="button" id="dropdown-recent-order1"
-															data-bs-toggle="dropdown" aria-haspopup="true"
-															aria-expanded="false" data-display="static"></a>
-														<ul class="dropdown-menu dropdown-menu-right">
-															<li class="dropdown-item">
-																<a href="#">View</a>
-															</li>
-															<li class="dropdown-item">
-																<a href="#">Remove</a>
-															</li>
-														</ul>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td>24541</td>
-												<td>
-													<a class="text-dark" href=""> Toddler Shoes, Gucci Watch</a>
-												</td>
-												<td class="d-none d-lg-table-cell">2 Units</td>
-												<td class="d-none d-lg-table-cell">Nov 15, 2018</td>
-												<td class="d-none d-lg-table-cell">$550</td>
-												<td>
-													<span class="badge badge-primary">Delayed</span>
-												</td>
-												<td class="text-right">
-													<div class="dropdown show d-inline-block widget-dropdown">
-														<a class="dropdown-toggle icon-burger-mini" href="#"
-															role="button" id="dropdown-recent-order2"
-															data-bs-toggle="dropdown" aria-haspopup="true"
-															aria-expanded="false" data-display="static"></a>
-														<ul class="dropdown-menu dropdown-menu-right">
-															<li class="dropdown-item">
-																<a href="#">View</a>
-															</li>
-															<li class="dropdown-item">
-																<a href="#">Remove</a>
-															</li>
-														</ul>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td>24541</td>
-												<td>
-													<a class="text-dark" href=""> Hat Black Suits</a>
-												</td>
-												<td class="d-none d-lg-table-cell">1 Unit</td>
-												<td class="d-none d-lg-table-cell">Nov 18, 2018</td>
-												<td class="d-none d-lg-table-cell">$325</td>
-												<td>
-													<span class="badge badge-warning">On Hold</span>
-												</td>
-												<td class="text-right">
-													<div class="dropdown show d-inline-block widget-dropdown">
-														<a class="dropdown-toggle icon-burger-mini" href="#"
-															role="button" id="dropdown-recent-order3"
-															data-bs-toggle="dropdown" aria-haspopup="true"
-															aria-expanded="false" data-display="static"></a>
-														<ul class="dropdown-menu dropdown-menu-right">
-															<li class="dropdown-item">
-																<a href="#">View</a>
-															</li>
-															<li class="dropdown-item">
-																<a href="#">Remove</a>
-															</li>
-														</ul>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td>24541</td>
-												<td>
-													<a class="text-dark" href=""> Backpack Gents, Swimming Cap Slin</a>
-												</td>
-												<td class="d-none d-lg-table-cell">5 Units</td>
-												<td class="d-none d-lg-table-cell">Dec 13, 2018</td>
-												<td class="d-none d-lg-table-cell">$200</td>
-												<td>
-													<span class="badge badge-success">Completed</span>
-												</td>
-												<td class="text-right">
-													<div class="dropdown show d-inline-block widget-dropdown">
-														<a class="dropdown-toggle icon-burger-mini" href="#"
-															role="button" id="dropdown-recent-order4"
-															data-bs-toggle="dropdown" aria-haspopup="true"
-															aria-expanded="false" data-display="static"></a>
-														<ul class="dropdown-menu dropdown-menu-right">
-															<li class="dropdown-item">
-																<a href="#">View</a>
-															</li>
-															<li class="dropdown-item">
-																<a href="#">Remove</a>
-															</li>
-														</ul>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td>24541</td>
-												<td>
-													<a class="text-dark" href=""> Speed 500 Ignite</a>
-												</td>
-												<td class="d-none d-lg-table-cell">1 Unit</td>
-												<td class="d-none d-lg-table-cell">Dec 23, 2018</td>
-												<td class="d-none d-lg-table-cell">$150</td>
-												<td>
-													<span class="badge badge-danger">Cancelled</span>
-												</td>
-												<td class="text-right">
-													<div class="dropdown show d-inline-block widget-dropdown">
-														<a class="dropdown-toggle icon-burger-mini" href="#"
-															role="button" id="dropdown-recent-order5"
-															data-bs-toggle="dropdown" aria-haspopup="true"
-															aria-expanded="false" data-display="static"></a>
-														<ul class="dropdown-menu dropdown-menu-right">
-															<li class="dropdown-item">
-																<a href="#">View</a>
-															</li>
-															<li class="dropdown-item">
-																<a href="#">Remove</a>
-															</li>
-														</ul>
-													</div>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-					</div>
+    <div class="col-12 p-b-15">
+        <!-- Recent Order Table -->
+        <div class="card card-table-border-none card-default recent-orders" id="recent-orders">
+            <div class="card-header justify-content-between">
+                <h2>Recent Food Orders</h2>
+                <div class="date-range-report">
+                    <span></span>
+                </div>
+            </div>
+            <div class="card-body pt-0 pb-5">
+                <table class="table card-table table-responsive table-responsive-large" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Food Item</th>
+                            <th class="d-none d-lg-table-cell">Quantity</th>
+                            <th class="d-none d-lg-table-cell">Order Date</th>
+                            <th class="d-none d-lg-table-cell">Order Cost</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>F1001</td>
+                            <td><a class="text-dark" href="">Jollof Rice & Grilled Chicken</a></td>
+                            <td class="d-none d-lg-table-cell">2 Plates</td>
+                            <td class="d-none d-lg-table-cell">Aug 10, 2025</td>
+                            <td class="d-none d-lg-table-cell">₦3,500</td>
+                            <td><span class="badge badge-success">Completed</span></td>
+                            <td class="text-right">
+                                <div class="dropdown show d-inline-block widget-dropdown">
+                                    <a class="dropdown-toggle icon-burger-mini" href="" role="button"
+                                       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                       data-display="static"></a>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li class="dropdown-item"><a href="#">View</a></li>
+                                        <li class="dropdown-item"><a href="#">Remove</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>F1002</td>
+                            <td><a class="text-dark" href="">Pepper Soup & Boiled Yam</a></td>
+                            <td class="d-none d-lg-table-cell">1 Bowl</td>
+                            <td class="d-none d-lg-table-cell">Aug 11, 2025</td>
+                            <td class="d-none d-lg-table-cell">₦2,200</td>
+                            <td><span class="badge badge-primary">Delayed</span></td>
+                            <td class="text-right">
+                                <div class="dropdown show d-inline-block widget-dropdown">
+                                    <a class="dropdown-toggle icon-burger-mini" href="#" role="button"
+                                       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                       data-display="static"></a>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li class="dropdown-item"><a href="#">View</a></li>
+                                        <li class="dropdown-item"><a href="#">Remove</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>F1003</td>
+                            <td><a class="text-dark" href="">Efo Riro with Pounded Yam</a></td>
+                            <td class="d-none d-lg-table-cell">3 Servings</td>
+                            <td class="d-none d-lg-table-cell">Aug 12, 2025</td>
+                            <td class="d-none d-lg-table-cell">₦4,500</td>
+                            <td><span class="badge badge-warning">On Hold</span></td>
+                            <td class="text-right">
+                                <div class="dropdown show d-inline-block widget-dropdown">
+                                    <a class="dropdown-toggle icon-burger-mini" href="#" role="button"
+                                       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                       data-display="static"></a>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li class="dropdown-item"><a href="#">View</a></li>
+                                        <li class="dropdown-item"><a href="#">Remove</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>F1004</td>
+                            <td><a class="text-dark" href="">Shawarma (Beef) & Coke</a></td>
+                            <td class="d-none d-lg-table-cell">4 Packs</td>
+                            <td class="d-none d-lg-table-cell">Aug 13, 2025</td>
+                            <td class="d-none d-lg-table-cell">₦6,000</td>
+                            <td><span class="badge badge-success">Completed</span></td>
+                            <td class="text-right">
+                                <div class="dropdown show d-inline-block widget-dropdown">
+                                    <a class="dropdown-toggle icon-burger-mini" href="#" role="button"
+                                       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                       data-display="static"></a>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li class="dropdown-item"><a href="#">View</a></li>
+                                        <li class="dropdown-item"><a href="#">Remove</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>F1005</td>
+                            <td><a class="text-dark" href="">Fried Rice & Turkey</a></td>
+                            <td class="d-none d-lg-table-cell">2 Plates</td>
+                            <td class="d-none d-lg-table-cell">Aug 14, 2025</td>
+                            <td class="d-none d-lg-table-cell">₦3,800</td>
+                            <td><span class="badge badge-danger">Cancelled</span></td>
+                            <td class="text-right">
+                                <div class="dropdown show d-inline-block widget-dropdown">
+                                    <a class="dropdown-toggle icon-burger-mini" href="#" role="button"
+                                       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                       data-display="static"></a>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li class="dropdown-item"><a href="#">View</a></li>
+                                        <li class="dropdown-item"><a href="#">Remove</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
 					<div class="row">
 {{-- 						
