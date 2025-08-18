@@ -35,7 +35,7 @@
                                         <div class="avatar-preview ec-preview">
                                             <div class="imagePreview ec-div-preview">
                                                 <img id="previewImage" 
-                                                     src="{{ $food->image ? asset('uploads/foods/'.$food->image) : asset('assets/img/products/vender-upload-preview.jpg') }}" 
+                                                     src="{{ $food->image ? asset($food->image) : asset('assets/img/products/vender-upload-preview.jpg') }}" 
                                                      alt="preview" style="width: 100%; height: auto;" />
                                             </div>
                                         </div>
@@ -56,7 +56,7 @@
                                         <select name="category" class="form-select">
                                             <option value="">-- Select Category --</option>
                                             @foreach($categories as $cat)
-                                                <option value="{{ $cat }}" {{ old('category', $food->category) == $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                                                <option value="{{ $cat->id }}" {{ old('category', $food->category) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

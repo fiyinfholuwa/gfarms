@@ -15,6 +15,8 @@
         --success-dark: #059669;
         --danger-color: #ef4444;
         --danger-dark: #dc2626;
+        --warning-color: #f59e0b;
+        --warning-dark: #d97706;
         --text-primary: #1f2937;
         --text-secondary: #6b7280;
         --bg-primary: #ffffff;
@@ -30,7 +32,6 @@
         --radius-xl: 1rem;
     }
 
-   
     /* Header */
     .header {
         background: var(--bg-primary);
@@ -91,9 +92,37 @@
         height: 1.25rem;
     }
 
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .orders-btn {
+        background: var(--warning-color);
+        color: white;
+        border: none;
+        border-radius: var(--radius-lg);
+        padding: 0.75rem 1.25rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+        text-decoration: none;
+    }
+
+    .orders-btn:hover {
+        background: var(--warning-dark);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-lg);
+    }
+
     .cart-trigger {
         position: relative;
-        background: black;
+        background: var(--primary-color);
         color: white;
         border: none;
         border-radius: var(--radius-lg);
@@ -321,6 +350,34 @@
         margin-bottom: 1rem;
     }
 
+    .checkout-btn {
+        width: 100%;
+        background: var(--success-color);
+        color: white;
+        border: none;
+        border-radius: var(--radius-lg);
+        padding: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .checkout-btn:hover {
+        background: var(--success-dark);
+        transform: translateY(-1px);
+    }
+
+    .checkout-btn:disabled {
+        background: var(--text-secondary);
+        cursor: not-allowed;
+        transform: none;
+    }
+
     /* Main Content */
     .main-content {
         padding: 2rem 0;
@@ -464,6 +521,26 @@
         transform: translateY(0);
     }
 
+    /* Loading State */
+    .loading {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+
+    .spinner {
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid transparent;
+        border-top: 2px solid currentColor;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
     /* Alerts */
     .alert {
         position: fixed;
@@ -503,7 +580,7 @@
             max-width: none;
         }
 
-        .cart-trigger {
+        .header-actions {
             order: 1;
             align-self: flex-end;
         }
@@ -523,12 +600,6 @@
         }
     }
 
-    /* Loading States */
-    .loading {
-        opacity: 0.7;
-        pointer-events: none;
-    }
-
     /* Animations */
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(20px); }
@@ -540,7 +611,7 @@
     }
 </style>
 
-<div class="header">
+{{-- <div class="header">
     <div class="container">
         <div class="header-content">
             <div class="search-container">
@@ -552,13 +623,18 @@
                 <input type="text" id="searchInput" class="search-input" placeholder="Search delicious food...">
             </div>
 
-            <button class="cart-trigger" onclick="toggleCart()">
-                <i class="fas fa-shopping-cart"></i> Cart
-                <span class="cart-badge" id="cart-badge" style="display: none;">0</span>
-            </button>
+            <div class="header-actions">
+                <a href="" class="orders-btn">
+                    <i class="fas fa-receipt"></i> My Orders
+                </a>
+                <button class="cart-trigger" onclick="toggleCart()">
+                    <i class="fas fa-shopping-cart"></i> Cart
+                    <span class="cart-badge" id="cart-badge" style="display: none;">0</span>
+                </button>
+            </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 <div class="cart-overlay" id="cart-overlay"></div>
 <div class="cart-sidebar" id="cart-sidebar">
@@ -576,13 +652,17 @@
         <div id="cart-items"></div>
     </div>
     
-    <div class="cart-footer">
+    <div class="cart-footer" id="cart-footer" style="display: none;">
         <div class="cart-total">
             Total: ₦<span id="cart-total">0</span>
         </div>
         <div class="cart-limit">
             Limit: ₦<span id="remaining-limit">50,000</span> remaining
         </div>
+        <button class="checkout-btn" id="checkout-btn" onclick="checkout()">
+            <i class="fas fa-credit-card"></i>
+            Checkout
+        </button>
     </div>
 </div>
 
@@ -590,6 +670,7 @@
     <div class="main-content">
         <div class="section-header">
             <h1 class="section-title">Food Market</h1>
+            <p class="section-subtitle">Fresh and delicious meals delivered to you</p>
         </div>
 
         <div class="product-grid" id="productGrid">
@@ -622,10 +703,60 @@
     </div>
 </div>
 
+<!-- CSRF Token -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
 <script>
-const cart = [];
+let cart = [];
 let totalAmount = 0;
 const LIMIT = 50000;
+let isLoading = false;
+
+// Get CSRF token
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+// Load cart from server on page load
+async function loadCart() {
+    try {
+        const response = await fetch('/api/cart', {
+            headers: {
+                'Authorization': `Bearer {{ auth()->user()->api_token ?? '' }}`,
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            cart = data.items || [];
+            recalcTotal();
+            renderCart();
+        }
+    } catch (error) {
+        console.error('Failed to load cart:', error);
+    }
+}
+
+// Save cart to server
+async function saveCart() {
+    try {
+        const response = await fetch('/api/cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer {{ auth()->user()->api_token ?? '' }}`,
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ items: cart })
+        });
+        
+        return response.ok;
+    } catch (error) {
+        console.error('Failed to save cart:', error);
+        return false;
+    }
+}
 
 function toggleCart() {
     const overlay = document.getElementById('cart-overlay');
@@ -654,7 +785,7 @@ function changeQty(id, delta) {
     input.value = newQty;
 }
 
-function addToCart(id, name, price) {
+async function addToCart(id, name, price) {
     const qty = parseInt(document.getElementById(`qty-${id}`).value) || 1;
     const itemTotal = qty * price;
 
@@ -679,10 +810,13 @@ function addToCart(id, name, price) {
     document.getElementById(`qty-${id}`).value = 1;
     recalcTotal();
     renderCart();
-    showAlert(` ${name} added to cart!`, 'success');
+    
+    // Save to server
+    await saveCart();
+    showAlert(`✅ ${name} added to cart!`, 'success');
 }
 
-function updateCartQty(id, newQty) {
+async function updateCartQty(id, newQty) {
     const item = cart.find(i => i.id === id);
     if (!item) return;
 
@@ -703,15 +837,21 @@ function updateCartQty(id, newQty) {
     item.total = newTotal;
     recalcTotal();
     renderCart();
+    
+    // Save to server
+    await saveCart();
 }
 
-function removeFromCart(id) {
+async function removeFromCart(id) {
     const index = cart.findIndex(i => i.id === id);
     if (index !== -1) {
         cart.splice(index, 1);
     }
     recalcTotal();
     renderCart();
+    
+    // Save to server
+    await saveCart();
 }
 
 function recalcTotal() {
@@ -724,6 +864,7 @@ function renderCart() {
     const cartBadge = document.getElementById('cart-badge');
     const cartTotal = document.getElementById('cart-total');
     const remainingLimit = document.getElementById('remaining-limit');
+    const cartFooter = document.getElementById('cart-footer');
 
     const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
     cartBadge.style.display = totalItems > 0 ? 'flex' : 'none';
@@ -732,8 +873,10 @@ function renderCart() {
     if (cart.length === 0) {
         cartEmpty.style.display = 'block';
         cartItems.innerHTML = '';
+        cartFooter.style.display = 'none';
     } else {
         cartEmpty.style.display = 'none';
+        cartFooter.style.display = 'block';
         cartItems.innerHTML = cart.map(item => `
             <div class="cart-item">
                 <div class="cart-item-info">
@@ -756,7 +899,67 @@ function renderCart() {
     remainingLimit.textContent = (LIMIT - totalAmount).toLocaleString();
 }
 
-// Search
+async function checkout() {
+    if (cart.length === 0) {
+        showAlert('❌ Your cart is empty!');
+        return;
+    }
+
+    if (isLoading) return;
+    
+    isLoading = true;
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const originalContent = checkoutBtn.innerHTML;
+    
+    checkoutBtn.innerHTML = '<div class="spinner"></div> Processing...';
+    checkoutBtn.disabled = true;
+    
+    try {
+        const response = await fetch('orders/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                items: cart,
+                total_amount: totalAmount
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            showAlert('🎉 Order placed successfully!', 'success');
+            
+            // Clear cart
+            cart = [];
+            recalcTotal();
+            renderCart();
+            
+            // Close cart sidebar
+            toggleCart();
+            
+            // Redirect to orders page after a delay
+            setTimeout(() => {
+                window.location.href = "{{ route('user.orders') }}";
+            }, 2000);
+            
+        } else {
+            showAlert(`❌ ${data.message || 'Checkout failed. Please try again.'}`);
+        }
+    } catch (error) {
+        console.error('Checkout error:', error);
+        showAlert('❌ Network error. Please check your connection and try again.');
+    } finally {
+        isLoading = false;
+        checkoutBtn.innerHTML = originalContent;
+        checkoutBtn.disabled = false;
+    }
+}
+
+// Search functionality
 document.getElementById('searchInput').addEventListener('input', function() {
     const query = this.value.toLowerCase().trim();
     const cards = document.querySelectorAll('#productGrid .product-card');
@@ -772,12 +975,14 @@ document.getElementById('searchInput').addEventListener('input', function() {
     });
 });
 
-// Close cart only when overlay is clicked
+// Close cart when overlay is clicked
 document.getElementById('cart-overlay').addEventListener('click', function() {
     toggleCart();
 });
 
-// Init
-renderCart();
+// Initialize cart on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadCart();
+});
 </script>
 @endsection

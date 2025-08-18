@@ -11,4 +11,9 @@ class Food extends Model
     protected $fillable = [
         'name', 'category', 'slug', 'image', 'short_description', 'full_description', 'amount'
     ];
+
+    public function cat()
+    {
+        return $this->hasOne(Category::class, 'id', 'category');
+    }
 }

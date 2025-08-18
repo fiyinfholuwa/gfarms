@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+
 
 class CartController extends Controller
 {
@@ -15,6 +17,67 @@ class CartController extends Controller
         
         return response()->json([
             'items' => $cart ? $cart->items : []
+        ]);
+    }
+
+
+    public function add_cart(Request $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => '❌ Please login to add items to cart.',
+            ]);
+        }
+    
+        // Find or create cart for this user
+        $cart = Cart::firstOrCreate(
+            ['user_id' => $user->id],
+            ['items' => []]
+        );
+    
+        $items = $cart->items ?? [];
+        $id = $request->id;
+        $name = $request->name;
+        $price = $request->price;
+        $qty = $request->qty ?? 1;
+        $limit = 20000; // Example limit ₦20,000
+    
+        $itemTotal = $price * $qty;
+        $totalAmount = collect($items)->sum('total');
+    
+        // Limit check
+        if ($totalAmount + $itemTotal > $limit) {
+            return response()->json([
+                'success' => false,
+                'message' => "❌ Cannot exceed ₦" . number_format($limit),
+            ]);
+        }
+    
+        // Update or add item
+        if (isset($items[$id])) {
+            $items[$id]['qty'] += $qty;
+            $items[$id]['total'] = $items[$id]['qty'] * $price;
+        } else {
+            $items[$id] = [
+                'id' => $id,
+                'name' => $name,
+                'price' => $price,
+                'qty' => $qty,
+                'total' => $itemTotal,
+            ];
+        }
+    
+        // Save back to DB
+        $cart->items = $items;
+        $cart->save();
+    
+        return response()->json([
+            'success' => true,
+            'message' => "✅ $name added to cart!",
+            'cart' => $items,
+            'count' => collect($items)->sum('qty') // cart count
         ]);
     }
 

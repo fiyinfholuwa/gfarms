@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Str;
+use App\Models\Category;
 use App\Models\Food;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -13,24 +14,15 @@ class AdminController extends Controller
         return view('admin.dashboard');
     }
 
-    private $categories = [
-        'Rice',
-        'Pasta',
-        'Pizza',
-        'Soup',
-        'Salad',
-        'Dessert',
-        'Beverage'
-    ];
 
     public function product_view(){
-        $categories = $this->categories;
+        $categories = Category::all();
 
         return view('admin.product_add', compact('categories'));
     }
     public function product_edit($id){
         $food = Food::where('id', $id)->first();
-        $categories = $this->categories;
+        $categories = Category::all();
 
         return view('admin.product_edit', compact('categories',  'food'));
     }
@@ -72,7 +64,11 @@ class AdminController extends Controller
             'full_description'  => $request->full_description,
         ]);
 
-        return redirect()->back()->with('success', 'Food added successfully!');
+        $notification = array(
+            'message' => 'Food added successfully!',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
     }
 
     public function product_all()
@@ -163,6 +159,61 @@ while (
 
     $food->save();
 
-    return redirect()->route('foods.all')->with('success', 'Food updated successfully!');
+    $notification = array(
+        'message' => 'Food Updated successfully!',
+        'alert-type' => 'success'
+    );
+    return redirect()->route('foods.all')->with($notification);
 }
+
+
+public function category_view(){
+    $categories = Category::all();
+    return view('admin.category', compact('categories'));
+}
+
+public function category_add(Request $request){
+    $request->validate([
+        'name' => 'required',
+    ]);
+    $url_slug = strtolower($request->name);
+    $label_slug= preg_replace('/\s+/', '-', $url_slug);
+
+    $category = new Category;
+    $category->name = $request->name;
+    $category->category_url = $label_slug;
+    $category->save();
+    $notification = array(
+        'message' => 'Category Sucessfully saved',
+        'alert-type' => 'success'
+    );
+
+    return redirect()->back()->with($notification);
+}
+
+public function category_delete($id){
+    Category::findOrFail($id)->delete();
+    $notification = array(
+        'message' => 'Category Successfully Deleted',
+        'alert-type' => 'success'
+    );
+    return redirect()->back()->with($notification);
+}
+
+public function category_update(Request $request, $id){
+    $category_update = Category::findOrFail($id);
+    $url_slug = strtolower($request->name);
+    $label_slug= preg_replace('/\s+/', '-', $url_slug);
+
+    $category_update->name = $request->name;
+    $category_update->category_url = $label_slug;
+    $category_update->save();
+
+    $notification = array(
+        'message' => 'Category Successfully Updated',
+        'alert-type' => 'success'
+    );
+    return redirect()->route('category.view')->with($notification);
+}
+
 }

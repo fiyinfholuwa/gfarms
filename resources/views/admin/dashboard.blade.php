@@ -48,7 +48,7 @@
 						</div>
 					</div>
 
-					<div class="row">
+					{{-- <div class="row">
 						<div class="col-xl-8 col-md-12 p-b-15">
 							<!-- Sales Graph -->
 							<div id="user-acquisition" class="card card-default">
@@ -122,9 +122,9 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> --}}
 
-					<div class="row">
+					{{-- <div class="row">
 						<div class="col-xl-8 col-md-12 p-b-15">
 							<!-- User activity statistics -->
 							<div class="card card-default" id="user-activity">
@@ -163,9 +163,9 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> --}}
 
-					<div class="row">
+					{{-- <div class="row">
 						<div class="col-xl-8 col-12 p-b-15">
 							<!-- World Chart -->
 							<div class="card card-default" id="analytics-country">
@@ -299,7 +299,7 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> --}}
 
 					<div class="row">
 						<div class="col-12 p-b-15">
@@ -473,7 +473,7 @@
 						</div>
 					</div>
 
-					<div class="row">
+					{{-- <div class="row">
 						<div class="col-xl-5">
 							<!-- New Customers -->
 							<div class="card ec-cust-card card-table-border-none card-default">
@@ -711,7 +711,7 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> --}}
 				</div> <!-- End Content -->
 			</div> <!-- End Content Wrapper -->
 

@@ -46,7 +46,7 @@
                                                 @endif
                                             </td>
                                             <td>{{ $food->name }}</td>
-                                            <td>{{ $food->category }}</td>
+                                            <td>{{ optional($food->cat)->name }}</td>
                                             <td>{{ $food->amount }}</td>
                                             <td>{{ $food->created_at->format('Y-m-d') }}</td>
                                             <td>

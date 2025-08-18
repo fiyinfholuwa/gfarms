@@ -609,62 +609,61 @@
     .product-card {
         animation: fadeIn 0.5s ease forwards;
     }
+
+    /* Category badge */
+.category-wrapper {
+    position: relative;
+    display: inline-block; /* keeps image + badge aligned */
+}
+
+.category-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: linear-gradient(135deg, #ff7b00, #ff4500);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    z-index: 10;
+}
+
+/* Product image wrapper with overlay button */
+.product-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.product-image {
+    width: 100%;
+    display: block;
+    border-radius: 10px;
+}
+
+/* Eye button */
+.view-details-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    font-size: 16px;
+    padding: 6px 10px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    opacity: 0;
+}
+
+.product-image-wrapper:hover .view-details-btn {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
 </style>
 
-<div class="header">
-    <div class="container">
-        <div class="header-content">
-            <div class="search-container">
-                <div class="search-icon">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                </div>
-                <input type="text" id="searchInput" class="search-input" placeholder="Search delicious food...">
-            </div>
-
-            <div class="header-actions">
-                <a href="" class="orders-btn">
-                    <i class="fas fa-receipt"></i> My Orders
-                </a>
-                <button class="cart-trigger" onclick="toggleCart()">
-                    <i class="fas fa-shopping-cart"></i> Cart
-                    <span class="cart-badge" id="cart-badge" style="display: none;">0</span>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="cart-overlay" id="cart-overlay"></div>
-<div class="cart-sidebar" id="cart-sidebar">
-    <div class="cart-header">
-        <div class="cart-title">🛒 Your Cart</div>
-        <button class="cart-close" onclick="toggleCart()">×</button>
-    </div>
-    
-    <div class="cart-content">
-        <div class="cart-empty" id="cart-empty">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">🛒</div>
-            <p>Your cart is empty</p>
-            <small>Add some delicious items to get started!</small>
-        </div>
-        <div id="cart-items"></div>
-    </div>
-    
-    <div class="cart-footer" id="cart-footer" style="display: none;">
-        <div class="cart-total">
-            Total: ₦<span id="cart-total">0</span>
-        </div>
-        <div class="cart-limit">
-            Limit: ₦<span id="remaining-limit">50,000</span> remaining
-        </div>
-        <button class="checkout-btn" id="checkout-btn" onclick="checkout()">
-            <i class="fas fa-credit-card"></i>
-            Checkout
-        </button>
-    </div>
-</div>
 
 <div class="container">
     <div class="main-content">
@@ -673,33 +672,89 @@
             <p class="section-subtitle">Fresh and delicious meals delivered to you</p>
         </div>
 
-        <div class="product-grid" id="productGrid">
-            @foreach($foods as $food)
-                <div class="product-card" data-name="{{ strtolower($food->name) }}">
-                    <img src="{{ $food->image ? asset($food->image) : asset('images/placeholder.png') }}" 
-                         alt="{{ $food->name }}" class="product-image">
-                    
-                    <div class="product-info">
-                        <h3 class="product-name">{{ $food->name }}</h3>
-                        <div class="product-price">₦{{ number_format($food->amount, 2) }}</div>
-                        <p class="product-description">{{ $food->short_description }}</p>
-                        
-                        <div class="product-actions">
-                            <div class="product-qty">
-                                <button type="button" onclick="changeQty({{ $food->id }}, -1)">−</button>
-                                <input type="number" min="1" value="1" id="qty-{{ $food->id }}" class="qty-input-product" readonly>
-                                <button type="button" onclick="changeQty({{ $food->id }}, 1)">+</button>
+        <div >
+        
+        </div>
+
+      <div class="product-grid" id="productGrid">
+    @foreach($foods as $food)
+        <div class="product-card" data-name="{{ strtolower($food->name) }}">
+            
+            {{-- Category Badge --}}
+               <span class="category-badge">
+                    {{ optional($food->cat)->name }}
+                </span>
+                
+            <div class="product-image-wrapper">
+                <img src="{{ $food->image ? asset($food->image) : asset('images/placeholder.png') }}" 
+                     alt="{{ $food->name }}" class="product-image">
+                
+                {{-- Eye Icon for Modal --}}
+                <button type="button" 
+                        class="view-details-btn" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#foodModal-{{ $food->id }}">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+            
+            <div class="product-info">
+                <h3 class="product-name">{{ $food->name }}</h3>
+                <div class="product-price">₦{{ number_format($food->amount, 2) }}</div>
+                
+                <div class="product-actions">
+                    <div class="product-qty">
+                        <button type="button" onclick="changeQty({{ $food->id }}, -1)">−</button>
+                        <input type="number" min="1" value="1" id="qty-{{ $food->id }}" class="qty-input-product" readonly>
+                        <button type="button" onclick="changeQty({{ $food->id }}, 1)">+</button>
+                    </div>
+                    <button 
+                        onclick="addToCart({{ $food->id }}, '{{ addslashes($food->name) }}', {{ $food->amount }})"
+                        class="add-to-cart-btn">
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        {{-- Modal for Food Details --}}
+        <div class="modal fade" id="foodModal-{{ $food->id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ $food->name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <img src="{{ $food->image ? asset($food->image) : asset('images/placeholder.png') }}" 
+                                     alt="{{ $food->name }}" class="img-fluid rounded">
                             </div>
-                            <button 
-                                onclick="addToCart({{ $food->id }}, '{{ addslashes($food->name) }}', {{ $food->amount }})"
-                                class="add-to-cart-btn">
-                                Add to Cart
-                            </button>
+                            <div class="col-md-7">
+                                <h4>₦{{ number_format($food->amount, 2) }}</h4>
+                                <p>{{ $food->description ?? $food->short_description }}</p>
+                                
+                                @if($food->cat)
+                                    <span class="category-badge">{{ $food->cat->name }}</span>
+                                @endif
+
+                                <div class="mt-3">
+                                    <button 
+                                        onclick="addToCart({{ $food->id }}, '{{ addslashes($food->name) }}', {{ $food->amount }})"
+                                        class="btn btn-success">
+                                        <i class="fas fa-cart-plus"></i> Add to Cart
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            @endforeach
+            </div>
         </div>
+    @endforeach
+</div>
+
     </div>
 </div>
 
@@ -716,35 +771,14 @@ let isLoading = false;
 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 // Load cart from server on page load
-async function loadCart() {
-    try {
-        const response = await fetch('/api/cart', {
-            headers: {
-                'Authorization': `Bearer {{ auth()->user()->api_token ?? '' }}`,
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            }
-        });
-        
-        if (response.ok) {
-            const data = await response.json();
-            cart = data.items || [];
-            recalcTotal();
-            renderCart();
-        }
-    } catch (error) {
-        console.error('Failed to load cart:', error);
-    }
-}
 
 // Save cart to server
 async function saveCart() {
     try {
-        const response = await fetch('/api/cart', {
+        const response = await fetch('cart', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer {{ auth()->user()->api_token ?? '' }}`,
                 'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json'
             },
@@ -758,12 +792,6 @@ async function saveCart() {
     }
 }
 
-function toggleCart() {
-    const overlay = document.getElementById('cart-overlay');
-    const sidebar = document.getElementById('cart-sidebar');
-    overlay.classList.toggle('active');
-    sidebar.classList.toggle('active');
-}
 
 function showAlert(message, type = 'error') {
     const alert = document.createElement('div');
@@ -778,211 +806,34 @@ function showAlert(message, type = 'error') {
     }, 3000);
 }
 
-function changeQty(id, delta) {
-    const input = document.getElementById(`qty-${id}`);
-    const currentQty = parseInt(input.value);
-    const newQty = Math.max(1, currentQty + delta);
-    input.value = newQty;
-}
-
 async function addToCart(id, name, price) {
     const qty = parseInt(document.getElementById(`qty-${id}`).value) || 1;
-    const itemTotal = qty * price;
 
-    if (totalAmount + itemTotal > LIMIT) {
-        showAlert(`❌ Cannot exceed ₦${LIMIT.toLocaleString()}. Current total: ₦${totalAmount.toLocaleString()}`);
-        return;
-    }
+    const response = await fetch("{{ route('cart.add') }}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
+        body: JSON.stringify({ id, name, price, qty })
+    });
 
-    const existingItem = cart.find(item => item.id === id);
-    if (existingItem) {
-        const newTotal = (existingItem.qty + qty) * price;
-        if (totalAmount - existingItem.total + newTotal > LIMIT) {
-            showAlert(`❌ Adding this quantity will exceed the limit`);
-            return;
-        }
-        existingItem.qty += qty;
-        existingItem.total = newTotal;
+    const result = await response.json();
+
+    if (result.success) {
+        showAlert(result.message, "success");
+        // optionally re-render cart items dynamically
     } else {
-        cart.push({ id, name, qty, price, total: itemTotal });
+        showAlert(result.message, "error");
     }
 
     document.getElementById(`qty-${id}`).value = 1;
-    recalcTotal();
-    renderCart();
-    
-    // Save to server
-    await saveCart();
-    showAlert(`✅ ${name} added to cart!`, 'success');
 }
 
-async function updateCartQty(id, newQty) {
-    const item = cart.find(i => i.id === id);
-    if (!item) return;
 
-    const newTotal = newQty * item.price;
-    const diff = newTotal - item.total;
-    
-    if (totalAmount + diff > LIMIT) {
-        showAlert(`❌ Cannot exceed ₦${LIMIT.toLocaleString()}`);
-        return;
-    }
 
-    if (newQty <= 0) {
-        removeFromCart(id);
-        return;
-    }
 
-    item.qty = newQty;
-    item.total = newTotal;
-    recalcTotal();
-    renderCart();
-    
-    // Save to server
-    await saveCart();
-}
 
-async function removeFromCart(id) {
-    const index = cart.findIndex(i => i.id === id);
-    if (index !== -1) {
-        cart.splice(index, 1);
-    }
-    recalcTotal();
-    renderCart();
-    
-    // Save to server
-    await saveCart();
-}
 
-function recalcTotal() {
-    totalAmount = cart.reduce((sum, item) => sum + item.total, 0);
-}
-
-function renderCart() {
-    const cartItems = document.getElementById('cart-items');
-    const cartEmpty = document.getElementById('cart-empty');
-    const cartBadge = document.getElementById('cart-badge');
-    const cartTotal = document.getElementById('cart-total');
-    const remainingLimit = document.getElementById('remaining-limit');
-    const cartFooter = document.getElementById('cart-footer');
-
-    const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
-    cartBadge.style.display = totalItems > 0 ? 'flex' : 'none';
-    cartBadge.textContent = totalItems;
-
-    if (cart.length === 0) {
-        cartEmpty.style.display = 'block';
-        cartItems.innerHTML = '';
-        cartFooter.style.display = 'none';
-    } else {
-        cartEmpty.style.display = 'none';
-        cartFooter.style.display = 'block';
-        cartItems.innerHTML = cart.map(item => `
-            <div class="cart-item">
-                <div class="cart-item-info">
-                    <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-price">₦${item.price.toLocaleString()} each</div>
-                </div>
-                <div class="cart-item-controls">
-                    <div class="qty-control">
-                        <button class="qty-btn" onclick="updateCartQty(${item.id}, ${item.qty - 1})">−</button>
-                        <input type="number" class="qty-input" value="${item.qty}" onchange="updateCartQty(${item.id}, parseInt(this.value))">
-                        <button class="qty-btn" onclick="updateCartQty(${item.id}, ${item.qty + 1})">+</button>
-                    </div>
-                    <button class="remove-btn" onclick="removeFromCart(${item.id})">×</button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    cartTotal.textContent = totalAmount.toLocaleString();
-    remainingLimit.textContent = (LIMIT - totalAmount).toLocaleString();
-}
-
-async function checkout() {
-    if (cart.length === 0) {
-        showAlert('❌ Your cart is empty!');
-        return;
-    }
-
-    if (isLoading) return;
-    
-    isLoading = true;
-    const checkoutBtn = document.getElementById('checkout-btn');
-    const originalContent = checkoutBtn.innerHTML;
-    
-    checkoutBtn.innerHTML = '<div class="spinner"></div> Processing...';
-    checkoutBtn.disabled = true;
-    
-    try {
-        const response = await fetch('orders/checkout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                items: cart,
-                total_amount: totalAmount
-            })
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-            showAlert('🎉 Order placed successfully!', 'success');
-            
-            // Clear cart
-            cart = [];
-            recalcTotal();
-            renderCart();
-            
-            // Close cart sidebar
-            toggleCart();
-            
-            // Redirect to orders page after a delay
-            setTimeout(() => {
-                window.location.href = "{{ route('user.orders') }}";
-            }, 2000);
-            
-        } else {
-            showAlert(`❌ ${data.message || 'Checkout failed. Please try again.'}`);
-        }
-    } catch (error) {
-        console.error('Checkout error:', error);
-        showAlert('❌ Network error. Please check your connection and try again.');
-    } finally {
-        isLoading = false;
-        checkoutBtn.innerHTML = originalContent;
-        checkoutBtn.disabled = false;
-    }
-}
-
-// Search functionality
-document.getElementById('searchInput').addEventListener('input', function() {
-    const query = this.value.toLowerCase().trim();
-    const cards = document.querySelectorAll('#productGrid .product-card');
-    cards.forEach(card => {
-        const name = card.getAttribute('data-name');
-        const isVisible = name.includes(query);
-        card.style.display = isVisible ? 'flex' : 'none';
-        if (isVisible && query) {
-            card.style.animation = 'none';
-            card.offsetHeight;
-            card.style.animation = 'fadeIn 0.3s ease forwards';
-        }
-    });
-});
-
-// Close cart when overlay is clicked
-document.getElementById('cart-overlay').addEventListener('click', function() {
-    toggleCart();
-});
-
-// Initialize cart on page load
-document.addEventListener('DOMContentLoaded', function() {
-    loadCart();
-});
 </script>
 @endsection

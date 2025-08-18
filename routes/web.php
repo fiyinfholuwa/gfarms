@@ -8,7 +8,11 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserDashboardController;
+use App\Models\Cart;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+
 
 
 
@@ -45,6 +49,15 @@ Route::post('/resend-otp', [AuthController::class, 'resend'])->name('otp.resend'
 // ✅ User Dashboard
 Route::middleware(['auth', 'onboard_kyc'])->group(function () {
 
+    // routes/web.php or routes/api.php
+    Route::get('/cart/count', function () {
+        $userId = Auth::id();
+        $cart = Cart::where('user_id', $userId)->first();
+        $items = $cart->items;
+    
+        $count = count($items);
+            return response()->json(['count' => $count]);
+    });
     // Dashboard
 
     // Profile
@@ -94,6 +107,8 @@ Route::get('/select-package', [PackageController::class, 'showForm'])->name('pac
 
 Route::post('/payment/webhook', [PackageController::class, 'webhook'])->name('package.webhook');
 
+Route::post('/cart/add', [App\Http\Controllers\CartController::class, 'add_cart'])->name('cart.add');
+
 
 
 Route::prefix('admin')->middleware(['auth'])->group(function () {
@@ -113,6 +128,12 @@ Route::middleware(['auth'])->group(function () {
 
     // Profile
 
+
+    Route::get('/admin/category/manage',[AdminController::class, 'category_view'])->name('category.view');
+    Route::post('/admin/category/add', [AdminController::class, 'category_add'])->name('category.add');
+    Route::post('/admin/category/delete/{id}',[AdminController::class, 'category_delete'])->name('category.delete');
+    Route::get('/admin/category/edit/{id}', [AdminController::class, 'category_edit'])->name('category.edit');
+    Route::post('/admin/category/update/{id}',[AdminController::class, 'category_update'])->name('category.update');
 
     // Apply for Foodstuff Plan
     Route::get('/admin/product/add', [AdminController::class, 'product_view'])->name('admin.product.add');

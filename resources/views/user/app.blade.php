@@ -124,14 +124,14 @@
 					<button id="sidebar-toggler" class="sidebar-toggle"></button>
 					<!-- search form -->
 					<div class="search-form d-lg-inline-block">
-						{{-- <div class="input-group">
+						<div class="input-group">
 							<input type="text" name="query" id="search-input" class="form-control"
 								placeholder="search.." autofocus autocomplete="off" />
 							<button type="button" name="search" id="search-btn" class="btn btn-flat">
 								<i class="mdi mdi-magnify"></i>
 							</button>
 						</div>
-						<div id="search-results-container">
+						{{-- <div id="search-results-container">
 							<ul id="search-results"></ul>
 						</div> --}}
 					</div>
@@ -174,12 +174,13 @@
 									</li>
 								</ul>
 							</li>
-							<li class="dropdown notifications-menu custom-dropdown">
-								<button class="dropdown-toggle notify-toggler custom-dropdown-toggler">
-									<i class="mdi mdi-bell-outline"></i>
-								</button>
+							<li class=" notifications-menu">
+								<a href="/cart" class="dropdown-toggle">
+    <i class="mdi mdi-cart-outline"></i> 
+    <sup class="badge bg-danger" id="cart-count">0</sup>
+</a>
 
-								<div class="card card-default dropdown-notify dropdown-menu-right mb-0">
+								{{-- <div class="card card-default dropdown-notify dropdown-menu-right mb-0">
 									<div class="card-header card-header-border-bottom px-3">
 										<h2>Notifications</h2>
 									</div>
@@ -694,8 +695,8 @@
 											</div>
 										</div>
 									</div>
-								</div>
-
+								</div> --}}
+{{-- 
 								<ul class="dropdown-menu dropdown-menu-right d-none">
 									<li class="dropdown-header">You have 5 notifications</li>
 									<li>
@@ -736,7 +737,7 @@
 									<li class="dropdown-footer">
 										<a class="text-center" href="#"> View All </a>
 									</li>
-								</ul>
+								</ul> --}}
 							</li>
 							{{-- <li class="right-sidebar-in right-sidebar-2-menu">
 								<i class="mdi mdi-settings-outline mdi-spin"></i>
@@ -846,12 +847,38 @@
     </style>
 
     <!-- Auto-show script -->
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById('notifTrigger').click();
-        });
-    </script>
+   
 @endif
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    function updateCartCount() {
+        fetch("/cart/count")
+            .then(response => response.json())
+            .then(data => {
+                console.log("Cart count response:", data); // 🔥 debug
+                const cartCountEl = document.getElementById("cart-count");
+                if (cartCountEl) {
+                    cartCountEl.innerText = data.count ?? 0; // fallback to 0
+                }
+            })
+            .catch(err => {
+                console.error("Error fetching cart count:", err);
+                const cartCountEl = document.getElementById("cart-count");
+                if (cartCountEl) {
+                    cartCountEl.innerText = 0; // ✅ show 0 if error
+                }
+            });
+    }
+
+    // Run immediately
+    updateCartCount();
+
+    // Refresh every 10 seconds
+    setInterval(updateCartCount, 10000);
+});
+</script>
 
 
 </html>
