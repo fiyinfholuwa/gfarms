@@ -573,71 +573,10 @@
                                     @break
                             @endswitch
                         </span>
+                        <a href="{{ route('user.orders.show', $order->order_number) }}" class="btn btn-primary">View Detail</a>
+
                     </div>
 
-                    <!-- Quick Actions Bar -->
-                    <div class="quick-actions">
-                        <div class="action-group">
-                            <button class="quick-btn btn-address" onclick="openAddressModal({{ $order->id }})">
-                                <i class="fas fa-map-marker-alt"></i> Add Address
-                            </button>
-                            <button class="quick-btn btn-processing" onclick="openProcessingModal({{ $order->id }})">
-                                <i class="fas fa-credit-card"></i> Pay Processing Fee
-                            </button>
-                        </div>
-                        <div class="action-group">
-                            <button class="quick-btn btn-wallet" onclick="openPaymentModal({{ $order->id }}, 'wallet')">
-                                <i class="fas fa-wallet"></i> Pay via Wallet
-                            </button>
-                            <button class="quick-btn btn-loan" onclick="openPaymentModal({{ $order->id }}, 'loan')">
-                                <i class="fas fa-hand-holding-usd"></i> Pay via Loan
-                            </button>
-                        </div>
-                        <button class="quick-btn btn-details" onclick="toggleOrderDetails('order-{{ $order->id }}')" id="details-btn-{{ $order->id }}">
-                            <i class="fas fa-chevron-down" id="chevron-{{ $order->id }}"></i> 
-                            <span id="details-text-{{ $order->id }}">Show Order Details</span>
-                        </button>
-                    </div>
-
-                    <!-- Collapsible Order Content -->
-                    <div class="order-content" id="order-{{ $order->id }}">
-                        <div class="order-items">
-                            @foreach($order->items as $item)
-                                <div class="order-item">
-                                    <div class="item-info">
-                                        <div class="item-name">{{ $item['name'] }}</div>
-                                        <div class="item-details">
-                                            ₦{{ number_format($item['price'], 2) }} × {{ $item['qty'] }}
-                                        </div>
-                                    </div>
-                                    <div class="item-total">
-                                        ₦{{ number_format($item['total'], 2) }}
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-
-                        <div class="order-total">
-                            Total: ₦{{ number_format($order->total_amount, 2) }}
-                        </div>
-
-                        <div class="order-actions">
-                            <a href="{{ route('user.orders.show', $order) }}" class="action-btn btn-view">
-                                <i class="fas fa-eye"></i> Full Details
-                            </a>
-                            
-                            @if(in_array($order->status, ['pending', 'confirmed']))
-                                <form action="{{ route('user.orders.cancel', $order) }}" method="POST" style="display: inline;"
-                                      onsubmit="return confirm('Are you sure you want to cancel this order?')">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="action-btn btn-cancel">
-                                        <i class="fas fa-times"></i> Cancel
-                                    </button>
-                                </form>
-                            @endif
-                        </div>
-                    </div>
                 </div>
             @endforeach
         </div>

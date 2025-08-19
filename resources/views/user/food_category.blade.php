@@ -668,26 +668,12 @@
 <div class="container">
     <div class="main-content">
         <div class="section-header">
-            <h1 class="section-title">Food Market</h1>
+            <h1 class="section-title">Food Market (<span style="color:darkorange;" class="text-primary">{{ $category->name }}</span>)</h1>
             <p class="section-subtitle">Fresh and delicious meals delivered to you</p>
         </div>
 
        <div class="container my-5">
-    <div class="row g-4">
-        @foreach($categories as $category)
-            <a href="{{ route('food.category', $category->category_url) }}">
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0 rounded-4 h-100 text-center">
-                    <div class="card-body d-flex flex-column justify-content-center">
-                        <h5 class="card-title fw-bold text-primary">{{ $category->name }} ( {{ $category->foods_count }})</h5>
-                    
-                    </div>
-                    
-                </div>
-            </div>
-            </a>
-        @endforeach
-    </div>
+    
 </div>
 
       <div class="product-grid" id="productGrid">

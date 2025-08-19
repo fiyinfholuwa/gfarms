@@ -105,14 +105,11 @@ class OrderController extends Controller
         return view('user.orders', compact('orders'));
     }
 
-    public function show(Order $order)
+    public function show($order)
     {
-        // Ensure user can only view their own orders
-        if ($order->user_id !== Auth::id()) {
-            abort(403);
-        }
-
-        return view('user.orders.show', compact('order'));
+        
+        $order = Order::where('order_number', '=', $order)->first();
+        return view('user.orders_detail', compact('order'));
     }
 
     public function cancel(Order $order)

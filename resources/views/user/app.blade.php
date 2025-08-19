@@ -175,7 +175,7 @@
 								</ul>
 							</li>
 							<li class=" notifications-menu">
-								<a href="/cart" class="dropdown-toggle">
+								<a href="{{ route('cart') }}" class="dropdown-toggle">
     <i class="mdi mdi-cart-outline"></i> 
     <sup class="badge bg-danger" id="cart-count">0</sup>
 </a>

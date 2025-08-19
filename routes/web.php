@@ -71,6 +71,7 @@ Route::middleware(['auth', 'onboard_kyc'])->group(function () {
 
     // Foodstuff Packages
     Route::get('/packages', [UserDashboardController::class, 'browse'])->name('user.packages');
+    Route::get('/food/category/{name}', [UserDashboardController::class, 'food_category'])->name('food.category');
     Route::get('/my-packages', [UserDashboardController::class, 'myPackages'])->name('user.my.packages');
 
     // Repayment
@@ -84,6 +85,7 @@ Route::middleware(['auth', 'onboard_kyc'])->group(function () {
     Route::get('/notifications', [UserDashboardController::class, 'notifications'])->name('user.notifications');
 
     // Support
+    Route::get('/cart', [UserDashboardController::class, 'my_cart'])->name('cart');
     Route::get('/support', [UserDashboardController::class, 'index'])->name('user.support');
 
     // Logout
@@ -164,12 +166,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('user.orders.show');
     Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('user.orders.cancel');
 
-    Route::get('/cart', [CartController::class, 'index']);
+    // Route::get('/cart', [CartController::class, 'index']);
     Route::post('/cart', [CartController::class, 'store']);
     Route::delete('/cart', [CartController::class, 'destroy']);
     
+    Route::post('/cart/update', [CartController::class, 'update_cart'])->name('cart.update');
+    Route::post('/cart/remove', [CartController::class, 'remove_from_cart'])->name('cart.remove');
+    Route::post('/cart/clear', [CartController::class, 'clear_cart'])->name('cart.clear');
+
     // Order API routes
-    Route::post('/orders/checkout', [OrderController::class, 'checkout']);
+    Route::post('/orders/checkout', [OrderController::class, 'checkout'])->name('checkout');
     
     // Assuming you have a food market route
     Route::get('/food-market', 'YourFoodMarketController@index')->name('food-market');
