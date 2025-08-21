@@ -88,17 +88,15 @@
 
         <div class="form-group col-md-6 mb-3">
             <label for="first_name" class="fw-bold">First Name 
-                <small class="text-muted d-block">* Must match the name on your BVN</small>
             </label>
-            <input type="text" id="first_name" name="first_name" class="form-control" placeholder="Enter First Name" value="{{ old('first_name') }}">
+            <input type="text" id="first_name" name="first_name" class="form-control" placeholder="Match BVN Name" value="{{ old('first_name') }}">
             @error('first_name')<small class="text-danger">{{ $message }}</small>@enderror
         </div>
 
         <div class="form-group col-md-6 mb-3">
             <label for="last_name" class="fw-bold">Last Name 
-                <small class="text-muted d-block">* Must match the name on your BVN</small>
             </label>
-            <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Enter Last Name" value="{{ old('last_name') }}">
+            <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Match BVN Name" value="{{ old('last_name') }}">
             @error('last_name')<small class="text-danger">{{ $message }}</small>@enderror
         </div>
 
@@ -110,9 +108,8 @@
 
         <div class="form-group col-md-12 mb-3">
             <label for="phone" class="fw-bold">Phone Number 
-                <small class="text-muted d-block">* Use the same number linked to your BVN</small>
             </label>
-            <input type="text" id="phone" name="phone" class="form-control" placeholder="Enter Phone Number" value="{{ old('phone') }}">
+            <input type="text" id="phone" name="phone" class="form-control" placeholder="Number linked to your BVN" value="{{ old('phone') }}">
             @error('phone')<small class="text-danger">{{ $message }}</small>@enderror
         </div>
 
@@ -135,6 +132,63 @@
         <div style="display:none;" class="form-group col-md-12 mb-3">
             <input type="text" name="country" class="form-control" value="Nigeria" readonly>
         </div>
+
+        <div class="form-group col-md-12 mb-3">
+    <label for="employee_status" class="fw-bold">Employee Status</label>
+    <select id="employee_status" name="employee_status" class="form-control" required>
+        <option value="">Select Status</option>
+        <option value="Employed">Employed</option>
+        <option value="Non Student/Non Employed">Non Student / Non Employed</option>
+        <option value="Trader">Trader</option>
+        <option value="Student">Student</option>
+    </select>
+    @error('employee_status')<small class="text-danger">{{ $message }}</small>@enderror
+</div>
+
+<!-- Student fields (hidden by default) -->
+<div id="student_fields" style="display:none;">
+    <div class="form-group col-md-12 mb-3">
+        <label for="student_id" class="fw-bold">Student ID</label>
+        <input type="text" id="student_id" name="student_id" class="form-control" placeholder="Enter Student ID">
+        @error('student_id')<small class="text-danger">{{ $message }}</small>@enderror
+    </div>
+
+    <div class="form-group col-md-12 mb-3">
+        <label for="school_name" class="fw-bold">School Name</label>
+        <input type="text" id="school_name" name="school_name" class="form-control" placeholder="Enter School Name">
+        @error('school_name')<small class="text-danger">{{ $message }}</small>@enderror
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const employeeStatus = document.getElementById("employee_status");
+    const studentFields = document.getElementById("student_fields");
+    const studentIdInput = document.getElementById("student_id");
+    const schoolNameInput = document.getElementById("school_name");
+
+    function toggleStudentFields() {
+        if (employeeStatus.value === "Student") {
+            studentFields.style.display = "block";
+            studentIdInput.setAttribute("required", "required");
+            schoolNameInput.setAttribute("required", "required");
+        } else {
+            studentFields.style.display = "none";
+            studentIdInput.removeAttribute("required");
+            schoolNameInput.removeAttribute("required");
+            studentIdInput.value = "";
+            schoolNameInput.value = "";
+        }
+    }
+
+    employeeStatus.addEventListener("change", toggleStudentFields);
+
+    // Initial check if form is pre-filled
+    toggleStudentFields();
+});
+
+</script>
+
 
         <div class="form-group col-md-12 mb-3">
             <label for="password" class="fw-bold">Password</label>

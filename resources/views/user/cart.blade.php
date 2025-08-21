@@ -13,11 +13,11 @@
     --primary-color: #d97706;   /* Dark Orange */
     --primary-dark: #92400e;    /* Even darker shade of orange */
 
-    /* ✅ Success */
+    /*  Success */
     --success-color: #000000;   /* Black (for success buttons) */
     --success-dark: #1f2937;    /* Dark gray-black */
 
-    /* ❌ Danger (Red tones) */
+    /*  Danger (Red tones) */
     --danger-color: #ef4444;  
     --danger-dark: #b91c1c;
 
@@ -539,19 +539,243 @@
                     </div>
 
                     <div class="limit-info">
-                        ⚠️ Spending limit: ₦{{ number_format($limit) }}
+                        Spending limit: ₦{{ number_format($limit) }}
                         <br>
                         Remaining: ₦{{ number_format($limit - $totalAmount) }}
                     </div>
 
                     <button class="checkout-btn" {{ $totalAmount > $limit ? 'disabled' : '' }} onclick="checkout()">
-                        <span>🛍️ Proceed to Checkout</span>
+                        <span>Proceed to Checkout</span>
                     </button>
                 </div>
             </div>
         @endif
     </div>
 </div>
+
+
+<!-- ================== CHECKOUT MODAL ================== -->
+<div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h5 class="modal-title">Checkout</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Delivery Address -->
+        <div class="mb-3">
+          <label class="form-label">Delivery Address</label>
+          <input type="text" id="deliveryAddress" class="form-control"
+                 value="{{ Auth::user()->home_address ?? '' }}">
+        </div>
+
+        <!-- Notes -->
+        <div class="mb-3">
+          <label class="form-label">Notes (optional)</label>
+          <textarea id="orderNotes" class="form-control" rows="3"></textarea>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="mb-3">
+          <label class="form-label">Payment Method</label><br>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="paymentMethod" id="walletOption" value="wallet" checked>
+            <label class="form-check-label" for="walletOption">Wallet</label>
+          </div>
+          <!--  Real-time wallet validation message -->
+          <div id="walletMessage" class="mt-1"></div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="paymentMethod" id="loanOption" value="loan">
+            <label class="form-check-label" for="loanOption">Loan</label>
+          </div>
+        </div>
+
+        <!-- Loan Options -->
+        <div id="loanOptions" style="display:none;">
+          <div class="mb-3">
+            <label class="form-label">Repayment Plan</label>
+            <select id="repaymentPlan" class="form-select">
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Cart + Balance Summary -->
+        <div class="alert alert-info mt-3">
+          <strong>Wallet Balance:</strong> ₦{{ Auth::user()->wallet_balance ?? 0 }} <br>
+          <small>Note: Wallet payments require <strong>Total + ₦1000</strong> available balance.</small>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-primary" id="confirmCheckout">
+          Confirm Checkout
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ================== JAVASCRIPT ================== -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const loanOptions = document.getElementById("loanOptions");
+    const confirmCheckout = document.getElementById("confirmCheckout");
+    const walletMessage = document.getElementById("walletMessage");
+    const walletOption = document.getElementById("walletOption");
+
+    // Backend balance injected from Laravel
+    const userBalance = {{ Auth::user()->wallet_balance ?? 0 }};
+
+    // Toggle loan repayment plan visibility
+    document.querySelectorAll("input[name='paymentMethod']").forEach(radio => {
+        radio.addEventListener("change", () => {
+            if (document.getElementById("loanOption").checked) {
+                loanOptions.style.display = "block";
+                walletMessage.innerHTML = ""; // clear wallet message if loan is selected
+            } else {
+                loanOptions.style.display = "none";
+                validateWalletBalance(); // run check again when switching back
+            }
+        });
+    });
+
+    //  Real-time wallet balance validation
+    function validateWalletBalance() {
+        // Gather cart total
+        let totalAmount = 0;
+        document.querySelectorAll('.cart-item').forEach((element) => {
+            const priceText = element.querySelector('.item-price').textContent.replace('₦', '').replace(',', '');
+            const price = parseInt(priceText);
+            const qty = parseInt(element.querySelector('.qty-input').value);
+            totalAmount += price * qty;
+        });
+
+        if (totalAmount === 0) {
+            walletMessage.innerHTML = `<span class="text-danger"> Your cart is empty.</span>`;
+            return;
+        }
+
+        const requiredAmount = totalAmount + 1000;
+
+        if (userBalance >= requiredAmount) {
+            walletMessage.innerHTML = `<span class="text-success"> You have enough balance to pay ₦${requiredAmount.toLocaleString()} With the Processing Fee.</span>`;
+        } else {
+            walletMessage.innerHTML = `<span class="text-danger"> Insufficient balance. You need ₦${requiredAmount.toLocaleString()}, but you only have ₦${userBalance.toLocaleString()}.</span>`;
+        }
+    }
+
+    // Run validation immediately when modal opens if wallet is default
+    if (walletOption.checked) {
+        validateWalletBalance();
+    }
+
+    // Confirm checkout click
+    confirmCheckout.addEventListener("click", async () => {
+        const address = document.getElementById("deliveryAddress").value.trim();
+        const notes = document.getElementById("orderNotes").value.trim();
+        const payment = document.querySelector("input[name='paymentMethod']:checked").value;
+
+        if (!address) {
+            showAlert("Please enter a delivery address", "error");
+            return;
+        }
+
+        let loanData = {};
+        if (payment === "loan") {
+            loanData = { repayment_plan: document.getElementById("repaymentPlan").value };
+        }
+
+        // Gather cart data
+        const cartItems = [];
+        document.querySelectorAll('.cart-item').forEach((element) => {
+            const id = element.id.split('-')[2];
+            const name = element.querySelector('.item-name').textContent.trim();
+            const priceText = element.querySelector('.item-price').textContent.replace('₦', '').replace(',', '');
+            const price = parseInt(priceText);
+            const qty = parseInt(element.querySelector('.qty-input').value);
+            cartItems.push({
+                id: parseInt(id),
+                name,
+                qty,
+                price,
+                total: price * qty
+            });
+        });
+
+        if (cartItems.length === 0) {
+            showAlert("Your cart is empty", "error");
+            return;
+        }
+
+        const totalAmount = cartItems.reduce((sum, item) => sum + item.total, 0);
+
+        //  Validation for Wallet on checkout click
+        if (payment === "wallet") {
+            if (userBalance < (totalAmount + 1000)) {
+                showAlert(` Insufficient balance. You need ₦${totalAmount + 1000}, but you only have ₦${userBalance}`, "error");
+                return;
+            }
+        }
+
+        // Send checkout request
+        try {
+            const response = await fetch("{{ route('checkout') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": csrfToken,
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    items: cartItems,
+                    total_amount: totalAmount,
+                    notes: notes,
+                    address: address,
+                    payment_method: payment,
+                    loan_data: loanData
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showAlert(` ${result.message}`, "success");
+                setTimeout(() => {
+                    window.location.href = `/orders/${result.order.order_number}`;
+                }, 1500);
+            } else {
+                showAlert(` ${result.message}`, "error");
+            }
+        } catch (error) {
+            console.error("Checkout error:", error);
+            showAlert(" Failed to place order. Please try again.", "error");
+        }
+    });
+});
+
+// ================== OPEN MODAL ==================
+async function checkout() {
+    const checkoutBtn = document.querySelector(".checkout-btn");
+    if (checkoutBtn.disabled) {
+        showAlert("Cannot checkout: Amount exceeds limit", "error");
+        return;
+    }
+    new bootstrap.Modal(document.getElementById("checkoutModal")).show();
+}
+</script>
+
 
 <!-- CSRF Token -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -704,99 +928,7 @@ async function clearCart() {
     }
 }
 
-async function checkout() {
-    const checkoutBtn = document.querySelector('.checkout-btn');
-    
-    if (checkoutBtn.disabled) {
-        showAlert('Cannot checkout: Amount exceeds limit', 'error');
-        return;
-    }
 
-    // Collect cart data from the page
-    const cartItems = [];
-    const cartItemElements = document.querySelectorAll('.cart-item');
-    
-    cartItemElements.forEach((element, index) => {
-        const id = element.id.split('-')[2]; // extract id from cart-item-{id}
-        const name = element.querySelector('.item-name').textContent.trim();
-        const priceText = element.querySelector('.item-price').textContent.replace('₦', '').replace(',', '');
-        const price = parseInt(priceText);
-        const qty = parseInt(element.querySelector('.qty-input').value);
-        const total = price * qty;
-        
-        cartItems.push({
-            id: parseInt(id),
-            name: name,
-            qty: qty,
-            price: price,
-            total: total
-        });
-    });
-
-    if (cartItems.length === 0) {
-        showAlert('Your cart is empty', 'error');
-        return;
-    }
-
-    const totalAmount = cartItems.reduce((sum, item) => sum + item.total, 0);
-    
-    // Optional: Add notes functionality
-    const notes = prompt('Any special instructions or notes? (Optional)') || '';
-
-    setLoading(checkoutBtn, true);
-    checkoutBtn.disabled = true;
-
-    try {
-        const response = await fetch("{{ route('checkout') }}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": csrfToken,
-                "Accept": "application/json"
-            },
-            body: JSON.stringify({
-                items: cartItems,
-                total_amount: totalAmount,
-                notes: notes
-            })
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            showAlert(`✅ ${result.message}`, "success");
-            
-            // Show order details briefly
-            setTimeout(() => {
-                showAlert(`🎉 Order #${result.order.order_number} created successfully!`, "success");
-            }, 1000);
-
-            // Redirect to manage orders page with the order ID
-            setTimeout(() => {
-                window.location.href = `/orders/${result.order.order_number}`;
-                
-                // Option 2: Redirect to specific order page
-                // window.location.href = `/orders/${result.order.id}`;
-                
-                // Option 3: Redirect to manage orders page
-                // window.location.href = `/manage-orders`;
-                
-                // Option 4: Stay on current page and reload to show empty cart
-                // window.location.reload();
-            }, 2500);
-
-        } else {
-            showAlert(`❌ ${result.message}`, "error");
-            checkoutBtn.disabled = false;
-        }
-    } catch (error) {
-        console.error('Checkout error:', error);
-        showAlert('❌ Failed to place order. Please check your connection and try again.', 'error');
-        checkoutBtn.disabled = false;
-    } finally {
-        setLoading(checkoutBtn, false);
-    }
-}
 // Store original quantities for reset functionality
 document.addEventListener('DOMContentLoaded', function() {
     const qtyInputs = document.querySelectorAll('.qty-input');

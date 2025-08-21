@@ -27,7 +27,7 @@ class CartController extends Controller
         if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => '❌ Please login to add items to cart.',
+                'message' => ' Please login to add items to cart.',
             ]);
         }
     
@@ -51,7 +51,7 @@ class CartController extends Controller
         if ($totalAmount + $itemTotal > $limit) {
             return response()->json([
                 'success' => false,
-                'message' => "❌ Cannot exceed ₦" . number_format($limit),
+                'message' => " Cannot exceed ₦" . number_format($limit),
             ]);
         }
     
@@ -75,7 +75,7 @@ class CartController extends Controller
     
         return response()->json([
             'success' => true,
-            'message' => "✅ $name added to cart!",
+            'message' => " $name added to cart!",
             'cart' => $items,
             'count' => collect($items)->sum('qty') // cart count
         ]);
@@ -120,7 +120,7 @@ class CartController extends Controller
     if (!$user) {
         return response()->json([
             'success' => false,
-            'message' => '❌ Please login to manage cart.',
+            'message' => ' Please login to manage cart.',
         ]);
     }
 
@@ -128,7 +128,7 @@ class CartController extends Controller
     if (!$cart) {
         return response()->json([
             'success' => false,
-            'message' => '❌ Cart not found.',
+            'message' => ' Cart not found.',
         ]);
     }
 
@@ -140,14 +140,14 @@ class CartController extends Controller
     if (!isset($items[$id])) {
         return response()->json([
             'success' => false,
-            'message' => '❌ Item not found in cart.',
+            'message' => ' Item not found in cart.',
         ]);
     }
 
     if ($qty <= 0) {
         return response()->json([
             'success' => false,
-            'message' => '❌ Invalid quantity.',
+            'message' => ' Invalid quantity.',
         ]);
     }
 
@@ -160,7 +160,7 @@ class CartController extends Controller
     if ($totalAmount > $limit) {
         return response()->json([
             'success' => false,
-            'message' => "❌ Cannot exceed ₦" . number_format($limit),
+            'message' => " Cannot exceed ₦" . number_format($limit),
         ]);
     }
 
@@ -170,7 +170,7 @@ class CartController extends Controller
 
     return response()->json([
         'success' => true,
-        'message' => "✅ Cart updated!",
+        'message' => " Cart updated!",
         'cart' => $items,
         'count' => collect($items)->sum('qty'),
         'total' => $totalAmount
@@ -183,7 +183,7 @@ public function remove_from_cart(Request $request)
     if (!$user) {
         return response()->json([
             'success' => false,
-            'message' => '❌ Please login to manage cart.',
+            'message' => ' Please login to manage cart.',
         ]);
     }
 
@@ -191,7 +191,7 @@ public function remove_from_cart(Request $request)
     if (!$cart) {
         return response()->json([
             'success' => false,
-            'message' => '❌ Cart not found.',
+            'message' => ' Cart not found.',
         ]);
     }
 
@@ -201,7 +201,7 @@ public function remove_from_cart(Request $request)
     if (!isset($items[$id])) {
         return response()->json([
             'success' => false,
-            'message' => '❌ Item not found in cart.',
+            'message' => ' Item not found in cart.',
         ]);
     }
 
@@ -216,7 +216,7 @@ public function remove_from_cart(Request $request)
 
     return response()->json([
         'success' => true,
-        'message' => "✅ {$itemName} removed from cart!",
+        'message' => " {$itemName} removed from cart!",
         'cart' => $items,
         'count' => collect($items)->sum('qty'),
         'total' => $totalAmount
@@ -229,7 +229,7 @@ public function clear_cart(Request $request)
     if (!$user) {
         return response()->json([
             'success' => false,
-            'message' => '❌ Please login to manage cart.',
+            'message' => ' Please login to manage cart.',
         ]);
     }
 
@@ -241,7 +241,7 @@ public function clear_cart(Request $request)
 
     return response()->json([
         'success' => true,
-        'message' => "✅ Cart cleared!",
+        'message' => " Cart cleared!",
         'cart' => [],
         'count' => 0,
         'total' => 0

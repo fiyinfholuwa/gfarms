@@ -517,7 +517,7 @@
     }
 </style>
 
-<div class="container">
+<div style="margin-top:50px;" class="container">
     <div class="orders-header">
         <h1 class="orders-title">My Orders</h1>
         <a href="{{ route('user.packages') }}" class="back-btn">
@@ -585,15 +585,36 @@
             {{ $orders->links() }}
         </div>
     @else
-        <div class="empty-state">
-            <div class="empty-icon">🍽️</div>
-            <h3>No orders yet</h3>
-            <p>When you place your first order, it will appear here.</p>
-            <a href="{{ route('user.packages') }}" class="back-btn" style="margin-top: 1.5rem;">
-                <i class="fas fa-shopping-cart"></i>
-                Start Shopping
-            </a>
-        </div>
+        <div class="empty-state text-center p-5">
+    {{-- <div class="empty-icon mb-3" style="font-size:3rem;">🍽️</div> --}}
+    <h3 class="fw-bold text-secondary mb-2">No Orders Yet</h3>
+    <p class="text-muted mb-4">Your delicious journey starts here. Place your first order and it will show up below.</p>
+    <a href="{{ route('user.packages') }}" 
+       class="btn btn-primary px-4 py-2 rounded-pill shadow-sm">
+        <i class="fas fa-shopping-cart me-2"></i> Start Shopping
+    </a>
+</div>
+
+<style>
+.empty-state {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    max-width: 500px;
+    margin: 2rem auto;
+    transition: all 0.3s ease;
+}
+.empty-state:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+.empty-icon {
+    font-size: 3rem;
+    line-height: 1;
+}
+
+</style>
     @endif
 </div>
 

@@ -668,8 +668,7 @@
 <div class="container">
     <div class="main-content">
         <div class="section-header">
-            <h1 class="section-title">Food Market (<span style="color:darkorange;" class="text-primary">{{ $category->name }}</span>)</h1>
-            <p class="section-subtitle">Fresh and delicious meals delivered to you</p>
+            <a class="btn btn-primary" href="{{ route('user.packages') }}" >Go Back</a><span class="section-title">  Food Market (<span style="color:darkorange;" class="text-primary">{{ $category->name }}</span>)</span>
         </div>
 
        <div class="container my-5">
@@ -677,6 +676,10 @@
 </div>
 
       <div class="product-grid" id="productGrid">
+
+
+        @if (count($foods) > 0)
+
     @foreach($foods as $food)
         <div class="product-card" data-name="{{ strtolower($food->name) }}">
             
@@ -753,6 +756,23 @@
             </div>
         </div>
     @endforeach
+
+    @else
+<div class="col-12 d-flex justify-content-center align-items-center" style="min-height: 50vh;">
+    <div class="text-center p-5 border rounded-4 shadow-sm bg-light" style="max-width: 500px;">
+        <div class="mb-3">
+            <i class="fas fa-box-open fa-4x text-muted"></i>
+        </div>
+        <h4 class="fw-bold text-secondary">No Products Available</h4>
+        <p class="text-muted">This category is empty for now. Please check back later for amazing updates 🌟</p>
+        <a href="{{ route('user.packages') }}" class="btn btn-primary mt-3">
+            <i class="fas fa-arrow-left me-2"></i> Go Back
+        </a>
+    </div>
+</div>
+
+      @endif
+    
 </div>
 
     </div>

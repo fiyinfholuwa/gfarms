@@ -20,6 +20,9 @@ return new class extends Migration
                   ->default('pending');
             $table->json('items'); // Store cart items as JSON
             $table->text('notes')->nullable();
+            $table->string('payment_method')->nullable();
+            $table->text('delivery_address')->nullable();
+            $table->string('repayment_plan')->nullable();
             $table->timestamp('delivered_at')->nullable();
             $table->timestamps();
         });

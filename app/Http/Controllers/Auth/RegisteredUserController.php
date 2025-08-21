@@ -46,6 +46,10 @@ public function store(Request $request): RedirectResponse
         'country' => ['required', 'string'],
         'password' => ['required', 'confirmed', Rules\Password::defaults()],
         'terms' => ['accepted'],
+        'employee_status' => 'required|in:Employed,Non Student/ Non Employed,Trader,Student',
+        'student_id' => 'required_if:employee_status,Student|string|nullable|max:255',
+        'school_name' => 'required_if:employee_status,Student|string|nullable|max:255',
+
     ]);
 
     // ✅ Create user
@@ -57,6 +61,9 @@ public function store(Request $request): RedirectResponse
         'state' => $request->state,
         'lga' => $request->lga,
         'country' => $request->country,
+        'employee_status' => $request->employee_status,
+        'student_id' => $request->student_id,
+        'school_name' => $request->school_name,
         'password' => Hash::make($request->password),
     ]);
 

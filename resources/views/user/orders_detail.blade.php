@@ -497,52 +497,53 @@
     <div class="order-header">
         <div>
             <h1 class="order-title">
-                📋 Order Management
+                Order Management
                 <span class="order-number">{{ $order->order_number }}</span>
             </h1>
             <div class="status-display status-{{ $order->status }}">
                 @switch($order->status)
-                    @case('pending') ⏳ @break
-                    @case('confirmed') ✅ @break
-                    @case('preparing') 👨‍🍳 @break
-                    @case('ready') 🎉 @break
-                    @case('delivered') 🚚 @break
-                    @case('cancelled') ❌ @break
+                    @case('pending')  @break
+                    @case('confirmed')  @break
+                    @case('preparing')  @break
+                    @case('ready')  @break
+                    @case('delivered')  @break
+                    @case('cancelled')  @break
                 @endswitch
                 {{ ucfirst($order->status) }}
             </div>
         </div>
         <a href="{{ url('/orders') }}" class="back-btn">
-            ⬅️ Back to Orders
+             Back to Orders
         </a>
     </div>
 
     <div class="order-content">
         <!-- Order Details -->
         <div class="order-details">
-            <h2 class="section-title">📄 Order Details</h2>
+            <h2 class="section-title"> Order Details</h2>
             
             <!-- Order Info -->
             <div class="info-grid">
-                <div class="info-item">
-                    <span class="info-label">Order ID</span>
-                    <span class="info-value">#{{ $order->id }}</span>
-                </div>
+                
                 <div class="info-item">
                     <span class="info-label">Order Date</span>
                     <span class="info-value">{{ $order->created_at->format('M d, Y - h:i A') }}</span>
                 </div>
-                <div class="info-item">
+                {{-- <div class="info-item">
                     <span class="info-label">Customer</span>
                     <span class="info-value">{{ $order->user->name ?? 'N/A' }}</span>
-                </div>
+                </div> --}}
                 <div class="info-item">
                     <span class="info-label">Payment Type</span>
-                    <span class="info-value">{{ $order->payment_type ? ucfirst($order->payment_type) : 'Not Set' }}</span>
+                    <span class="info-value">{{ $order->payment_method ? ucfirst($order->payment_method) : 'Not Set' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Home Address</span>
+                    <span class="info-value">{{ $order->delivery_address ? ucfirst($order->delivery_address) : 'Not Set' }}</span>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Mandatory Fee</span>
-                    <span class="info-value">{{ $order->mandatory_fee ? 'Yes' : 'No' }}</span>
+                    <span class="info-value">{{ $order->has_paid_delivery_fee =='yes' ? 'Yes' : 'No' }}</span>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Delivered</span>
@@ -554,11 +555,11 @@
 
             <!-- Order Items -->
             <div class="order-items">
-                <h3 class="section-title">🛒 Ordered Items</h3>
+                <h3 class="section-title"> Ordered Items</h3>
                 
                 @foreach($order->items as $item)
                     <div class="order-item">
-                        <div class="item-icon">🍽️</div>
+                        <div class="item-icon"></div>
                         
                         <div class="item-details">
                             <h4 class="item-name">{{ $item['name'] }}</h4>
@@ -582,7 +583,7 @@
             <!-- Notes Section -->
             @if($order->notes)
                 <div class="notes-section">
-                    <h4 class="notes-title">📝 Special Notes</h4>
+                    <h4 class="notes-title"> Special Notes</h4>
                     <div class="notes-content">{{ $order->notes }}</div>
                 </div>
             @endif
@@ -590,98 +591,58 @@
 
         <!-- Management Panel -->
         <div class="order-management">
-            <h2 class="section-title">⚙️ Management Panel</h2>
+            <h2 class="section-title">Management Panel</h2>
 
             <!-- Delivery Status Management -->
             <div class="management-section">
                 <div class="section-header">
-                    <span class="section-icon">🚚</span>
+                    <span class="section-icon"></span>
                     <span class="section-label">Delivery Status</span>
                     <span class="current-value">
                         {{ $order->delivered_at ? 'Delivered' : 'Pending' }}
                     </span>
                 </div>
                 
-                @if(!$order->delivered_at)
+                @if(!$order->delivered_at && $order->status === 'ready')
                     <button class="update-btn btn-delivery" onclick="markAsDelivered()">
-                        ✅ Mark as Delivered
+                     Mark as Delivered
                     </button>
-                @else
+                    @endif
+                {{-- @else
                     <button class="update-btn btn-delivery" onclick="unmarkDelivered()">
-                        ↩️ Unmark Delivery
+                     Unmark Delivery
                     </button>
-                @endif
+                @endif --}}
             </div>
 
+            @if($order->has_paid_delivery_fee =='no')
             <!-- Payment Type Management -->
             <div class="management-section">
-                <div class="section-header">
-                    <span class="section-icon">💳</span>
-                    <span class="section-label">Payment Type</span>
-                    <span class="current-value">
-                        {{ $order->payment_type ? ucfirst($order->payment_type) : 'Not Set' }}
-                    </span>
-                </div>
-                
+                <h4 class="mb-3">Processing Fee Payment #1000.00</h4>
                 <div class="radio-group">
-                    <label class="radio-option {{ $order->payment_type === 'wallet' ? 'selected' : '' }}">
-                        <input type="radio" name="payment_type" value="wallet" class="radio-input" 
-                               {{ $order->payment_type === 'wallet' ? 'checked' : '' }}>
+                    <label class="radio-option">
+                        <input type="radio" name="payment_type" value="fincra" class="radio-input" >
                         <div>
-                            <div class="radio-label">💰 Wallet Payment</div>
-                            <div class="radio-description">Pay from user's wallet balance</div>
+                            <div class="radio-label">Fincra</div>
+                            {{-- <div class="radio-description">Pay from user's wallet balance</div> --}}
                         </div>
                     </label>
                     
-                    <label class="radio-option {{ $order->payment_type === 'loan' ? 'selected' : '' }}">
-                        <input type="radio" name="payment_type" value="loan" class="radio-input"
-                               {{ $order->payment_type === 'loan' ? 'checked' : '' }}>
+                    <label class="radio-option ">
+                        <input type="radio" name="payment_type" value="paystack" class="radio-input">
                         <div>
-                            <div class="radio-label">🏦 Loan Payment</div>
-                            <div class="radio-description">Add to user's loan account</div>
+                            <div class="radio-label">Paystack</div>
+                            {{-- <div class="radio-description">Add to user's loan account</div> --}}
                         </div>
                     </label>
                 </div>
                 
                 <button class="update-btn btn-payment" onclick="updatePaymentType()">
-                    💳 Update Payment Type
+                    Pay Processing Fee
                 </button>
             </div>
+            @endif
 
-            <!-- Mandatory Fee Management -->
-            <div class="management-section">
-                <div class="section-header">
-                    <span class="section-icon">💸</span>
-                    <span class="section-label">Mandatory Fee</span>
-                    <span class="current-value">
-                        {{ $order->mandatory_fee ? 'Yes' : 'No' }}
-                    </span>
-                </div>
-                
-                <div class="radio-group">
-                    <label class="radio-option {{ $order->mandatory_fee ? 'selected' : '' }}">
-                        <input type="radio" name="mandatory_fee" value="1" class="radio-input"
-                               {{ $order->mandatory_fee ? 'checked' : '' }}>
-                        <div>
-                            <div class="radio-label">✅ Yes</div>
-                            <div class="radio-description">Apply mandatory fee</div>
-                        </div>
-                    </label>
-                    
-                    <label class="radio-option {{ !$order->mandatory_fee ? 'selected' : '' }}">
-                        <input type="radio" name="mandatory_fee" value="0" class="radio-input"
-                               {{ !$order->mandatory_fee ? 'checked' : '' }}>
-                        <div>
-                            <div class="radio-label">❌ No</div>
-                            <div class="radio-description">No mandatory fee required</div>
-                        </div>
-                    </label>
-                </div>
-                
-                <button class="update-btn btn-fee" onclick="updateMandatoryFee()">
-                    💸 Update Mandatory Fee
-                </button>
-            </div>
         </div>
     </div>
 </div>
@@ -814,7 +775,7 @@ async function unmarkDelivered() {
 
 async function updatePaymentType() {
     const selectedPaymentType = document.querySelector('input[name="payment_type"]:checked')?.value;
-    
+
     if (!selectedPaymentType) {
         showAlert('Please select a payment type', 'error');
         return;
@@ -824,23 +785,26 @@ async function updatePaymentType() {
     setLoading(btn, true);
 
     try {
-        const response = await fetch(`/orders/${orderId}/payment-type`, {
+        const response = await fetch("{{ route('order.processing') }}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
+                'X-CSRF-TOKEN': "{{ csrf_token() }}",
                 'Accept': 'application/json'
             },
-            body: JSON.stringify({ payment_type: selectedPaymentType })
+            body: JSON.stringify({
+                payment_type: selectedPaymentType,
+                order_id: orderId
+            })
         });
 
         const result = await response.json();
 
-        if (result.success) {
-            showAlert(`💳 Payment type updated to ${selectedPaymentType}!`, 'success');
-            setTimeout(() => window.location.reload(), 1500);
+        if (result.status === "success") {
+            // 🚀 redirect user to the payment page
+            window.location.href = result.url;
         } else {
-            showAlert(result.message, 'error');
+            showAlert(result.message || 'Something went wrong', 'error');
         }
     } catch (error) {
         console.error('Error:', error);
@@ -849,6 +813,7 @@ async function updatePaymentType() {
         setLoading(btn, false);
     }
 }
+
 
 async function updateMandatoryFee() {
     const selectedFee = document.querySelector('input[name="mandatory_fee"]:checked')?.value;

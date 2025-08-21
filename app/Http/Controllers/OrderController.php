@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Order;
 use App\Models\Cart;
 use App\Models\Food;
+use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
@@ -28,7 +30,7 @@ class OrderController extends Controller
         // Validate items exist and prices are correct
         $foodIds = collect($request->items)->pluck('id');
         $foods = Food::whereIn('id', $foodIds)->get()->keyBy('id');
-        
+
         $calculatedTotal = 0;
         foreach ($request->items as $item) {
             $food = $foods->get($item['id']);
@@ -38,14 +40,14 @@ class OrderController extends Controller
                     'message' => 'One or more items are no longer available'
                 ], 400);
             }
-            
+
             if ($food->amount != $item['price']) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Price mismatch detected. Please refresh and try again.'
                 ], 400);
             }
-            
+
             $calculatedTotal += $item['qty'] * $item['price'];
         }
 
@@ -59,6 +61,28 @@ class OrderController extends Controller
         try {
             DB::beginTransaction();
 
+            $repayment_plan = $request->loan_data;
+            $plan = $repayment_plan['repayment_plan'] ?? NULL;
+
+            if ($request->payment_method == 'wallet') {
+                $extra_fee = 1000;
+                User::where('id', Auth::id())->decrement('wallet_balance', $request->total_amount + $extra_fee);
+                $has_paid_delivery_fee = 'yes';
+                $reference = strtoupper('Wallet') . '_' . Str::uuid();
+
+                DB::table('payments')->insert([
+                    'user_id'    => Auth::id(),
+                    'package'    => 'purchase',
+                    'reference'  => $reference,
+                    'amount'     => $request->total_amount + $extra_fee,
+                    'status'     => 'success',
+                    'gateway'    => 'wallet',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } else {
+                $has_paid_delivery_fee = 'no';
+            }
             // Create order
             $order = Order::create([
                 'user_id' => Auth::id(),
@@ -66,11 +90,28 @@ class OrderController extends Controller
                 'total_amount' => $request->total_amount,
                 'items' => $request->items,
                 'notes' => $request->notes,
-                'status' => 'pending'
+                'status' => 'pending',
+                'delivery_address' => $request->address,
+                'payment_method' => $request->payment_method,
+                'repayment_plan' => $plan,
+                'has_paid_delivery_fee' => $has_paid_delivery_fee,
+
             ]);
 
+            if ($request->payment_method === 'loan') {
+                $update_loan_amount  = $request->total_amount;
+            } else {
+                $update_loan_amount  = 0;
+            }
             // Clear user's cart
             Cart::where('user_id', Auth::id())->delete();
+
+            User::where('id', Auth::id())->update([
+                'last_payment_method' => $plan,
+                'home_address' => $request->address
+            ]);
+            
+            User::where('id', Auth::id())->increment('loan_balance', $update_loan_amount);
 
             DB::commit();
 
@@ -84,13 +125,12 @@ class OrderController extends Controller
                     'status' => $order->status
                 ]
             ]);
-
         } catch (\Exception $e) {
             DB::rollback();
-            
+
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to place order. Please try again.'. $e->getMessage()
+                'message' => 'Failed to place order. Please try again.' . $e->getMessage()
             ], 500);
         }
     }
@@ -99,15 +139,15 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::where('user_id', Auth::id())
-                      ->orderBy('created_at', 'desc')
-                      ->paginate(10);
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
         return view('user.orders', compact('orders'));
     }
 
     public function show($order)
     {
-        
+
         $order = Order::where('order_number', '=', $order)->first();
         return view('user.orders_detail', compact('order'));
     }

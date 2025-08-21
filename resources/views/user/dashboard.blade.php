@@ -139,7 +139,7 @@
                 <div class="card card-mini dash-card card-1">
                     <div class="card-body">
                         <i class="fas fa-wallet card-icon"></i>
-                        <h2 class="mb-1">₦1,503</h2>
+                            <h2 class="mb-1">₦{{ number_format(Auth::user()->wallet_balance) }}</h2>
                         <p>Wallet Balance</p>
                     </div>
                 </div>
@@ -149,7 +149,7 @@
                 <div class="card card-mini dash-card card-2">
                     <div class="card-body">
                         <i class="fas fa-chart-line card-icon"></i>
-                        <h2 class="mb-1">₦79,503</h2>
+                        <h2 class="mb-1">₦{{ number_format(Auth::user()->loan_balance) }}</h2>
                         <p>Loan Balance</p>
                     </div>
                 </div>
@@ -251,8 +251,8 @@
         <div class="card card-table-border-none card-default recent-orders" id="recent-orders">
             <div class="card-header justify-content-between">
                 <h2>Recent Food Orders</h2>
-                <div class="date-range-report">
-                    <span></span>
+                <div class="">
+                    <span><a href="{{ route('user.orders') }}">View All Orders</a></span>
                 </div>
             </div>
             <div class="card-body pt-0 pb-5">
@@ -265,106 +265,73 @@
                             <th class="d-none d-lg-table-cell">Order Date</th>
                             <th class="d-none d-lg-table-cell">Order Cost</th>
                             <th>Status</th>
-                            <th></th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>F1001</td>
-                            <td><a class="text-dark" href="">Jollof Rice & Grilled Chicken</a></td>
-                            <td class="d-none d-lg-table-cell">2 Plates</td>
-                            <td class="d-none d-lg-table-cell">Aug 10, 2025</td>
-                            <td class="d-none d-lg-table-cell">₦3,500</td>
-                            <td><span class="badge badge-success">Completed</span></td>
-                            <td class="text-right">
-                                <div class="dropdown show d-inline-block widget-dropdown">
-                                    <a class="dropdown-toggle icon-burger-mini" href="" role="button"
-                                       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                       data-display="static"></a>
-                                    <ul class="dropdown-menu dropdown-menu-right">
-                                        <li class="dropdown-item"><a href="#">View</a></li>
-                                        <li class="dropdown-item"><a href="#">Remove</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>F1002</td>
-                            <td><a class="text-dark" href="">Pepper Soup & Boiled Yam</a></td>
-                            <td class="d-none d-lg-table-cell">1 Bowl</td>
-                            <td class="d-none d-lg-table-cell">Aug 11, 2025</td>
-                            <td class="d-none d-lg-table-cell">₦2,200</td>
-                            <td><span class="badge badge-primary">Delayed</span></td>
-                            <td class="text-right">
-                                <div class="dropdown show d-inline-block widget-dropdown">
-                                    <a class="dropdown-toggle icon-burger-mini" href="#" role="button"
-                                       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                       data-display="static"></a>
-                                    <ul class="dropdown-menu dropdown-menu-right">
-                                        <li class="dropdown-item"><a href="#">View</a></li>
-                                        <li class="dropdown-item"><a href="#">Remove</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>F1003</td>
-                            <td><a class="text-dark" href="">Efo Riro with Pounded Yam</a></td>
-                            <td class="d-none d-lg-table-cell">3 Servings</td>
-                            <td class="d-none d-lg-table-cell">Aug 12, 2025</td>
-                            <td class="d-none d-lg-table-cell">₦4,500</td>
-                            <td><span class="badge badge-warning">On Hold</span></td>
-                            <td class="text-right">
-                                <div class="dropdown show d-inline-block widget-dropdown">
-                                    <a class="dropdown-toggle icon-burger-mini" href="#" role="button"
-                                       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                       data-display="static"></a>
-                                    <ul class="dropdown-menu dropdown-menu-right">
-                                        <li class="dropdown-item"><a href="#">View</a></li>
-                                        <li class="dropdown-item"><a href="#">Remove</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>F1004</td>
-                            <td><a class="text-dark" href="">Shawarma (Beef) & Coke</a></td>
-                            <td class="d-none d-lg-table-cell">4 Packs</td>
-                            <td class="d-none d-lg-table-cell">Aug 13, 2025</td>
-                            <td class="d-none d-lg-table-cell">₦6,000</td>
-                            <td><span class="badge badge-success">Completed</span></td>
-                            <td class="text-right">
-                                <div class="dropdown show d-inline-block widget-dropdown">
-                                    <a class="dropdown-toggle icon-burger-mini" href="#" role="button"
-                                       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                       data-display="static"></a>
-                                    <ul class="dropdown-menu dropdown-menu-right">
-                                        <li class="dropdown-item"><a href="#">View</a></li>
-                                        <li class="dropdown-item"><a href="#">Remove</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>F1005</td>
-                            <td><a class="text-dark" href="">Fried Rice & Turkey</a></td>
-                            <td class="d-none d-lg-table-cell">2 Plates</td>
-                            <td class="d-none d-lg-table-cell">Aug 14, 2025</td>
-                            <td class="d-none d-lg-table-cell">₦3,800</td>
-                            <td><span class="badge badge-danger">Cancelled</span></td>
-                            <td class="text-right">
-                                <div class="dropdown show d-inline-block widget-dropdown">
-                                    <a class="dropdown-toggle icon-burger-mini" href="#" role="button"
-                                       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                       data-display="static"></a>
-                                    <ul class="dropdown-menu dropdown-menu-right">
-                                        <li class="dropdown-item"><a href="#">View</a></li>
-                                        <li class="dropdown-item"><a href="#">Remove</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
+    @forelse($recent_orders as $order)
+        <tr>
+            <!-- Order Number -->
+            <td>{{ $order->order_number }}</td>
+
+            <!-- Food Items (decode JSON) -->
+            <td>
+                @php
+                    $items = $order->items;
+                @endphp
+                @if(is_array($items))
+                    @foreach($items as $item)
+                        <span class="d-block">{{ $item['name'] ?? 'Item' }} (x{{ $item['qty'] ?? 1 }})</span>
+                    @endforeach
+                @else
+                    <span>-</span>
+                @endif
+            </td>
+
+            <!-- Quantity (sum all items) -->
+            <td class="d-none d-lg-table-cell">
+                @if(is_array($items))
+                    {{ collect($items)->sum('qty') }}
+                @else
+                    -
+                @endif
+            </td>
+
+            <!-- Order Date -->
+            <td class="d-none d-lg-table-cell">{{ $order->created_at->format('M d, Y') }}</td>
+
+            <!-- Total Amount -->
+            <td class="d-none d-lg-table-cell">₦{{ number_format($order->total_amount, 2) }}</td>
+
+            <!-- Status -->
+            <td>
+                @php
+                    $statusClass = [
+                        'completed' => 'success',
+                        'pending'   => 'warning',
+                        'cancelled' => 'danger',
+                        'confirmed' => 'primary',
+                    ][$order->status] ?? 'secondary';
+                @endphp
+                <span class="badge badge-{{ $statusClass }}">{{ ucfirst($order->status) }}</span>
+            </td>
+
+            <!-- Actions -->
+            <td class="text-right">
+    <a href="{{ route('user.orders.show', $order->order_number) }}" 
+       class="btn btn-sm btn-primary">
+        <i class="fas fa-eye"></i> View
+    </a>
+</td>
+
+        </tr>
+    @empty
+        <tr>
+            <td colspan="7" class="text-center">No recent orders</td>
+        </tr>
+    @endforelse
+</tbody>
+
                 </table>
             </div>
         </div>

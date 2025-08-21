@@ -47,53 +47,46 @@
 					<!-- sidebar menu -->
 					<ul class="nav sidebar-inner" id="sidebar-menu">
 						<!-- Dashboard -->
-    <!-- Dashboard -->
-    <li class="active">
-        <a class="sidenav-item-link" href="{{ route('dashboard') }}">
-            <i class="mdi mdi-view-dashboard-outline"></i>
-            <span class="nav-text">Dashboard</span>
-        </a>
-        <hr>
-    </li>
+    <<!-- Dashboard -->
+<li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+    <a class="sidenav-item-link" href="{{ route('dashboard') }}">
+        <i class="mdi mdi-view-dashboard-outline"></i>
+        <span class="nav-text">Dashboard</span>
+    </a>
+    <hr>
+</li>
 
-   
-    <!-- Delivery Status -->
-    <li>
-        <a class="sidenav-item-link" href="{{ route('user.packages') }}">
+<!-- Food Markets -->
+<li class="{{ request()->routeIs('user.packages') ? 'active' : '' }}">
+    <a class="sidenav-item-link" href="{{ route('user.packages') }}">
         <i class="mdi mdi-basket-outline"></i>
-            <span class="nav-text">Food Markets</span>
-        </a>
-    </li>
-    <!-- Delivery Status -->
-    <li>
-        <a class="sidenav-item-link" href="{{ route('user.orders') }}">
+        <span class="nav-text">Food Markets</span>
+    </a>
+</li>
+
+<!-- My Orders -->
+<li class="{{ request()->routeIs('user.orders') ? 'active' : '' }}">
+    <a class="sidenav-item-link" href="{{ route('user.orders') }}">
         <i class="fas fa-truck"></i>
-            <span class="nav-text">My Orders</span>
-        </a>
-    </li>
+        <span class="nav-text">My Orders</span>
+    </a>
+</li>
 
-    <!-- Notifications -->
-    
-   
-   
-   
-    <!-- Delivery Status -->
-    <li>
-        <a class="sidenav-item-link" href="{{ route('user.payment') }}">
-<i class="fas fa-credit-card"></i> <!-- For credit/debit card -->
-            <span class="nav-text">Payment History</span>
-        </a>
-    </li>
+<!-- Payment History -->
+<li class="{{ request()->routeIs('user.payment') ? 'active' : '' }}">
+    <a class="sidenav-item-link" href="{{ route('user.payment') }}">
+        <i class="fas fa-credit-card"></i>
+        <span class="nav-text">Payment History</span>
+    </a>
+</li>
 
-    <!-- Notifications -->
-   
-    <!-- Support -->
-    <li>
-        <a class="sidenav-item-link" href="">
-            <i class="mdi mdi-lifebuoy"></i>
-            <span class="nav-text">Support</span>
-        </a>
-    </li>
+<!-- Support -->
+<li class="{{ request()->routeIs('support.index') ? 'active' : '' }}">
+    <a class="sidenav-item-link" href="{{ route('support.index') }}">
+        <i class="mdi mdi-lifebuoy"></i>
+        <span class="nav-text">Support</span>
+    </a>
+</li>
 
     <!-- Logout -->
     <li>
@@ -139,40 +132,23 @@
 					<!-- navbar right -->
 					<div class="navbar-right">
 						<ul class="nav navbar-nav">
-							<!-- User Account -->
 							<li class="dropdown user-menu">
-								<button class="dropdown-toggle nav-link ec-drop" data-bs-toggle="dropdown"
+								{{-- <button class="dropdown-toggle nav-link ec-drop" data-bs-toggle="dropdown"
 									aria-expanded="false">
 									<img src="assets/img/user/user.png" class="user-image" alt="User Image" />
-								</button>
-								<ul class="dropdown-menu dropdown-menu-right ec-dropdown-menu">
-									<!-- User image -->
+								</button> --}}
+								{{-- <ul class="dropdown-menu dropdown-menu-right ec-dropdown-menu">
 									<li class="dropdown-header">
 										<img src="assets/img/user/user.png" class="img-circle" alt="User Image" />
 										<div class="d-inline-block">
 											John Deo <small class="pt-1">john.example@gmail.com</small>
 										</div>
 									</li>
-									{{-- <li>
-										<a href="user-profile.html">
-											<i class="mdi mdi-account"></i> My Profile
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<i class="mdi mdi-email"></i> Message
-										</a>
-									</li>
-									<li>
-										<a href="#"> <i class="mdi mdi-diamond-stone"></i> Projects </a>
-									</li>
-									<li class="right-sidebar-in">
-										<a href="javascript:0"> <i class="mdi mdi-settings-outline"></i> Setting </a>
-									</li> --}}
+									
 									<li class="dropdown-footer">
 										<a href="index.html"> <i class="mdi mdi-logout"></i> Log Out </a>
 									</li>
-								</ul>
+								</ul> --}}
 							</li>
 							<li class=" notifications-menu">
 								<a href="{{ route('cart') }}" class="dropdown-toggle">
@@ -752,10 +728,10 @@
         <!-- Footer -->
 			<footer class="footer mt-auto">
 				<div class="copyright bg-white">
-					<p>
+					{{-- <p>
 						Copyright &copy; <span id="ec-year"></span><a class="text-primary"
 						href="https://themeforest.net/user/ashishmaraviya" target="_blank"> Ekka Admin Dashboard</a>. All Rights Reserved.
-					  </p>
+					  </p> --}}
 				</div>
 			</footer>
 
@@ -794,61 +770,195 @@
 
 </body>
 
-@if(session('notification'))
-    <?php $notif = session('notification'); ?>
-    
-    <!-- Hidden trigger -->
-    <button type="button" class="btn btn-primary d-none" id="notifTrigger" data-bs-toggle="modal" data-bs-target="#notifModal"></button>
 
-    <!-- Modern Notification Modal -->
-    <div class="modal fade" id="notifModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-md">
-            <div class="modal-content shadow-lg border-0" style="border-radius: 20px; overflow: hidden;">
-                <!-- Header with gradient background -->
-                <div class="modal-header 
-                    @if($notif['type']=='success') bg-gradient-success 
-                    @elseif($notif['type']=='error') bg-gradient-danger 
-                    @else bg-gradient-info @endif 
-                    text-white border-0">
-                    <h5 class="modal-title w-100 text-center">{{ $notif['title'] }}</h5>
-                </div>
 
-                <!-- Body -->
-                <div class="modal-body text-center p-4" style="font-size: 1.1rem; color: #333;">
-                    <p class="mb-0">{{ $notif['message'] }}</p>
-                </div>
+<!-- Include iziToast CSS & JS if not already included -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+<script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
 
-                <!-- Footer -->
-                <div class="modal-footer justify-content-center border-0 pb-4">
-                    <button class="btn btn-outline-dark px-4 rounded-pill" data-bs-dismiss="modal">OK</button>
-                </div>
-            </div>
+<!-- Modal CSS -->
+<style>
+    .action_modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .action_modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .action_modal {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 32px;
+        max-width: 400px;
+        width: 90%;
+        box-shadow:
+            0 25px 50px -12px rgba(0, 0, 0, 0.25),
+            0 0 0 1px rgba(255, 255, 255, 0.3);
+        transform: scale(0.9) translateY(20px);
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        text-align: center;
+        position: relative;
+    }
+
+    .action_modal-overlay.active .action_modal {
+        transform: scale(1) translateY(0);
+    }
+
+    .action_modal-icon {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .action_modal-icon.success {
+        background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    .action_modal-icon.error {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+
+    .action_modal-icon.info {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+
+    .action_modal-icon.warning {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+    }
+
+    .action_modal-title {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #1f2937;
+    }
+
+    .action_modal-message {
+        font-size: 16px;
+        color: #6b7280;
+        margin-bottom: 24px;
+        line-height: 1.5;
+    }
+
+    .action_modal-btn {
+        padding: 12px 28px;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: white;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .action_modal-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+    }
+</style>
+
+<!-- Modal HTML -->
+<div class="action_modal-overlay" id="clipboardModal" onclick="closeClipboardModal(event)">
+    <div class="action_modal" onclick="event.stopPropagation()">
+        <div class="action_modal-icon" id="modalIcon">
+            <span id="modalIconText"><i class="fa fa-info-circle text-white"></i></span>
         </div>
+        <h3 class="action_modal-title" id="modalTitle">Notice</h3>
+        <p class="action_modal-message" id="modalMessage">This is a message.</p>
+        <button class="action_modal-btn" onclick="closeClipboardModal()">Ok</button>
     </div>
+</div>
 
-    <!-- Extra Styles -->
-    <style>
-        .bg-gradient-success {
-            background: linear-gradient(135deg, #28a745, #218838);
-        }
-        .bg-gradient-danger {
-            background: linear-gradient(135deg, #dc3545, #c82333);
-        }
-        .bg-gradient-info {
-            background: linear-gradient(135deg, #17a2b8, #138496);
-        }
-        #notifModal .modal-content {
-            animation: pop-in 0.3s ease-out;
-        }
-        @keyframes pop-in {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-    </style>
+<!-- Modal JS -->
+<script>
+    function showSessionModal(type, message) {
+        const overlay = document.getElementById('clipboardModal');
+        const icon = document.getElementById('modalIcon');
+        const iconText = document.getElementById('modalIconText');
+        const title = document.getElementById('modalTitle');
+        const msg = document.getElementById('modalMessage');
 
-    <!-- Auto-show script -->
-   
-@endif
+        // Reset classes to allow proper icon color
+        icon.className = 'action_modal-icon';
+
+        if (type === 'success') {
+            icon.classList.add('success');
+            iconText.innerHTML = '<i class="fa fa-check-circle text-white"></i>';
+            title.textContent = 'Success!';
+        } else if (type === 'info') {
+            icon.classList.add('info');
+            iconText.innerHTML = '<i class="fa fa-info-circle text-white"></i>';
+            title.textContent = 'Info';
+        } else if (type === 'warning') {
+            icon.classList.add('warning');
+            iconText.innerHTML = '<i class="fa fa-exclamation-triangle text-white"></i>';
+            title.textContent = 'Warning';
+        } else if (type === 'error') {
+            icon.classList.add('error');
+            iconText.innerHTML = '<i class="fa fa-times-circle text-white"></i>';
+            title.textContent = 'Error';
+        } else {
+            icon.classList.add('info');
+            iconText.innerHTML = '<i class="fa fa-info-circle text-white"></i>';
+            title.textContent = 'Notice';
+        }
+
+        msg.textContent = message;
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeClipboardModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+
+        const overlay = document.getElementById('clipboardModal');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Close modal on Escape key press
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeClipboardModal();
+        }
+    });
+
+    @if(Session::has('message'))
+    // Get Laravel flash message type and message
+    const type = "{{ Session::get('alert-type', 'info') }}";
+    const message = "{{ Session::get('message') }}";
+
+    // Show modal on page load
+    showSessionModal(type, message);
+
+    // Clear session keys so it won't show again
+    {{ Session::forget('message') }}
+    {{ Session::forget('alert-type') }}
+    @endif
+</script>
 
 
 <script>

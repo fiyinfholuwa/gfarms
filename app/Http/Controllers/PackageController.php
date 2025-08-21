@@ -1,14 +1,15 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Order;
 use App\Models\Payment;
+use App\Models\User;
+use Dojah\Client; // the correct SDK class
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use Dojah\Client; // the correct SDK class
 
 
 class PackageController extends Controller
@@ -104,7 +105,7 @@ public function complete(Request $request)
         return view('auth.package', compact('packages'));
     }
 
-    private function createFincraPayment($user, $reference)
+    private function createFincraPayment($user, $amount, $reference)
     {
         $redirectUrl = route('package.callback');
     
@@ -116,7 +117,7 @@ public function complete(Request $request)
             'content-type' => 'application/json'
         ])->post($this->get_base_url() . '/checkout/payments', [
             "currency"       => "NGN",
-            "amount"         => 500,
+            "amount"         => $amount,
             "customer"       => [
                 "name"  => $user->first_name . " ". $user->last_name,
                 "email" => $user->email
@@ -133,14 +134,14 @@ public function complete(Request $request)
     }
     
 
-    private function createPaystackPayment($user, $reference)
+    private function createPaystackPayment($user, $amount, $reference)
 {
     $redirectUrl = route('package.callback');
 
     $response = Http::withToken(env('PAYSTACK_SECRET_KEY'))
         ->post('https://api.paystack.co/transaction/initialize', [
             "email"        => $user->email,
-            "amount"       => 500 * 100,
+            "amount"       => $amount * 100,
             "reference"    => $reference,
             "callback_url" => $redirectUrl,
         ])->json();
@@ -160,13 +161,13 @@ public function complete(Request $request)
 
     // Generate reference with gateway prefix
     $reference = strtoupper($gateway) . '_' . Str::uuid();
-
+    $amount = 500;
     // Save pending payment
     DB::table('payments')->insert([
         'user_id'    => $user->id,
         'package'    => 'onboarding',
         'reference'  => $reference,
-        'amount'     => 1500,
+        'amount'     => $amount,
         'status'     => 'pending',
         'gateway'    => $gateway,
         'created_at' => now(),
@@ -175,8 +176,8 @@ public function complete(Request $request)
 
     // ✅ Call the correct payment creation method
     $paymentResponse = ($gateway === 'paystack') 
-        ? $this->createPaystackPayment($user, $reference) 
-        : $this->createFincraPayment($user, $reference);
+        ? $this->createPaystackPayment($user,  $amount, $reference) 
+        : $this->createFincraPayment($user, $amount, $reference);
 
     // ✅ Normalize the payment URL (both methods must return ['url' => '...'])
     if (empty($paymentResponse['url'])) {
@@ -186,6 +187,48 @@ public function complete(Request $request)
     // ✅ Redirect to gateway URL
     return redirect($paymentResponse['url']);
 }
+
+
+public function pay_processing_fee(Request $request)
+{
+    $gateway = $request->payment_type;
+    $id = $request->order_id;
+    $user = Auth::user();
+    $amount = 1000;
+    $reference = strtoupper($gateway) . '_' . Str::uuid();
+
+    // Save pending payment
+    DB::table('payments')->insert([
+        'user_id'    => $user->id,
+        'package'    => 'processing_fee|'.$id,
+        'reference'  => $reference,
+        'amount'     => $amount,
+        'status'     => 'pending',
+        'gateway'    => $gateway,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    // Call the correct payment creation method
+    $paymentResponse = ($gateway === 'paystack') 
+        ? $this->createPaystackPayment($user, $amount, $reference) 
+        : $this->createFincraPayment($user, $amount, $reference);
+
+    if (empty($paymentResponse['url'])) {
+        return response()->json([
+            'status'  => 'error',
+            'title'   => 'Processing Fee Payment!',
+            'message' => 'Payment Service is Down, Kindly Try Again Later or Reach out to Admin for Assistance',
+        ], 500);
+    }
+
+    return response()->json([
+        'status' => 'success',
+        'url'    => $paymentResponse['url'],
+        'reference' => $reference,
+    ]);
+}
+
 
 
     /**
@@ -225,14 +268,37 @@ public function complete(Request $request)
     /**
      * ✅ Callback for Both Paystack & Fincra
      */
+
+     public static function checkProcessingFee($string)
+    {
+        if (strpos($string, 'processing_fee|') !== false) {
+            $parts = explode('|', $string);
+
+            // make sure there's a value after "|"
+            if (isset($parts[1]) && is_numeric($parts[1])) {
+                return [
+                    'status' => true,
+                    'id' => (int)$parts[1]
+                ];
+            }
+        }
+
+        return [
+            'status' => false,
+            'id' => null
+        ];
+    }
+
     public function paymentCallback(Request $request)
     {
         $reference = $request->query('reference');
         $payment = DB::table('payments')->where('reference', $reference)->first();
 
         if (!$payment) {
-            return GeneralController::sendNotification('', 'error', 'Onboarding Payment!', 'Payment record not found.');
+            return GeneralController::sendNotification('', 'error', ' Online Payment!', 'Payment record not found.');
         }
+        $check_package = self::checkProcessingFee($payment->package);
+
 
         // ✅ Determine which gateway to verify
         $verifyResponse = ($payment->gateway === 'paystack') 
@@ -244,14 +310,27 @@ public function complete(Request $request)
                 'status'     => 'success',
                 'updated_at' => now()
             ]);
+            if($check_package['status']){
+                Order::where('id', $check_package['id'])
+                ->update(['has_paid_delivery_fee' => 'yes']);
+                        }
             User::findOrFail($payment->user_id)->update(['has_paid_onboarding' => 'yes']);
-            return GeneralController::sendNotification('dashboard', 'success', 'Onboarding Payment!', 'Payment successful!');
+            if($check_package['status']){
+                return GeneralController::sendNotification('user.orders', 'success', 'Online  Payment!', 'Payment successful!');
+            }else{
+                return GeneralController::sendNotification('dashboard', 'success', 'Online  Payment!', 'Payment successful!');
+            }
         } else {
             DB::table('payments')->where('reference', $reference)->update([
                 'status'     => 'failed',
                 'updated_at' => now()
             ]);
-            return GeneralController::sendNotification('dashboard', 'error', 'Onboarding Payment!', 'Payment verification failed.');
+            if($check_package['status']){
+                return GeneralController::sendNotification('user.orders', 'error', 'Online Payment!', 'Payment verification failed.');
+            }else{
+                return GeneralController::sendNotification('dashboard', 'error', 'Online Payment!', 'Payment verification failed.');
+            }
+
         }
     }
 

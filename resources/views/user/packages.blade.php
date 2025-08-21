@@ -673,25 +673,29 @@
         </div>
 
        <div class="container my-5">
-    <div class="row g-4">
-        @foreach($categories as $category)
-            <a href="{{ route('food.category', $category->category_url) }}">
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0 rounded-4 h-100 text-center">
-                    <div class="card-body d-flex flex-column justify-content-center">
-                        <h5 class="card-title fw-bold text-primary">{{ $category->name }} ( {{ $category->foods_count }})</h5>
-                    
+   <div class="row g-4">
+    @foreach($categories as $category)
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="card shadow-sm border-0 rounded-4 h-100 text-center">
+                <a href="{{ route('food.category', $category->category_url) }}" 
+                   class="text-decoration-none text-dark h-100 d-flex flex-column justify-content-center">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold text-primary">
+                            {{ $category->name }} ({{ $category->foods_count }})
+                        </h5>
                     </div>
-                    
-                </div>
+                </a>
             </div>
-            </a>
-        @endforeach
-    </div>
+        </div>
+    @endforeach
+</div>
+
 </div>
 
       <div class="product-grid" id="productGrid">
-    @foreach($foods as $food)
+
+      @if (count($foods) > 0)
+          @foreach($foods as $food)
         <div class="product-card" data-name="{{ strtolower($food->name) }}">
             
             {{-- Category Badge --}}
@@ -733,8 +737,8 @@
 
         {{-- Modal for Food Details --}}
         <div class="modal fade" id="foodModal-{{ $food->id }}" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
+            <div class="modal-dialog modal-lg">
+                <div style="padding:40px;" class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">{{ $food->name }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -767,6 +771,21 @@
             </div>
         </div>
     @endforeach
+
+    @else
+    <div class="col-12 d-flex justify-content-center align-items-center" style="min-height: 50vh;">
+    <div class="text-center p-5 border rounded-4 shadow-sm bg-light" style="max-width: 500px;">
+        <div class="mb-3">
+            <i class="fas fa-box-open fa-4x text-muted"></i>
+        </div>
+        <h4 class="fw-bold text-secondary">No Products Available</h4>
+        <p class="text-muted"> Please check back later for amazing updates 🌟</p>
+        
+    </div>
+</div>
+
+      @endif
+    
 </div>
 
     </div>

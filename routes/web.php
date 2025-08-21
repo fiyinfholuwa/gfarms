@@ -7,10 +7,14 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SupportTicketController;
 use App\Http\Controllers\UserDashboardController;
 use App\Models\Cart;
+use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+
 
 
 
@@ -25,7 +29,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('user.dashboard');
+    $recent_orders = Order::where('user_id', Auth::id())->paginate(5);
+    return view('user.dashboard', compact('recent_orders'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -60,6 +65,12 @@ Route::middleware(['auth', 'onboard_kyc'])->group(function () {
     });
     // Dashboard
 
+
+    Route::get('/support', [SupportTicketController::class, 'index'])->name('support.index');
+    Route::post('/support/store', [SupportTicketController::class, 'store'])->name('support.store');
+    Route::post('/support/update/{id}', [SupportTicketController::class, 'update'])->name('support.update');
+    Route::post('/support/delete/{id}', [SupportTicketController::class, 'destroy'])->name('support.delete');
+    
     // Profile
     Route::get('/profile', [UserDashboardController::class, 'profile'])->name('user.profile');
 
@@ -86,7 +97,6 @@ Route::middleware(['auth', 'onboard_kyc'])->group(function () {
 
     // Support
     Route::get('/cart', [UserDashboardController::class, 'my_cart'])->name('cart');
-    Route::get('/support', [UserDashboardController::class, 'index'])->name('user.support');
 
     // Logout
     Route::get('/logout', [UserDashboardController::class, 'logout'])->name('logout');
@@ -157,7 +167,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/notifications', [UserDashboardController::class, 'notifications'])->name('user.notifications');
 
     // Support
-    Route::get('/support', [UserDashboardController::class, 'index'])->name('user.support');
 
     // Logout
     Route::get('/logout', [UserDashboardController::class, 'logout'])->name('logout');
@@ -176,6 +185,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Order API routes
     Route::post('/orders/checkout', [OrderController::class, 'checkout'])->name('checkout');
+    Route::post('/orders/processing/payment', [PackageController::class, 'pay_processing_fee'])->name('order.processing');
     
     // Assuming you have a food market route
     Route::get('/food-market', 'YourFoodMarketController@index')->name('food-market');
