@@ -10,43 +10,54 @@
 				<div class="content">
 					<!-- Top Statistics -->
 					<div class="row">
-						<div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
-							<div class="card card-mini dash-card card-1">
-								<div class="card-body">
-									<h2 class="mb-1">1,503</h2>
-									<p>Daily Signups</p>
-									<span class="mdi mdi-account-arrow-left"></span>
-								</div>
-							</div>
-						</div>
-						<div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
-							<div class="card card-mini dash-card card-2">
-								<div class="card-body">
-									<h2 class="mb-1">79,503</h2>
-									<p>Daily Visitors</p>
-									<span class="mdi mdi-account-clock"></span>
-								</div>
-							</div>
-						</div>
-						<div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
-							<div class="card card-mini dash-card card-3">
-								<div class="card-body">
-									<h2 class="mb-1">15,503</h2>
-									<p>Daily Order</p>
-									<span class="mdi mdi-package-variant"></span>
-								</div>
-							</div>
-						</div>
-						<div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
-							<div class="card card-mini dash-card card-4">
-								<div class="card-body">
-									<h2 class="mb-1">$98,503</h2>
-									<p>Daily Revenue</p>
-									<span class="mdi mdi-currency-usd"></span>
-								</div>
-							</div>
-						</div>
-					</div>
+    <div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
+        <div class="card card-mini dash-card card-1">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-1">{{ $total_orders }}</h2>
+                    <p>Total Orders</p>
+                </div>
+                <span class="mdi mdi-cart-outline icon-lg text-primary"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
+        <div class="card card-mini dash-card card-2">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-1">{{ $total_products }}</h2>
+                    <p>Total Food Products</p>
+                </div>
+                <span class="mdi mdi-food-fork-drink icon-lg text-success"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
+        <div class="card card-mini dash-card card-3">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-1">{{ $total_users }}</h2>
+                    <p>Total Users</p>
+                </div>
+                <span class="mdi mdi-account-group-outline icon-lg text-warning"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
+        <div class="card card-mini dash-card card-4">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-1">{{ $total_revenues }}</h2>
+                    <p>Total Revenues</p>
+                </div>
+                <span class="mdi mdi-cash-multiple icon-lg text-danger"></span>
+            </div>
+        </div>
+    </div>
+</div>
 
 					{{-- <div class="row">
 						<div class="col-xl-8 col-md-12 p-b-15">
@@ -301,178 +312,98 @@
 						</div>
 					</div> --}}
 
-					<div class="row">
-						<div class="col-12 p-b-15">
-							<!-- Recent Order Table -->
-							<div class="card card-table-border-none card-default recent-orders" id="recent-orders">
-								<div class="card-header justify-content-between">
-									<h2>Recent Orders</h2>
-									<div class="date-range-report">
-										<span></span>
-									</div>
-								</div>
-								<div class="card-body pt-0 pb-5">
-									<table class="table card-table table-responsive table-responsive-large"
-										style="width:100%">
-										<thead>
-											<tr>
-												<th>Order ID</th>
-												<th>Product Name</th>
-												<th class="d-none d-lg-table-cell">Units</th>
-												<th class="d-none d-lg-table-cell">Order Date</th>
-												<th class="d-none d-lg-table-cell">Order Cost</th>
-												<th>Status</th>
-												<th></th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>24541</td>
-												<td>
-													<a class="text-dark" href=""> Coach Swagger</a>
-												</td>
-												<td class="d-none d-lg-table-cell">1 Unit</td>
-												<td class="d-none d-lg-table-cell">Oct 20, 2018</td>
-												<td class="d-none d-lg-table-cell">$230</td>
-												<td>
-													<span class="badge badge-success">Completed</span>
-												</td>
-												<td class="text-right">
-													<div class="dropdown show d-inline-block widget-dropdown">
-														<a class="dropdown-toggle icon-burger-mini" href=""
-															role="button" id="dropdown-recent-order1"
-															data-bs-toggle="dropdown" aria-haspopup="true"
-															aria-expanded="false" data-display="static"></a>
-														<ul class="dropdown-menu dropdown-menu-right">
-															<li class="dropdown-item">
-																<a href="#">View</a>
-															</li>
-															<li class="dropdown-item">
-																<a href="#">Remove</a>
-															</li>
-														</ul>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td>24541</td>
-												<td>
-													<a class="text-dark" href=""> Toddler Shoes, Gucci Watch</a>
-												</td>
-												<td class="d-none d-lg-table-cell">2 Units</td>
-												<td class="d-none d-lg-table-cell">Nov 15, 2018</td>
-												<td class="d-none d-lg-table-cell">$550</td>
-												<td>
-													<span class="badge badge-primary">Delayed</span>
-												</td>
-												<td class="text-right">
-													<div class="dropdown show d-inline-block widget-dropdown">
-														<a class="dropdown-toggle icon-burger-mini" href="#"
-															role="button" id="dropdown-recent-order2"
-															data-bs-toggle="dropdown" aria-haspopup="true"
-															aria-expanded="false" data-display="static"></a>
-														<ul class="dropdown-menu dropdown-menu-right">
-															<li class="dropdown-item">
-																<a href="#">View</a>
-															</li>
-															<li class="dropdown-item">
-																<a href="#">Remove</a>
-															</li>
-														</ul>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td>24541</td>
-												<td>
-													<a class="text-dark" href=""> Hat Black Suits</a>
-												</td>
-												<td class="d-none d-lg-table-cell">1 Unit</td>
-												<td class="d-none d-lg-table-cell">Nov 18, 2018</td>
-												<td class="d-none d-lg-table-cell">$325</td>
-												<td>
-													<span class="badge badge-warning">On Hold</span>
-												</td>
-												<td class="text-right">
-													<div class="dropdown show d-inline-block widget-dropdown">
-														<a class="dropdown-toggle icon-burger-mini" href="#"
-															role="button" id="dropdown-recent-order3"
-															data-bs-toggle="dropdown" aria-haspopup="true"
-															aria-expanded="false" data-display="static"></a>
-														<ul class="dropdown-menu dropdown-menu-right">
-															<li class="dropdown-item">
-																<a href="#">View</a>
-															</li>
-															<li class="dropdown-item">
-																<a href="#">Remove</a>
-															</li>
-														</ul>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td>24541</td>
-												<td>
-													<a class="text-dark" href=""> Backpack Gents, Swimming Cap Slin</a>
-												</td>
-												<td class="d-none d-lg-table-cell">5 Units</td>
-												<td class="d-none d-lg-table-cell">Dec 13, 2018</td>
-												<td class="d-none d-lg-table-cell">$200</td>
-												<td>
-													<span class="badge badge-success">Completed</span>
-												</td>
-												<td class="text-right">
-													<div class="dropdown show d-inline-block widget-dropdown">
-														<a class="dropdown-toggle icon-burger-mini" href="#"
-															role="button" id="dropdown-recent-order4"
-															data-bs-toggle="dropdown" aria-haspopup="true"
-															aria-expanded="false" data-display="static"></a>
-														<ul class="dropdown-menu dropdown-menu-right">
-															<li class="dropdown-item">
-																<a href="#">View</a>
-															</li>
-															<li class="dropdown-item">
-																<a href="#">Remove</a>
-															</li>
-														</ul>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td>24541</td>
-												<td>
-													<a class="text-dark" href=""> Speed 500 Ignite</a>
-												</td>
-												<td class="d-none d-lg-table-cell">1 Unit</td>
-												<td class="d-none d-lg-table-cell">Dec 23, 2018</td>
-												<td class="d-none d-lg-table-cell">$150</td>
-												<td>
-													<span class="badge badge-danger">Cancelled</span>
-												</td>
-												<td class="text-right">
-													<div class="dropdown show d-inline-block widget-dropdown">
-														<a class="dropdown-toggle icon-burger-mini" href="#"
-															role="button" id="dropdown-recent-order5"
-															data-bs-toggle="dropdown" aria-haspopup="true"
-															aria-expanded="false" data-display="static"></a>
-														<ul class="dropdown-menu dropdown-menu-right">
-															<li class="dropdown-item">
-																<a href="#">View</a>
-															</li>
-															<li class="dropdown-item">
-																<a href="#">Remove</a>
-															</li>
-														</ul>
-													</div>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-					</div>
+						<div class="row">
+    <div class="col-12 p-b-15">
+        <!-- Recent Order Table -->
+        <div class="card card-table-border-none card-default recent-orders" id="recent-orders">
+            <div class="card-header justify-content-between">
+                <h2>Recent Food Orders</h2>
+                <div class="">
+                    <span><a href="{{ route('admin.orders') }}">View All Orders</a></span>
+                </div>
+            </div>
+            <div class="card-body pt-0 pb-5">
+                <table class="table card-table table-responsive table-responsive-large" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Food Item</th>
+                            <th class="d-none d-lg-table-cell">Quantity</th>
+                            <th class="d-none d-lg-table-cell">Order Date</th>
+                            <th class="d-none d-lg-table-cell">Order Cost</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    @forelse($recent_orders as $order)
+        <tr>
+            <!-- Order Number -->
+            <td>{{ $order->order_number }}</td>
 
+            <!-- Food Items (decode JSON) -->
+            <td>
+                @php
+                    $items = $order->items;
+                @endphp
+                @if(is_array($items))
+                    @foreach($items as $item)
+                        <span class="d-block">{{ $item['name'] ?? 'Item' }} (x{{ $item['qty'] ?? 1 }})</span>
+                    @endforeach
+                @else
+                    <span>-</span>
+                @endif
+            </td>
+
+            <!-- Quantity (sum all items) -->
+            <td class="d-none d-lg-table-cell">
+                @if(is_array($items))
+                    {{ collect($items)->sum('qty') }}
+                @else
+                    -
+                @endif
+            </td>
+
+            <!-- Order Date -->
+            <td class="d-none d-lg-table-cell">{{ $order->created_at->format('M d, Y') }}</td>
+
+            <!-- Total Amount -->
+            <td class="d-none d-lg-table-cell">₦{{ number_format($order->total_amount, 2) }}</td>
+
+            <!-- Status -->
+            <td>
+                @php
+                    $statusClass = [
+                        'completed' => 'success',
+                        'pending'   => 'warning',
+                        'cancelled' => 'danger',
+                        'confirmed' => 'primary',
+                    ][$order->status] ?? 'secondary';
+                @endphp
+                <span class="badge badge-{{ $statusClass }}">{{ ucfirst($order->status) }}</span>
+            </td>
+
+            <!-- Actions -->
+            <td class="text-right">
+    <a href="{{ route('admin.order.show', $order->order_number) }}" 
+       class="btn btn-sm btn-primary">
+        <i class="fas fa-eye"></i> View
+    </a>
+</td>
+
+        </tr>
+    @empty
+        <tr>
+            <td colspan="7" class="text-center">No recent orders</td>
+        </tr>
+    @endforelse
+</tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 					{{-- <div class="row">
 						<div class="col-xl-5">
 							<!-- New Customers -->

@@ -48,13 +48,12 @@
 					<ul class="nav sidebar-inner" id="sidebar-menu">
 						<!-- Dashboard -->
     <!-- Dashboard -->
-    <li class="active">
-        <a class="sidenav-item-link" href="">
-            <i class="mdi mdi-view-dashboard-outline"></i>
-            <span class="nav-text">Dashboard</span>
-        </a>
-        <hr>
-    </li>
+   <li class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+    <a href="{{ route('admin.dashboard') }}">
+        <i class="mdi mdi-view-dashboard-outline"></i>
+        <span class="nav-text">Dashboard</span>
+    </a>
+</li>
 
     
 
@@ -85,6 +84,48 @@
         </div>
     </li>
 
+
+
+
+<!-- My Orders -->
+<li class="{{ request()->routeIs('admin.orders') ? 'active' : '' }}">
+    <a class="sidenav-item-link" href="{{ route('admin.orders') }}">
+        <i class="fas fa-box-open"></i>
+        <span class="nav-text">Manage Orders</span>
+    </a>
+</li>
+
+<!-- Payment History -->
+<li class="{{ request()->routeIs('admin.payment') ? 'active' : '' }}">
+    <a class="sidenav-item-link" href="{{ route('admin.payment') }}">
+        <i class="fas fa-wallet"></i>
+        <span class="nav-text">Manage Payment</span>
+    </a>
+</li>
+
+<!-- Support -->
+<li class="{{ request()->routeIs('admin.support') ? 'active' : '' }}">
+    <a class="sidenav-item-link" href="{{ route('admin.support') }}">
+        <i class="fas fa-headset"></i>
+        <span class="nav-text">Manage Support</span>
+    </a>
+</li>
+
+<!-- Account Levels -->
+<li class="{{ request()->routeIs('manage.account.level') ? 'active' : '' }}">
+    <a class="sidenav-item-link" href="{{ route('manage.account.level') }}">
+        <i class="fas fa-layer-group"></i>
+        <span class="nav-text">Manage Levels</span>
+    </a>
+</li>
+
+<!-- Users -->
+<li class="{{ request()->routeIs('manage.user') ? 'active' : '' }}">
+    <a class="sidenav-item-link" href="{{ route('manage.user') }}">
+        <i class="fas fa-users-cog"></i>
+        <span class="nav-text">Manage Users</span>
+    </a>
+</li>
    
     <!-- Logout -->
     <li>
@@ -114,7 +155,7 @@
 					<!-- Sidebar toggle button -->
 					<button id="sidebar-toggler" class="sidebar-toggle"></button>
 					<!-- search form -->
-					<div class="search-form d-lg-inline-block">
+					{{-- <div class="search-form d-lg-inline-block">
 						<div class="input-group">
 							<input type="text" name="query" id="search-input" class="form-control"
 								placeholder="search.." autofocus autocomplete="off" />
@@ -125,13 +166,13 @@
 						<div id="search-results-container">
 							<ul id="search-results"></ul>
 						</div>
-					</div>
+					</div> --}}
 
 					<!-- navbar right -->
 					<div class="navbar-right">
 						<ul class="nav navbar-nav">
 							<!-- User Account -->
-							<li class="dropdown user-menu">
+							{{-- <li class="dropdown user-menu">
 								<button class="dropdown-toggle nav-link ec-drop" data-bs-toggle="dropdown"
 									aria-expanded="false">
 									<img src="assets/img/user/user.png" class="user-image" alt="User Image" />
@@ -164,8 +205,8 @@
 										<a href="index.html"> <i class="mdi mdi-logout"></i> Log Out </a>
 									</li>
 								</ul>
-							</li>
-							<li class="dropdown notifications-menu custom-dropdown">
+							</li> --}}
+							{{-- <li class="dropdown notifications-menu custom-dropdown">
 								<button class="dropdown-toggle notify-toggler custom-dropdown-toggler">
 									<i class="mdi mdi-bell-outline"></i>
 								</button>
@@ -728,10 +769,10 @@
 										<a class="text-center" href="#"> View All </a>
 									</li>
 								</ul>
-							</li>
-							<li class="right-sidebar-in right-sidebar-2-menu">
+							</li> --}}
+							{{-- <li class="right-sidebar-in right-sidebar-2-menu">
 								<i class="mdi mdi-settings-outline mdi-spin"></i>
-							</li>
+							</li> --}}
 						</ul>
 					</div>
 				</nav>
@@ -1050,10 +1091,15 @@
 
 <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
-<script> var editor = new FroalaEditor('#myTextarea'); </script>
+{{-- <script> var editor = new FroalaEditor('#myTextarea'); </script> --}}
 
 
 <script>
+
+document.querySelectorAll('textarea[id^="myTextarea"]').forEach((textarea) => {
+    ClassicEditor.create(textarea).catch(error => console.error(error));
+});
+
     ClassicEditor
         .create(document.querySelector('#myTextarea'))
         .catch(error => {

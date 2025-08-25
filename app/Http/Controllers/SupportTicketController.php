@@ -10,8 +10,13 @@ class SupportTicketController extends Controller
     // List all tickets (admin)
     public function index()
     {
-        $tickets = SupportTicket::with('user')->latest()->get();
+        $tickets = SupportTicket::where('user_id', Auth::user()->id)->with('user')->latest()->get();
         return view('user.support', compact('tickets'));
+    }
+    public function admin_support()
+    {
+        $tickets = SupportTicket::with('user')->latest()->get();
+        return view('admin.support', compact('tickets'));
     }
 
     // Store new ticket
@@ -63,6 +68,18 @@ class SupportTicketController extends Controller
 
         $ticket->delete();
         return GeneralController::sendNotification('', 'success', '', 'Ticket deleted successfully.');
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,resolved,closed',
+        ]);
+
+        $ticket = SupportTicket::findOrFail($id);
+        $ticket->status = $request->status;
+        $ticket->save();
+        return GeneralController::sendNotification('', 'success', '', 'Ticket status updated successfully!');
     }
 }
 

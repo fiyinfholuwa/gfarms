@@ -59,9 +59,9 @@ Route::middleware(['auth', 'onboard_kyc'])->group(function () {
         $userId = Auth::id();
         $cart = Cart::where('user_id', $userId)->first();
         $items = $cart->items;
-    
+
         $count = count($items);
-            return response()->json(['count' => $count]);
+        return response()->json(['count' => $count]);
     });
     // Dashboard
 
@@ -70,7 +70,7 @@ Route::middleware(['auth', 'onboard_kyc'])->group(function () {
     Route::post('/support/store', [SupportTicketController::class, 'store'])->name('support.store');
     Route::post('/support/update/{id}', [SupportTicketController::class, 'update'])->name('support.update');
     Route::post('/support/delete/{id}', [SupportTicketController::class, 'destroy'])->name('support.delete');
-    
+
     // Profile
     Route::get('/profile', [UserDashboardController::class, 'profile'])->name('user.profile');
 
@@ -101,7 +101,6 @@ Route::middleware(['auth', 'onboard_kyc'])->group(function () {
     // Logout
     Route::get('/logout', [UserDashboardController::class, 'logout'])->name('logout');
     Route::get('/user/payment', [PackageController::class, 'payment_user'])->name('user.payment');
-
 });
 
 
@@ -131,6 +130,23 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::delete('/foods/delete/{id}', [AdminController::class, 'product_delete'])->name('foods.destroy');
     Route::get('/foods/all', [AdminController::class, 'product_all'])->name('foods.all');
 
+    Route::get('/orders', [AdminController::class, 'admin_orders'])->name('admin.orders');
+
+    Route::post('/orders/update-status', [AdminController::class, 'updateStatus'])
+        ->name('admin.update.order');
+
+    Route::get('/orders/{order}', [AdminController::class, 'admin_order_show'])->name('admin.order.show');
+
+    Route::get('/payment', [AdminController::class, 'payment_admin'])->name('admin.payment');
+
+    Route::get('/support', [SupportTicketController::class, 'admin_support'])->name('admin.support');
+    Route::post('/support/update-status/{id}', [SupportTicketController::class, 'updateStatus'])->name('support.updateStatus');
+
+
+    Route::get('/kyc-levels', [AdminController::class, 'kyc_level'])->name('manage.account.level');
+    Route::get('/manage/user/', [AdminController::class, 'manage_user'])->name('manage.user');
+    Route::post('/kyc-levels/{key}/update', [AdminController::class, 'update_kyc_level'])->name('admin.kyc.update');
+
 });
 
 
@@ -141,17 +157,17 @@ Route::middleware(['auth'])->group(function () {
     // Profile
 
 
-    Route::get('/admin/category/manage',[AdminController::class, 'category_view'])->name('category.view');
+    Route::get('/admin/category/manage', [AdminController::class, 'category_view'])->name('category.view');
     Route::post('/admin/category/add', [AdminController::class, 'category_add'])->name('category.add');
-    Route::post('/admin/category/delete/{id}',[AdminController::class, 'category_delete'])->name('category.delete');
+    Route::post('/admin/category/delete/{id}', [AdminController::class, 'category_delete'])->name('category.delete');
     Route::get('/admin/category/edit/{id}', [AdminController::class, 'category_edit'])->name('category.edit');
-    Route::post('/admin/category/update/{id}',[AdminController::class, 'category_update'])->name('category.update');
+    Route::post('/admin/category/update/{id}', [AdminController::class, 'category_update'])->name('category.update');
 
     // Apply for Foodstuff Plan
     Route::get('/admin/product/add', [AdminController::class, 'product_view'])->name('admin.product.add');
     Route::get('/admin/dashboard', [AdminController::class, 'admin_dashboard'])->name('admin.dashboard');
 
-    
+
     // Foodstuff Packages
     Route::get('/packages', [UserDashboardController::class, 'browse'])->name('user.packages');
     Route::get('/my-packages', [UserDashboardController::class, 'myPackages'])->name('user.my.packages');
@@ -170,7 +186,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Logout
     Route::get('/logout', [UserDashboardController::class, 'logout'])->name('logout');
-    
+
     Route::get('/orders', [OrderController::class, 'index'])->name('user.orders');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('user.orders.show');
     Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('user.orders.cancel');
@@ -178,7 +194,7 @@ Route::middleware(['auth'])->group(function () {
     // Route::get('/cart', [CartController::class, 'index']);
     Route::post('/cart', [CartController::class, 'store']);
     Route::delete('/cart', [CartController::class, 'destroy']);
-    
+
     Route::post('/cart/update', [CartController::class, 'update_cart'])->name('cart.update');
     Route::post('/cart/remove', [CartController::class, 'remove_from_cart'])->name('cart.remove');
     Route::post('/cart/clear', [CartController::class, 'clear_cart'])->name('cart.clear');
@@ -186,9 +202,9 @@ Route::middleware(['auth'])->group(function () {
     // Order API routes
     Route::post('/orders/checkout', [OrderController::class, 'checkout'])->name('checkout');
     Route::post('/orders/processing/payment', [PackageController::class, 'pay_processing_fee'])->name('order.processing');
-    
+
     // Assuming you have a food market route
     Route::get('/food-market', 'YourFoodMarketController@index')->name('food-market');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
