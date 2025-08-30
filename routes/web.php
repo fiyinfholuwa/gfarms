@@ -202,6 +202,7 @@ Route::middleware(['auth'])->group(function () {
     // Order API routes
     Route::post('/orders/checkout', [OrderController::class, 'checkout'])->name('checkout');
     Route::post('/orders/processing/payment', [PackageController::class, 'pay_processing_fee'])->name('order.processing');
+    Route::get('/generate/virtual/account/', [PackageController::class, 'generate_virtual_account'])->name('generate_virtual_account');
 
     // Assuming you have a food market route
     Route::get('/food-market', 'YourFoodMarketController@index')->name('food-market');

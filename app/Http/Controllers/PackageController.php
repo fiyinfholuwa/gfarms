@@ -16,6 +16,7 @@ class PackageController extends Controller
 {
 
     protected $dojah;
+    protected $baseUrl = "https://api.paystack.co";
 
     /**
      * Initialize Dojah SDK only when needed
@@ -407,6 +408,96 @@ public function payment_user(Request $request)
         ));
     }
 
+
+
+    public function generateVirtualAccountForUser($email, $firstName, $lastName, $phone, $bank = "wema-bank")
+    {
+        // Step 1: Create customer (if already exists, Paystack will return it)
+        $customerResponse = $this->makeRequest("POST", $this->baseUrl . "/customer", [
+            "email" => $email,
+            "first_name" => $firstName,
+            "last_name" => $lastName,
+            "phone" => $phone
+        ]);
+        if (!$customerResponse['status']) {
+            return [
+                "status" => false,
+                "message" => "Failed to create/fetch customer on Paystack",
+                "error" => $customerResponse
+            ];
+        }
+
+        $customerId = $customerResponse['data']['id']; // numeric ID
+
+        // Step 2: Create dedicated account
+        $accountResponse = $this->makeRequest("POST", $this->baseUrl . "/dedicated_account", [
+            "customer" => $customerId,
+            "preferred_bank" => 'test-bank'
+        ]);
+        return $accountResponse;
+    }
+
+    private function makeRequest($method, $url, $data = [])
+    {
+        $client = new \GuzzleHttp\Client();
+
+        $options = [
+            "headers" => [
+                "Authorization" => "Bearer " . env('PAYSTACK_SECRET_KEY'),
+                "Accept" => "application/json"
+            ]
+        ];
+
+        if (!empty($data)) {
+            $options["json"] = $data;
+        }
+
+        $response = $client->request($method, $url, $options);
+
+        return json_decode($response->getBody(), true);
+    }
+
+    public function generate_virtual_account()
+{
+    $email = Auth::user()->email;
+    $first_name = Auth::user()->first_name;
+    $last_name = Auth::user()->last_name;
+    $phone = Auth::user()->phone;
+
+    $account = $this->generateVirtualAccountForUser(
+        $email,
+        $first_name,
+        $last_name,
+        $phone
+    );
+
+    if (!empty($account['status']) && $account['status'] === true) {
+        $user = User::findOrFail(Auth::id());
+
+        // save only account_name + account_number + bank name as JSON
+        $user->virtual_account_number = json_encode([
+            'account_name'   => $account['data']['account_name'] ?? null,
+            'account_number' => $account['data']['account_number'] ?? null,
+            'bank'           => $account['data']['bank'] ?? null,
+        ]);
+        $user->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Account generated successfully',
+            'data' => $user->virtual_account_number
+        ]);
+    }
+
+    return response()->json([
+        'status' => false,
+        'message' => $account['message'] ?? 'Failed to generate account'
+    ]);
 }
+
+
+}
+
+
 
 ?>

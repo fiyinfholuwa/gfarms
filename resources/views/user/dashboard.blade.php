@@ -135,49 +135,70 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xl-3 col-sm-6 p-3">
-                <div class="card card-mini dash-card card-1">
-                    <div class="card-body">
-                        <i class="fas fa-wallet card-icon"></i>
-                            <h2 class="mb-1">₦{{ number_format(Auth::user()->wallet_balance) }}</h2>
-                        <p>Wallet Balance</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-xl-3 col-sm-6 p-3">
-                <div class="card card-mini dash-card card-2">
-                    <div class="card-body">
-                        <i class="fas fa-chart-line card-icon"></i>
-                        <h2 class="mb-1">₦{{ number_format(Auth::user()->loan_balance) }}</h2>
-                        <p>Loan Balance</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-xl-3 col-sm-6 p-3">
-                <div class="card card-mini dash-card card-3">
-                    <div class="card-body account-section">
-                        <i class="fas fa-university card-icon"></i>
-                        <button class="copy-btn" onclick="copyAccountNumber()" id="copyBtn">
-                            <i class="fas fa-copy"></i> Copy
-                        </button>
-                        <h2 class="mb-1 account-number" id="accountNumber">2300221232</h2>
-                        <p>Wema Bank</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-xl-3 col-sm-6 p-3">
-                <div class="card card-mini dash-card card-4">
-                    <div class="card-body">
-                        <i class="fas fa-user-circle card-icon"></i>
-                        <h2 class="mb-1">Active</h2>
-                        <p>User Account</p>
-                    </div>
-                </div>
+    <div class="col-xl-3 col-sm-6 p-3 d-flex">
+        <div class="card card-mini dash-card card-1 w-100">
+            <div class="card-body">
+                <i class="fas fa-wallet card-icon"></i>
+                <h2 class="mb-1">₦{{ number_format(Auth::user()->wallet_balance) }}</h2>
+                <p>Wallet Balance</p>
             </div>
         </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6 p-3 d-flex">
+        <div class="card card-mini dash-card card-2 w-100">
+            <div class="card-body">
+                <i class="fas fa-chart-line card-icon"></i>
+                <h2 class="mb-1">₦{{ number_format(Auth::user()->loan_balance) }}</h2>
+                <p>Loan Balance</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6 p-3 d-flex">
+        <div class="card card-mini dash-card card-3 w-100">
+            <div class="card-body account-section text-center">
+                @if(empty(Auth::user()->virtual_account_number))
+                    <!-- Generate button -->
+                    <button style="background:black;" class="btn btn-primary w-100" id="generateBtn" onclick="generateAccount()">
+                        Generate Account
+    <i id="spinner" class="fa fa-spinner fa-spin d-none"></i>
+                    </button>
+                @else
+                    @php
+                        $accountData = json_decode(Auth::user()->virtual_account_number, true);
+                    @endphp
+
+                    <!-- Account Number + Copy -->
+                    <div class="d-flex justify-content-center align-items-center mb-2">
+                        <h2 class="mb-0 account-number me-2" id="accountNumber">
+                            {{ $accountData['account_number'] ?? '' }}
+                        </h2>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="copyAccountNumber()" id="copyBtn">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+
+                    <!-- Bank Name -->
+                    <p class="text-muted mb-0">
+                        {{ $accountData['bank']['name'] ?? '' }} | {{ $accountData['account_name'] ?? '' }}
+                    </p>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6 p-3 d-flex">
+        <div class="card card-mini dash-card card-4 w-100">
+            <div class="card-body">
+                <i class="fas fa-user-circle card-icon"></i>
+                <h2 class="mb-1">Active</h2>
+                <p>User Account</p>
+            </div>
+        </div>
+    </div>
+</div>
+
     </div>
 
     <!-- Toast Container -->
@@ -240,6 +261,48 @@
             });
         }
     </script>
+
+    <script>
+function generateAccount() {
+    let btn = document.getElementById("generateBtn");
+    let spinner = document.getElementById("spinner");
+
+    // save the original text
+    let originalText = btn.innerText.trim();
+
+    btn.disabled = true;
+    btn.firstChild.textContent = "Generating... "; // change button text
+    spinner.classList.remove("d-none");
+
+    fetch("{{ route('generate_virtual_account') }}", {
+        method: "GET",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === true) {
+            alert("Account generated successfully!");
+            location.reload();
+        } else {
+            alert("Failed to generate account: " + (data.message || "Unknown error"));
+        }
+    })
+    .catch(err => {
+        alert("Error: " + err.message);
+    })
+    .finally(() => {
+        btn.disabled = false;
+        btn.firstChild.textContent = originalText + " "; // restore original text
+        spinner.classList.add("d-none");
+    });
+}
+
+
+</script>
+
 </body>
 </html>
 					
