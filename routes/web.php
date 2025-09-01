@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PackageController;
+use App\Http\Controllers\PaymentWebhookController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportTicketController;
 use App\Http\Controllers\UserDashboardController;
@@ -13,6 +14,7 @@ use App\Models\Cart;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -207,5 +209,8 @@ Route::middleware(['auth'])->group(function () {
     // Assuming you have a food market route
     Route::get('/food-market', 'YourFoodMarketController@index')->name('food-market');
 });
+
+Route::post('/paystack/webhook', [PaymentWebhookController::class, 'handleWebhook']);
+
 
 require __DIR__ . '/auth.php';

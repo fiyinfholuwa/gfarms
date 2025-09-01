@@ -16,6 +16,8 @@
 
 	<link href="https://cdn.materialdesignicons.com/4.4.95/css/materialdesignicons.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
 
 	<!-- PLUGINS CSS STYLE -->
 	<link href="{{ asset('assets/plugins/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
@@ -39,7 +41,7 @@
 			<div id="sidebar" class="sidebar ec-sidebar-footer">
 
 				<div style="padding:5px;" class="ec-brand text-center">
-									<img style="width:100px !important" class="ec-brand-icon" src="https://fingo.smartrobtech.co.uk/wp-content/uploads/2025/07/Fingo-Aurelius-LTD-Logo.png" alt="" />
+									<img style="width:250px !important; padding:20px;" class="ec-brand-icon" src="https://fingo.smartrobtech.co.uk/wp-content/uploads/2025/07/Fingo-Aurelius-LTD-Logo.png" alt="" />
 				</div>
 
 				<!-- begin sidebar scrollbar -->

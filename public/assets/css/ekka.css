@@ -20091,9 +20091,11 @@ div.copied {
 }
 .navbar .sidebar-offcanvas-toggle:before,
 .navbar .sidebar-toggle:before {
-  content: "神";
-  font-family: "Material Design Icons";
+  font-family: "Font Awesome 6 Free";  /* must match the font name */
+  font-weight: 900; /* solid style */
+  content: "\f0c9"; /* Unicode for fa-bars */
 }
+
 .navbar .navbar-toggler i {
   color: #8a909d;
 }
@@ -20958,7 +20960,7 @@ div.copied {
   .ec-left-sidebar {
     -webkit-transform: translateX(0);
             transform: translateX(0);
-    width: 250px;
+    width: 250px !important;
     position: relative;
     z-index: 1;
   }
@@ -20994,6 +20996,7 @@ div.copied {
 @media (min-width: 768px) {
   .sidebar .sidebar-inner {
     margin-top: 20px;
+    width: 250px !important;
   }
 }
 @media (min-width: 1200px) {
