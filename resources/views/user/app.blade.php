@@ -122,13 +122,18 @@
 					<button id="sidebar-toggler" class="sidebar-toggle"></button>
 					<!-- search form -->
 					<div class="search-form d-lg-inline-block">
-						<div class="input-group">
-							<input type="text" name="query" id="search-input" class="form-control"
-								placeholder="search.." autofocus autocomplete="off" />
-							<button type="button" name="search" id="search-btn" class="btn btn-flat">
-								<i class="mdi mdi-magnify"></i>
-							</button>
-						</div>
+						<form method="GET" action="{{ route('food.search') }}">
+    <div class="input-group">
+        <input type="text" name="query" id="search-input"
+               class="form-control"
+               placeholder="Search by title..."
+               value="{{ request('query') }}">
+        <button type="submit" class="btn btn-flat">
+            <i class="mdi mdi-magnify"></i>
+        </button>
+    </div>
+</form>
+
 						{{-- <div id="search-results-container">
 							<ul id="search-results"></ul>
 						</div> --}}

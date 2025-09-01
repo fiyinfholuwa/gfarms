@@ -87,6 +87,8 @@ Route::middleware(['auth', 'onboard_kyc'])->group(function () {
     Route::get('/food/category/{name}', [UserDashboardController::class, 'food_category'])->name('food.category');
     Route::get('/my-packages', [UserDashboardController::class, 'myPackages'])->name('user.my.packages');
 
+    Route::get('/search-food', [UserDashboardController::class, 'search_food'])->name('food.search');
+
     // Repayment
     Route::get('/repayments/schedule', [UserDashboardController::class, 'schedule'])->name('user.repayments.schedule');
     Route::get('/repayments/history', [UserDashboardController::class, 'history'])->name('user.repayments.history');

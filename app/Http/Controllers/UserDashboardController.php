@@ -24,4 +24,16 @@ class UserDashboardController extends Controller
         $carts = Cart::where('user_id', '=', Auth::user()->id)->get();
         return view('user.cart', compact('carts'));
     }
+
+    public function search_food(Request $request)
+{
+    $query = $request->input('query');
+
+    $foods = Food::when($query, function ($q) use ($query) {
+        $q->where('name', 'LIKE', '%' . $query . '%');
+    })->get();
+
+    return view('user.food_search', compact('foods', 'query'));
+}
+
 }
