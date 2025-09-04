@@ -1,125 +1,63 @@
-@extends('auth.app')
+@extends('auth_new.app')
 
 @section('content')
-<style>
-    .otp-container {
-        display: flex;
-        min-height: 100vh;
-        background: #f8f9fa;
-        flex-wrap: wrap;
-    }
-    .otp-image {
-        flex: 1;
-        background: url('https://businesspost.ng/wp-content/uploads/2023/08/Raw-Food-Items.jpg') no-repeat center center;
-        background-size: cover;
-    }
-    .otp-section {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 50px;
-        background: #fff;
-        box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-    }
-    .otp-card {
-        width: 100%;
-        max-width: 400px;
-        text-align: center;
-    }
-    .brand-logo {
-        margin-bottom: 20px;
-    }
-    .brand-logo img {
-        max-width: 180px;
-    }
-    .otp-input-group {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin-bottom: 20px;
-    }
-    .otp-input {
-        width: 45px;
-        height: 50px;
-        font-size: 20px;
-        text-align: center;
-        border: 2px solid #ddd;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-    }
-    .otp-input:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 5px rgba(0,123,255,0.5);
-        outline: none;
-    }
-    .otp-card button {
-        width: 100%;
-        padding: 12px;
-        font-size: 16px;
-        border-radius: 8px;
-    }
-    .otp-card a {
-        color: #007bff;
-        text-decoration: none;
-    }
-    .otp-card a:hover {
-        text-decoration: underline;
-    }
-
-    /* ✅ Hide image on small screens */
-    @media (max-width: 768px) {
-        .otp-image {
-            display: none;
-        }
-        .otp-section {
-            flex: 1 1 100%;
-            box-shadow: none;
-        }
-    }
-</style>
-
-<div class="otp-container">
-    <!-- Left Image -->
-    <div class="otp-image"></div>
-
-    <!-- OTP Form Section -->
-    <div class="otp-section">
-        <div class="otp-card">
-            <div class="brand-logo">
-                <a href="#">
-                    <img src="https://fingo.smartrobtech.co.uk/wp-content/uploads/2025/07/Fingo-Aurelius-LTD-Logo.png" alt="Logo">
-                </a>
-            </div>
-
-            <p class="mb-4">Enter the 6-digit OTP sent to your email</p>
-
-            {{-- ✅ OTP Verification Form --}}
-            <form action="{{ route('otp.verify.submit') }}" method="POST" id="otpForm">
-                @csrf
-                <div class="otp-input-group">
-                    @for($i = 1; $i <= 6; $i++)
-                        <input type="text" name="otp[]" maxlength="1" class="otp-input" required>
-                    @endfor
-                </div>
-                @error('otp')
-                    <small style="color:red; font-weight:bolder;">{{ $message }}</small>
-                @enderror
-                <button type="submit" class="btn btn-primary mb-3">Verify OTP</button>
-            </form>
-
-            {{-- ✅ Resend OTP --}}
-            <form action="{{ route('otp.resend') }}" method="POST">
-                @csrf
-                <button type="submit" class="btn btn-link">Resend OTP</button>
-            </form>
-
-            <p class="mt-3"><a href="{{ route('login') }}">Back to Login</a></p>
+<div class="auth-img">
+    <img class="img-fluid auth-bg" src="https://www.agrohandlers.com/uploaded_files/blog-pix/202309180828_ORGANIC-FOOD-STORE-BUSINESS-PLAN-IN-NIGERIA.jpg" alt="auth_bg" />
+    <div class="auth-content">
+        <div>
+            <h2>Email Verification</h2>
+            <h4 class="p-0">Enter the OTP sent to your email</h4>
         </div>
     </div>
 </div>
 
-{{-- ✅ JavaScript for OTP Navigation --}}
+<form class="auth-form" method="POST" action="{{ route('otp.verify.submit') }}">
+    @csrf
+    <div class="custom-container">
+
+        {{-- OTP Input Fields --}}
+        <div class="form-group">
+            <label class="form-label">OTP</label>
+            <div class="otp-input-group d-flex gap-2 mb-2">
+                @for($i = 0; $i < 6; $i++)
+                    <input type="text" name="otp[]" maxlength="1" 
+                           class="otp-input form-control text-center @error('otp')  @enderror" 
+                           required>
+                @endfor
+            </div>
+            @error('otp')
+                <small class="text-danger">{{ $message }}</small>
+            @enderror
+        </div>
+
+        {{-- Global Error (wrong OTP) --}}
+        @if(session('error'))
+            <div class="alert alert-danger mt-2">{{ session('error') }}</div>
+        @endif
+
+        {{-- Success Message --}}
+        @if(session('status'))
+            <div class="alert alert-success mt-2">{{ session('status') }}</div>
+        @endif
+
+        {{-- Submit --}}
+        <div class="submit-btn mt-3">
+            <button type="submit" class="btn auth-btn w-100">Verify OTP</button>
+        </div>
+
+        {{-- Resend OTP --}}
+        <div class="mt-3 text-center">
+            <form action="{{ route('otp.resend') }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-link">Resend OTP</button>
+            </form>
+        </div>
+
+        <p class="mt-3"><a href="{{ route('login') }}">Back to Login</a></p>
+    </div>
+</form>
+
+{{-- OTP Auto Navigation --}}
 <script>
 document.querySelectorAll('.otp-input').forEach((input, index, arr) => {
     input.addEventListener('input', function () {
@@ -135,49 +73,18 @@ document.querySelectorAll('.otp-input').forEach((input, index, arr) => {
 });
 </script>
 
-{{-- ✅ Custom Toast Styles --}}
+{{-- OTP Styles --}}
 <style>
-.toast {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #007bff;
-    color: #fff;
-    padding: 15px 20px;
+.otp-input-group {
+    display: flex;
+    justify-content: center;
+}
+.otp-input {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    text-align: center;
     border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    opacity: 0;
-    transform: translateY(-20px);
-    transition: all 0.4s ease;
-    z-index: 9999;
-}
-.toast.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-.toast.error {
-    background: #dc3545;
-}
-.toast.success {
-    background: #28a745;
 }
 </style>
-
-@if(session('status'))
-    <div id="toast" class="toast success">{{ session('status') }}</div>
-@endif
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const toast = document.getElementById("toast");
-    if(toast){
-        toast.classList.add("show");
-        setTimeout(() => {
-            toast.classList.remove("show");
-        }, 4000); // ✅ Hide after 4 seconds
-    }
-});
-</script>
-
-
 @endsection

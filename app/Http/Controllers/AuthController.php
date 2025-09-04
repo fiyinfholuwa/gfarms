@@ -12,58 +12,106 @@ class AuthController extends Controller
 {
     public function showVerifyForm()
     {
-        return view('auth.email_verification');
+        return view('auth_new.email_verification');
     }
+
 
     public function verify(Request $request)
     {
-        $request->validate([
-            'otp' => 'required|array|size:6',
-            'otp.*' => 'required|numeric',
-        ]);
+        try {
+            $request->validate([
+                'otp' => 'required',
+            ]);
 
-        $email = Auth::user()->email;
-        $enteredOtp = implode('', $request->otp);
+            $email = Auth::user()->email;
+            $enteredOtp = $request->otp;
 
-        if (Cache::get('otp_' . $email) == $enteredOtp) {
-            Cache::forget('otp_' . $email);
-            User::findOrFail(Auth::user()->id)->update(['has_verified_email' => 'yes']);
-            return redirect()->route('check_login')->with('success', 'OTP verified successfully!');
-        }
+            // Check if OTP exists and matches
+            $storedOtp = Cache::get('otp_' . $email);
 
-        return back()->withErrors(['otp' => 'Invalid or expired OTP']);
-    }
+            if ($storedOtp == $enteredOtp) {
+                // Clear the OTP from cache
+                Cache::forget('otp_' . $email);
 
-    public function resend()
-    {
-        $email = Auth::user()->email;
-        $otp = rand(100000, 999999);
+                // Update user verification status
+                User::findOrFail(Auth::user()->id)->update(['has_verified_email' => 'yes']);
 
-        // ✅ Store new OTP in cache
-        Cache::put('otp_' . $email, $otp, now()->addMinutes(10));
+                return response()->json(['message' => 'OTP verified successfully!', 'status'=> true]);
 
-        // ✅ Send OTP directly from here
-        Mail::raw("Your new OTP code is: {$otp}\n\nIt expires in 10 minutes.", function ($message) use ($email) {
-            $message->to($email)->subject('Your New Aurelious OTP Code');
-        });
-
-        return back()->with('status', 'A new OTP has been sent to your email.');
-    }
-
-    public function check_login(){
-        if (Auth::id()) {
-            if(Auth::user()->user_role ==='admin'){
-                return redirect()->route('admin.dashboard'); 
+                // return redirect()->route('check_login')->with('success', 'OTP verified successfully!');
             }
-            if (Auth::user()->has_verified_email=='no') {
+
+
+            return response()->json(['message' => 'Invalid OTP. Please try again.', 'status'=> false], 400);
+
+            // return back()->withErrors(['otp' => 'Invalid OTP. Please try again.']);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            
+            return response()->json(['message' => 'Please enter all 6 digits of the OTP.', 'status'=> false], 422);
+
+        } catch (\Exception $e) {
+
+            return response()->json(['message' => 'Something went wrong. Please try again.', 'status'=> false], 500);
+
+        }
+    }
+
+    public function resend(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            $email = $user->email;
+
+            // Generate new OTP
+            $otp = rand(100000, 999999);
+
+            // Store OTP in cache with 10 minutes expiry
+            Cache::put('otp_' . $email, $otp, now()->addMinutes(10));
+
+            // Send email
+            Mail::raw("Your new OTP code is: {$otp}\n\nIt expires in 10 minutes.\n\nIf you didn't request this, please ignore this email.", function ($message) use ($email) {
+                $message->to($email)
+                    ->subject('Your New Aurelious OTP Code')
+                    ->from(config('mail.from.address'), config('mail.from.name'));
+            });
+
+            // Log for debugging (remove in production)
+
+
+            return response()->json([
+                'message' => 'A new OTP has been sent to your email.',
+                'success' => true
+            ]);
+            // return back()->with('status', 'A new OTP has been sent to your email.');
+
+        } catch (\Exception $e) {
+
+
+            return response()->json([
+                'messsage' => 'Failed to send OTP. Please try again. ' . $e->getMessage(),
+                'success' => false
+            ], 500);
+
+            // return back()->with('error', 'Failed to send OTP. Please try again.');
+        }
+    }
+
+
+    public function check_login()
+    {
+        if (Auth::id()) {
+            if (Auth::user()->user_role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            }
+            if (Auth::user()->has_verified_email == 'no') {
                 return redirect()->route('otp.verify');
-            }elseif(Auth::user()->has_paid_onboarding=='yes'){
+            } elseif (Auth::user()->has_paid_onboarding == 'yes') {
                 return redirect()->route('dashboard');
-             }
-            else{
+            } else {
                 return redirect()->route('login');
             }
-        }else{
+        } else {
             return redirect()->back();
         }
     }

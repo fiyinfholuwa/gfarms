@@ -11,9 +11,12 @@ use Illuminate\Support\Facades\Auth;
 class UserDashboardController extends Controller
 {
     public function browse(){
+        $foods = Food::all();
+        return view('user_new.shop', compact('foods'));
+    }
+    public function category(){
         $categories = Category::withCount('foods')->get();
-        $foods = Food::all(); // Get all available foods
-        return view('user.packages', compact('foods', 'categories'));
+        return view('user_new.category', compact('categories'));
     }
     public function food_category($name){
         $category = Category::where('category_url', '=', $name)->first();

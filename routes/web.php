@@ -11,6 +11,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportTicketController;
 use App\Http\Controllers\UserDashboardController;
 use App\Models\Cart;
+use App\Models\Food;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -26,13 +27,15 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
 Route::get('/', function () {
-    return view('auth.login');
+    return view('auth_new.login');
 });
 
 Route::get('/dashboard', function () {
     $recent_orders = Order::where('user_id', Auth::id())->paginate(5);
-    return view('user.dashboard', compact('recent_orders'));
+    $foods = Food::paginate(5);
+    return view('user_new.dashboard', compact('foods'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -83,7 +86,8 @@ Route::middleware(['auth', 'onboard_kyc'])->group(function () {
     Route::get('/apply-plan', [UserDashboardController::class, 'apply'])->name('user.apply.plan');
 
     // Foodstuff Packages
-    Route::get('/packages', [UserDashboardController::class, 'browse'])->name('user.packages');
+    Route::get('/shop', [UserDashboardController::class, 'browse'])->name('user.packages');
+    Route::get('/categories', [UserDashboardController::class, 'category'])->name('category');
     Route::get('/food/category/{name}', [UserDashboardController::class, 'food_category'])->name('food.category');
     Route::get('/my-packages', [UserDashboardController::class, 'myPackages'])->name('user.my.packages');
 
@@ -173,7 +177,6 @@ Route::middleware(['auth'])->group(function () {
 
 
     // Foodstuff Packages
-    Route::get('/packages', [UserDashboardController::class, 'browse'])->name('user.packages');
     Route::get('/my-packages', [UserDashboardController::class, 'myPackages'])->name('user.my.packages');
 
     // Repayment
