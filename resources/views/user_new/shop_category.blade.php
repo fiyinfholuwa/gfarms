@@ -4,11 +4,23 @@
 <!-- banner section start -->
   
     
+    <!-- Breadcrumb / Title Section -->
+<section class="section-t-space">
+    <div class="custom-container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent p-0 mb-3">
+                <li class="breadcrumb-item"><a href="{{ route('user.packages') }}">Shop / Category</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $category->name }}</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
     <!-- Foods Section Start -->
 <section class="section-t-space">
     <div class="custom-container">
         <div class="title d-flex justify-content-between align-items-center">
-            <h2 class="text-center">Shop</h2>
+            {{-- <h2 class="text-center">Shop</h2> --}}
         </div>
 
         <div class="row g-4">

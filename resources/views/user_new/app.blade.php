@@ -25,6 +25,7 @@
     <!-- Font Awesome CDN -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" 
       crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 
     <!-- iconsax css -->
@@ -52,43 +53,51 @@
           <ul class="link-section">
             
             <li>
-              <a href="{{ route('dashboard') }}" class="pages">
-                <h4>Dashboard</h4>
-                <i class="ri-arrow-drop-right-line"></i>
-              </a>
-            </li>
+  <a href="{{ route('dashboard') }}" class="pages {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+    <h4>Dashboard</h4>
+    <i class="ri-arrow-drop-right-line"></i>
+  </a>
+</li>
 
-            <li>
-              <a href="" class="pages">
-                <h4>Food Market</h4>
-                <i class="ri-arrow-drop-right-line"></i>
-              </a>
-            </li>
-            <li>
-              <a href="" class="pages">
-                <h4>My Orders</h4>
-                <i class="ri-arrow-drop-right-line"></i>
-              </a>
-            </li>
-            <li>
-              <a href="" class="pages">
-                <h4>Payment History</h4>
-                <i class="ri-arrow-drop-right-line"></i>
-              </a>
-            </li>
-            <li>
-              <a href="" class="pages">
-                <h4>Support</h4>
-                <i class="ri-arrow-drop-right-line"></i>
-              </a>
-            </li>
+<li>
+  <a href="{{ route('user.packages') }}" class="pages {{ request()->routeIs('user.packages') ? 'active' : '' }}">
+    <h4>Food Market</h4>
+    <i class="ri-arrow-drop-right-line"></i>
+  </a>
+</li>
 
-            <li>
-              <a href="{{ route('logout') }}" class="pages">
-                <h4>Logout</h4>
-                <i class="ri-arrow-drop-right-line"></i>
-              </a>
-            </li>
+<li>
+  <a href="{{ route('user.orders') }}" class="pages {{ request()->routeIs('user.orders') ? 'active' : '' }}">
+    <h4>My Orders</h4>
+    <i class="ri-arrow-drop-right-line"></i>
+  </a>
+</li>
+
+<li>
+  <a href="{{ route('user.payment') }}" class="pages {{ request()->routeIs('user.payment') ? 'active' : '' }}">
+    <h4>Payment History</h4>
+    <i class="ri-arrow-drop-right-line"></i>
+  </a>
+</li>
+
+<li>
+  <a href="{{ route('support.index') }}" class="pages {{ request()->routeIs('support.index') ? 'active' : '' }}">
+    <h4>Support</h4>
+    <i class="ri-arrow-drop-right-line"></i>
+  </a>
+</li>
+
+<li>
+  <a href="#" class="pages"
+     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+    <h4>Logout</h4>
+    <i class="ri-arrow-drop-right-line"></i>
+  </a>
+  <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
+      @csrf
+  </form>
+</li>
+
           </ul>
         </div>
       </div>
@@ -111,8 +120,10 @@
               </div>
             </div>
           </div>
-          <a href="" class="notification">
-            <i class="iconsax notification-icon" data-icon="bell-2"></i>
+          <a href="{{ route('cart') }}" class="">
+<i class="fa fa-shopping-cart" style="font-size:20px; color:#555;"></i>
+<sup class="badge bg-danger" id="cart-count">0</sup>
+
           </a>
         </div>
       </div>
@@ -122,16 +133,19 @@
     <!-- search section starts -->
     <section>
       <div class="custom-container">
-        <form class="theme-form search-head" target="_blank">
+
+      
+
+        <form class="theme-form search-head" method="GET" action="{{ route('food.search') }}" >
           <div class="form-group">
             <div class="form-input">
-              <input type="text" class="form-control search" id="inputusername" placeholder="Search here..." />
-              {{-- <i class="iconsax search-icon" data-icon="search-normal-2"></i> --}}
+              <input type="text" class="form-control search" name="query" id="inputusername" value="{{ request('query') }}" placeholder="Search here..." />
             </div>
 
-            <a href="#search-filter" class="btn filter-btn mt-0" data-bs-toggle="modal">
+<button  type="submit" class="btn filter-btn mt-0">
   <i class="fa fa-search"></i>
-</a>
+        </button>
+
 
           </div>
         </form>
@@ -146,59 +160,54 @@
     <!-- panel-space end -->
 
     <!-- bottom navbar start -->
-    <div class="navbar-menu">
-      <ul>
-        <li class="active">
-          <a href="{{ route('dashboard') }}">
-            <div class="icon">
-              <img class="unactive" src="assets/images/svg/home.svg" alt="home" />
-              <img class="active" src="assets/images/svg/home-fill.svg" alt="home" />
-            </div>
-          </a>
-        </li>
-        <li>
-          <a href="{{ route('category') }}">
-            <div class="icon">
-              <img class="unactive" src="assets/images/svg/categories.svg" alt="categories" />
-              <img class="active" src="assets/images/svg/categories-fill.svg" alt="categories" />
-            </div>
-          </a>
-        </li>
-        <li>
-          <a href="{{ route('user.packages') }}">
-            <div class="icon">
-              <img class="unactive" src="assets/images/svg/bag.svg" alt="bag" />
-              <img class="active" src="assets/images/svg/bag-fill.svg" alt="bag" />
-            </div>
-          </a>
-        </li>
-        <li>
-          <a href="">
-            <div class="icon">
-              <img class="unactive" src="assets/images/svg/bag.svg" alt="bag" />
-              <img class="active" src="assets/images/svg/bag-fill.svg" alt="bag" />
-            </div>
-          </a>
-        </li>
-        <li>
-          <a href="">
-            <div class="icon">
-              <img class="unactive" src="assets/images/svg/heart.svg" alt="heart" />
-              <img class="active" src="assets/images/svg/heart-fill.svg" alt="heart" />
-            </div>
-          </a>
-        </li>
-        <li>
-          <a href="">
-            <div class="icon">
-              <img class="unactive" src="assets/images/svg/profile.svg" alt="profile" />
-              <img class="active" src="assets/images/svg/profile-fill.svg" alt="profile" />
-            </div>
-          </a>
-        </li>
-      </ul>
-    </div>
+   <div class="navbar-menu">
+  <ul style="list-style:none; display:flex; gap:30px; padding:0; margin:0;">
+    <li>
+      <a href="{{ route('dashboard') }}">
+        <i class="fa fa-home" 
+           style="font-size:28px; color:{{ request()->routeIs('dashboard') ? 'orange' : '#555' }};">
+        </i>
+      </a>
+    </li>
+
+    <li>
+      <a href="{{ route('category') }}">
+        <i class="fa fa-tag" 
+           style="font-size:28px; color:{{ request()->routeIs('category') ? 'orange' : '#555' }};">
+        </i>
+      </a>
+    </li>
+
+    <li>
+      <a href="{{ route('user.packages') }}">
+        <i class="fa fa-shopping-bag" 
+           style="font-size:28px; color:{{ request()->routeIs('user.packages') ? 'orange' : '#555' }};">
+        </i>
+      </a>
+    </li>
+
+    <li>
+      <a href="{{ route('user.payment') }}">
+        <i class="fa fa-exchange" 
+           style="font-size:28px; color:{{ request()->routeIs('user.payment') ? 'orange' : '#555' }};">
+        </i>
+      </a>
+    </li>
+
+    <li>
+      <a href="{{ route('user.orders') }}">
+        <i class="fas fa-shopping-cart" 
+           style="font-size:28px; color:{{ request()->routeIs('user.orders') ? 'orange' : '#555' }};">
+        </i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
     <!-- bottom navbar end -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- swiper js -->
     <script src="{{ asset('assets/js/swiper-bundle.min.js') }}"></script>
@@ -215,6 +224,228 @@
 
     <!-- script js -->
     <script src="{{ asset('assets/js/script.js') }}"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    function updateCartCount() {
+        fetch("/cart/count")
+            .then(response => response.json())
+            .then(data => {
+                console.log("Cart count response:", data); // 🔥 debug
+                const cartCountEl = document.getElementById("cart-count");
+                if (cartCountEl) {
+                    cartCountEl.innerText = data.count ?? 0; // fallback to 0
+                }
+            })
+            .catch(err => {
+                console.error("Error fetching cart count:", err);
+                const cartCountEl = document.getElementById("cart-count");
+                if (cartCountEl) {
+                    cartCountEl.innerText = 0; // ✅ show 0 if error
+                }
+            });
+    }
+
+    // Run immediately
+    updateCartCount();
+
+    // Refresh every 10 seconds
+    setInterval(updateCartCount, 10000);
+});
+</script>
+
+
+
+
+<!-- Include iziToast CSS & JS if not already included -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+<script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+
+<!-- Modal CSS -->
+<style>
+    .action_modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .action_modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .action_modal {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 32px;
+        max-width: 400px;
+        width: 90%;
+        box-shadow:
+            0 25px 50px -12px rgba(0, 0, 0, 0.25),
+            0 0 0 1px rgba(255, 255, 255, 0.3);
+        transform: scale(0.9) translateY(20px);
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        text-align: center;
+        position: relative;
+    }
+
+    .action_modal-overlay.active .action_modal {
+        transform: scale(1) translateY(0);
+    }
+
+    .action_modal-icon {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .action_modal-icon.success {
+        background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    .action_modal-icon.error {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+
+    .action_modal-icon.info {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+
+    .action_modal-icon.warning {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+    }
+
+    .action_modal-title {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #1f2937;
+    }
+
+    .action_modal-message {
+        font-size: 16px;
+        color: #6b7280;
+        margin-bottom: 24px;
+        line-height: 1.5;
+    }
+
+    .action_modal-btn {
+        padding: 12px 28px;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: white;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .action_modal-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+    }
+</style>
+
+<!-- Modal HTML -->
+<div class="action_modal-overlay" id="clipboardModal" onclick="closeClipboardModal(event)">
+    <div class="action_modal" onclick="event.stopPropagation()">
+        <div class="action_modal-icon" id="modalIcon">
+            <span id="modalIconText"><i class="fa fa-info-circle text-white"></i></span>
+        </div>
+        <h3 class="action_modal-title" id="modalTitle">Notice</h3>
+        <p class="action_modal-message" id="modalMessage">This is a message.</p>
+        <button class="action_modal-btn" onclick="closeClipboardModal()">Ok</button>
+    </div>
+</div>
+
+<!-- Modal JS -->
+<script>
+    function showSessionModal(type, message) {
+        const overlay = document.getElementById('clipboardModal');
+        const icon = document.getElementById('modalIcon');
+        const iconText = document.getElementById('modalIconText');
+        const title = document.getElementById('modalTitle');
+        const msg = document.getElementById('modalMessage');
+
+        // Reset classes to allow proper icon color
+        icon.className = 'action_modal-icon';
+
+        if (type === 'success') {
+            icon.classList.add('success');
+            iconText.innerHTML = '<i class="fa fa-check-circle text-white"></i>';
+            title.textContent = 'Success!';
+        } else if (type === 'info') {
+            icon.classList.add('info');
+            iconText.innerHTML = '<i class="fa fa-info-circle text-white"></i>';
+            title.textContent = 'Info';
+        } else if (type === 'warning') {
+            icon.classList.add('warning');
+            iconText.innerHTML = '<i class="fa fa-exclamation-triangle text-white"></i>';
+            title.textContent = 'Warning';
+        } else if (type === 'error') {
+            icon.classList.add('error');
+            iconText.innerHTML = '<i class="fa fa-times-circle text-white"></i>';
+            title.textContent = 'Error';
+        } else {
+            icon.classList.add('info');
+            iconText.innerHTML = '<i class="fa fa-info-circle text-white"></i>';
+            title.textContent = 'Notice';
+        }
+
+        msg.textContent = message;
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeClipboardModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+
+        const overlay = document.getElementById('clipboardModal');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Close modal on Escape key press
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeClipboardModal();
+        }
+    });
+
+    @if(Session::has('message'))
+    // Get Laravel flash message type and message
+    const type = "{{ Session::get('alert-type', 'info') }}";
+    const message = "{{ Session::get('message') }}";
+
+    // Show modal on page load
+    showSessionModal(type, message);
+
+    // Clear session keys so it won't show again
+    {{ Session::forget('message') }}
+    {{ Session::forget('alert-type') }}
+    @endif
+</script>
+
+    
   </body>
 
 <!-- Mirrored from themes.pixelstrap.com/fuzzy/landing.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 02 Sep 2025 07:35:23 GMT -->

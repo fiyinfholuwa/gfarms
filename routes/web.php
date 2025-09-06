@@ -87,6 +87,7 @@ Route::middleware(['auth', 'onboard_kyc'])->group(function () {
 
     // Foodstuff Packages
     Route::get('/shop', [UserDashboardController::class, 'browse'])->name('user.packages');
+    Route::get('/shop/detail/{name}', [UserDashboardController::class, 'shop_detail'])->name('shop.detail');
     Route::get('/categories', [UserDashboardController::class, 'category'])->name('category');
     Route::get('/food/category/{name}', [UserDashboardController::class, 'food_category'])->name('food.category');
     Route::get('/my-packages', [UserDashboardController::class, 'myPackages'])->name('user.my.packages');

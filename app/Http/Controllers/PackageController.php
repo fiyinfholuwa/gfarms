@@ -400,7 +400,7 @@ public function payment_user(Request $request)
         $totalPayments = $allUserPayments->count();
         $successfulPayments = $allUserPayments->where('status', 'success')->count();
         
-        return view('user.payment', compact(
+        return view('user_new.transaction', compact(
             'payments', 
             'totalAmount', 
             'totalPayments', 

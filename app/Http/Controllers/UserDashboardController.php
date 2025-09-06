@@ -21,11 +21,15 @@ class UserDashboardController extends Controller
     public function food_category($name){
         $category = Category::where('category_url', '=', $name)->first();
         $foods = Food::where('category', $category->id)->get(); // Get all available foods
-        return view('user.food_category', compact('foods', 'category'));
+        return view('user_new.shop_category', compact('foods', 'category'));
+    }
+    public function shop_detail($name){
+        $food = Food::where('slug', $name)->first(); 
+        return view('user_new.shop_detail', compact('food'));
     }
     public function my_cart(){
         $carts = Cart::where('user_id', '=', Auth::user()->id)->get();
-        return view('user.cart', compact('carts'));
+        return view('user_new.cart', compact('carts'));
     }
 
     public function search_food(Request $request)
@@ -36,7 +40,7 @@ class UserDashboardController extends Controller
         $q->where('name', 'LIKE', '%' . $query . '%');
     })->get();
 
-    return view('user.food_search', compact('foods', 'query'));
+    return view('user_new.shop_search', compact('foods', 'query'));
 }
 
 }

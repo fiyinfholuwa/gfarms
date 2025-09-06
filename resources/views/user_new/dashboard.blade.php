@@ -390,7 +390,7 @@ function generateAccount() {
                             <div class="product-box-img">
                                                                 <h5 class="badge bg-warning">{{ optional($food->cat)->name ?? 'Uncategorized' }}</h5>
 
-                                <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#foodModal-{{ $food->id }}">
+                                <a href="{{ route('shop.detail', $food->slug) }}">
                                     <img class="img" 
                                          src="{{ $food->image ? asset($food->image) : asset('images/placeholder.png') }}" 
                                          alt="{{ $food->name }}" />
@@ -427,41 +427,6 @@ function generateAccount() {
                         </div>
                     </div>
 
-                    {{-- Modal for Food Details --}}
-                    <div class="modal fade" id="foodModal-{{ $food->id }}" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content p-4">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">{{ $food->name }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <img src="{{ $food->image ? asset($food->image) : asset('images/placeholder.png') }}" 
-                                                 alt="{{ $food->name }}" class="img-fluid rounded">
-                                        </div>
-                                        <div class="col-md-7">
-                                            <h4 class="fw-bold">₦{{ number_format($food->amount, 2) }}</h4>
-                                            <p>{{ $food->description ?? $food->short_description }}</p>
-
-                                            @if($food->cat)
-                                                <span class="badge bg-secondary">{{ $food->cat->name }}</span>
-                                            @endif
-
-                                            <div class="mt-3">
-                                                <button 
-                                                    onclick="addToCart({{ $food->id }}, '{{ addslashes($food->name) }}', {{ $food->amount }})"
-                                                    class="btn btn-success">
-                                                    <i class="fas fa-cart-plus"></i> Add to Cart
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 @endforeach
             @else
                 <div class="col-12 d-flex justify-content-center align-items-center" style="min-height: 50vh;">
@@ -879,5 +844,7 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     </section> --}}
     <!-- banner section end -->
+
+
 
 @endsection

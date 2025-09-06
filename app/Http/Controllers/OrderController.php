@@ -142,14 +142,14 @@ class OrderController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('user.orders', compact('orders'));
+        return view('user_new.order', compact('orders'));
     }
 
     public function show($order)
     {
 
         $order = Order::where('order_number', '=', $order)->first();
-        return view('user.orders_detail', compact('order'));
+        return view('user_new.order_detail', compact('order'));
     }
 
     public function cancel(Order $order)

@@ -11,7 +11,7 @@ class SupportTicketController extends Controller
     public function index()
     {
         $tickets = SupportTicket::where('user_id', Auth::user()->id)->with('user')->latest()->get();
-        return view('user.support', compact('tickets'));
+        return view('user_new.support', compact('tickets'));
     }
     public function admin_support()
     {
