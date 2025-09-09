@@ -106,28 +106,73 @@
 
     <!-- header start -->
     <header class="section-t-space">
-      <div class="custom-container">
-        <div class="header">
-          <div class="head-content">
-            <button class="sidebar-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft">
-              <i class="iconsax menu-icon" data-icon="menu-hamburger"></i>
-            </button>
-            <div class="header-info">
-              <img class="img-fluid profile-pic" style="width:100px; height:70px;" src="https://fingo.smartrobtech.co.uk/wp-content/uploads/2025/07/Fingo-Aurelius-LTD-Logo.png" alt="profile" />
-              <div>
-                <h4 class="light-text">Hello</h4>
-                <h2 class="theme-color">{{ Auth::user()->first_name }}</h2>
-              </div>
-            </div>
-          </div>
-          <a href="{{ route('cart') }}" class="">
-<i class="fa fa-shopping-cart" style="font-size:20px; color:#555;"></i>
-<sup class="badge bg-danger" id="cart-count">0</sup>
+  <div class="custom-container">
+    <div class="header">
+      <div class="head-content">
+        <button class="sidebar-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft">
+          <i class="iconsax menu-icon" data-icon="menu-hamburger"></i>
+        </button>
 
-          </a>
+        <div class="header-info">
+          <img class="img-fluid profile-pic" 
+               src="https://fingo.smartrobtech.co.uk/wp-content/uploads/2025/07/Fingo-Aurelius-LTD-Logo.png" 
+               alt="profile" />
+          <div>
+            <h4 class="light-text">Hello</h4>
+            <h2 class="theme-color">{{ Auth::user()->first_name }}</h2>
+          </div>
         </div>
       </div>
-    </header>
+
+      <a href="{{ route('cart') }}" class="cart-link">
+        <i class="fa fa-shopping-cart"></i>
+        <sup class="badge bg-danger" id="cart-count">0</sup>
+      </a>
+    </div>
+  </div>
+</header>
+
+<style>
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.head-content {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-pic {
+  width: 80px !important;
+  height: 60px !important;
+  {{-- object-fit: contain; --}}
+}
+
+.cart-link {
+  position: relative;
+  font-size: 20px;
+  color: #555;
+  text-decoration: none;
+}
+
+.cart-link sup {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  font-size: 12px;
+}
+
+</style>
     <!-- header end -->
 
     <!-- search section starts -->
@@ -167,6 +212,7 @@
         <i class="fa fa-home" 
            style="font-size:28px; color:{{ request()->routeIs('dashboard') ? 'orange' : '#555' }};">
         </i>
+        <span class="b-label">Home</span>
       </a>
     </li>
 
@@ -175,6 +221,8 @@
         <i class="fa fa-tag" 
            style="font-size:28px; color:{{ request()->routeIs('category') ? 'orange' : '#555' }};">
         </i>
+                <span class="b-label">Category</span>
+
       </a>
     </li>
 
@@ -183,6 +231,8 @@
         <i class="fa fa-shopping-bag" 
            style="font-size:28px; color:{{ request()->routeIs('user.packages') ? 'orange' : '#555' }};">
         </i>
+                        <span class="b-label">Shop</span>
+
       </a>
     </li>
 
@@ -191,6 +241,8 @@
         <i class="fa fa-exchange" 
            style="font-size:28px; color:{{ request()->routeIs('user.payment') ? 'orange' : '#555' }};">
         </i>
+                                <span class="b-label">Payment</span>
+
       </a>
     </li>
 
@@ -199,11 +251,26 @@
         <i class="fas fa-shopping-cart" 
            style="font-size:28px; color:{{ request()->routeIs('user.orders') ? 'orange' : '#555' }};">
         </i>
+                                <span class="b-label">Orders</span>
+
       </a>
     </li>
   </ul>
 </div>
 
+<style>
+.b-label{
+
+  font-size:12px;
+}
+
+@media(max-width:375px){
+  .b-label{
+
+  font-size:8px !important;
+}
+}
+</style>
 
     <!-- bottom navbar end -->
 

@@ -20,14 +20,14 @@
 
 
 	<!-- PLUGINS CSS STYLE -->
-	<link href="{{ asset('assets/plugins/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
-	<link href="{{ asset('assets/plugins/simplebar/simplebar.css') }}" rel="stylesheet" />
+	<link href="{{ asset('assets_old/plugins/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
+	<link href="{{ asset('assets_old/plugins/simplebar/simplebar.css') }}" rel="stylesheet" />
 
 	<!-- Ekka CSS -->
-	<link id="ekka-css" href="{{ asset('assets/css/ekka.css') }}" rel="stylesheet" />
+	<link id="ekka-css" href="{{ asset('assets_old/css/ekka.css') }}" rel="stylesheet" />
 
 	<!-- FAVICON -->
-	<link href="assets/img/favicon.png" rel="shortcut icon" />
+	<link href="assets_old/img/favicon.png" rel="shortcut icon" />
 
 </head>
 
@@ -177,12 +177,12 @@
 							{{-- <li class="dropdown user-menu">
 								<button class="dropdown-toggle nav-link ec-drop" data-bs-toggle="dropdown"
 									aria-expanded="false">
-									<img src="assets/img/user/user.png" class="user-image" alt="User Image" />
+									<img src="assets_old/img/user/user.png" class="user-image" alt="User Image" />
 								</button>
 								<ul class="dropdown-menu dropdown-menu-right ec-dropdown-menu">
 									<!-- User image -->
 									<li class="dropdown-header">
-										<img src="assets/img/user/user.png" class="img-circle" alt="User Image" />
+										<img src="assets_old/img/user/user.png" class="img-circle" alt="User Image" />
 										<div class="d-inline-block">
 											John Deo <small class="pt-1">john.example@gmail.com</small>
 										</div>
@@ -247,7 +247,7 @@
 														<a href="javscript:void(0)"
 															class="media media-message media-notification">
 															<div class="position-relative mr-3">
-																<img class="rounded-circle" src="assets/img/user/u2.jpg"
+																<img class="rounded-circle" src="assets_old/img/user/u2.jpg"
 																	alt="Image">
 																<span class="status away"></span>
 															</div>
@@ -272,7 +272,7 @@
 														<a href="javscript:void(0)"
 															class="media media-message media-notification media-active">
 															<div class="position-relative mr-3">
-																<img class="rounded-circle" src="assets/img/user/u1.jpg"
+																<img class="rounded-circle" src="assets_old/img/user/u1.jpg"
 																	alt="Image">
 																<span class="status active"></span>
 															</div>
@@ -297,7 +297,7 @@
 														<a href="javscript:void(0)"
 															class="media media-message media-notification">
 															<div class="position-relative mr-3">
-																<img class="rounded-circle" src="assets/img/user/u5.jpg"
+																<img class="rounded-circle" src="assets_old/img/user/u5.jpg"
 																	alt="Image">
 																<span class="status away"></span>
 															</div>
@@ -463,7 +463,7 @@
 														<a href="javscript:void(0)"
 															class="media media-message media-notification">
 															<div class="position-relative mr-3">
-																<img class="rounded-circle" src="assets/img/user/u6.jpg"
+																<img class="rounded-circle" src="assets_old/img/user/u6.jpg"
 																	alt="Image">
 																<span class="status away"></span>
 															</div>
@@ -488,7 +488,7 @@
 														<a href="javscript:void(0)"
 															class="media media-message media-notification">
 															<div class="position-relative mr-3">
-																<img class="rounded-circle" src="assets/img/user/u7.jpg"
+																<img class="rounded-circle" src="assets_old/img/user/u7.jpg"
 																	alt="Image">
 																<span class="status away"></span>
 															</div>
@@ -513,7 +513,7 @@
 														<a href="javscript:void(0)"
 															class="media media-message media-notification media-active">
 															<div class="position-relative mr-3">
-																<img class="rounded-circle" src="assets/img/user/u1.jpg"
+																<img class="rounded-circle" src="assets_old/img/user/u1.jpg"
 																	alt="Image">
 																<span class="status active"></span>
 															</div>
@@ -538,7 +538,7 @@
 														<a href="javscript:void(0)"
 															class="media media-message media-notification">
 															<div class="position-relative mr-3">
-																<img class="rounded-circle" src="assets/img/user/u2.jpg"
+																<img class="rounded-circle" src="assets_old/img/user/u2.jpg"
 																	alt="Image">
 																<span class="status away"></span>
 															</div>
@@ -563,7 +563,7 @@
 														<a href="javscript:void(0)"
 															class="media media-message media-notification">
 															<div class="position-relative mr-3">
-																<img class="rounded-circle" src="assets/img/user/u5.jpg"
+																<img class="rounded-circle" src="assets_old/img/user/u5.jpg"
 																	alt="Image">
 																<span class="status away"></span>
 															</div>
@@ -800,30 +800,30 @@
         
 
 	<!-- Common Javascript -->
-	<script src="{{ asset('assets/plugins/jquery/jquery-3.5.1.min.js') }}"></script>
-	<script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
-	<script src="{{ asset('assets/plugins/simplebar/simplebar.min.js') }}"></script>
-	<script src="{{ asset('assets/plugins/jquery-zoom/jquery.zoom.min.js') }}"></script>
-	<script src="{{ asset('assets/plugins/slick/slick.min.js') }}"></script>
+	<script src="{{ asset('assets_old/plugins/jquery/jquery-3.5.1.min.js') }}"></script>
+	<script src="{{ asset('assets_old/js/bootstrap.bundle.min.js') }}"></script>
+	<script src="{{ asset('assets_old/plugins/simplebar/simplebar.min.js') }}"></script>
+	<script src="{{ asset('assets_old/plugins/jquery-zoom/jquery.zoom.min.js') }}"></script>
+	<script src="{{ asset('assets_old/plugins/slick/slick.min.js') }}"></script>
 
 	<!-- Chart -->
-	<script src="{{ asset('assets/plugins/charts/Chart.min.js') }}"></script>
-	<script src="{{ asset('assets/js/chart.js') }}"></script>
+	<script src="{{ asset('assets_old/plugins/charts/Chart.min.js') }}"></script>
+	<script src="{{ asset('assets_old/js/chart.js') }}"></script>
 
 	<!-- Google map chart -->
-	<script src="{{ asset('assets/plugins/charts/google-map-loader.js') }}"></script>
-	<script src="{{ asset('assets/plugins/charts/google-map.js') }}"></script>
+	<script src="{{ asset('assets_old/plugins/charts/google-map-loader.js') }}"></script>
+	<script src="{{ asset('assets_old/plugins/charts/google-map.js') }}"></script>
 
 	<!-- Date Range Picker -->
-	<script src="{{ asset('assets/plugins/daterangepicker/moment.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/daterangepicker/daterangepicker.js') }}"></script>
-	<script src="{{ asset('assets/js/date-range.js') }}"></script>
+	<script src="{{ asset('assets_old/plugins/daterangepicker/moment.min.js') }}"></script>
+    <script src="{{ asset('assets_old/plugins/daterangepicker/daterangepicker.js') }}"></script>
+	<script src="{{ asset('assets_old/js/date-range.js') }}"></script>
 
 	<!-- Option Switcher -->
-	<script src="{{ asset('assets/plugins/options-sidebar/optionswitcher.js') }}"></script>
+	<script src="{{ asset('assets_old/plugins/options-sidebar/optionswitcher.js') }}"></script>
 
 	<!-- Ekka Custom -->
-	<script src="{{ asset('assets/js/ekka.js') }}"></script>
+	<script src="{{ asset('assets_old/js/ekka.js') }}"></script>
 </body>
 
 @if(session('notification'))
