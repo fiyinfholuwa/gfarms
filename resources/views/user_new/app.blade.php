@@ -114,9 +114,9 @@
         </button>
 
         <div class="header-info">
-          <img class="img-fluid profile-pic" 
+          {{-- <img class="img-fluid profile-pic" 
                src="https://fingo.smartrobtech.co.uk/wp-content/uploads/2025/07/Fingo-Aurelius-LTD-Logo.png" 
-               alt="profile" />
+               alt="profile" /> --}}
           <div>
             <h4 class="light-text">Hello</h4>
             <h2 class="theme-color">{{ Auth::user()->first_name }}</h2>
