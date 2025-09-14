@@ -229,7 +229,45 @@ public function pay_processing_fee(Request $request)
         'reference' => $reference,
     ]);
 }
+public function pay_processing_fee_onspot(Request $request)
+{
+    $data = $request->all();   // grab all input from fetch()
 
+    $gateway = $data['payment_type'];
+    $id = $data['order_id'];
+    $user = Auth::user();
+    $amount = 1000;
+    $reference = strtoupper($gateway) . '_' . Str::uuid();
+
+    DB::table('payments')->insert([
+        'user_id'    => $user->id,
+        'package'    => 'processing_fee|' . $id,
+        'reference'  => $reference,
+        'amount'     => $amount,
+        'status'     => 'pending',
+        'gateway'    => $gateway,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $paymentResponse = ($gateway === 'paystack') 
+        ? $this->createPaystackPayment($user, $amount, $reference) 
+        : $this->createFincraPayment($user, $amount, $reference);
+
+    if (empty($paymentResponse['url'])) {
+        return response()->json([
+            'status'  => 'error',
+            'title'   => 'Processing Fee Payment!',
+            'message' => 'Payment Service is Down, Kindly Try Again Later or Reach out to Admin for Assistance',
+        ], 500);
+    }
+
+    return response()->json([
+        'status'    => 'success',
+        'url'       => $paymentResponse['url'],
+        'reference' => $reference,
+    ]);
+}
 
 
     /**

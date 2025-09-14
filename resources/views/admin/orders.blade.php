@@ -135,12 +135,12 @@
             <div class="modal-body">
                 <label for="status" class="form-label">Select Status</label>
                 <select class="form-select" name="status" id="modal_status">
-                    <option value="pending">Pending</option>
-                    <option value="confirmed">Confirmed</option>
+                    <option value="pending">Under Review</option>
+                    <option value="confirmed">Approved</option>
                     <option value="preparing">Preparing</option>
-                    <option value="ready">Ready</option>
+                    <option value="ready">Dispatched</option>
                     <option value="delivered">Delivered</option>
-                    <option value="cancelled">Cancelled</option>
+                    <option value="cancelled">Denied</option>
                 </select>
             </div>
             <div class="modal-footer">

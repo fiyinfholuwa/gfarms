@@ -16,6 +16,15 @@ class OrderController extends Controller
 {
     public function checkout(Request $request)
     {
+        // Decode items if it comes as JSON string
+        if ($request->has('items') && is_string($request->items)) {
+            $decoded = json_decode($request->items, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $request->merge(['items' => $decoded]);
+            }
+        }
+    
+        // Validate basic cart
         $request->validate([
             'items' => 'required|array|min:1',
             'items.*.id' => 'required|integer',
@@ -24,52 +33,51 @@ class OrderController extends Controller
             'items.*.price' => 'required|numeric|min:0',
             'items.*.total' => 'required|numeric|min:0',
             'total_amount' => 'required|numeric|min:0|max:50000',
-            'notes' => 'nullable|string|max:500'
+            'payment_method' => 'required|string|in:wallet,loan',
         ]);
-
+    
+        // Extra validation if loan
+        if ($request->payment_method === 'loan') {
+            $request->validate([
+                'bvn' => 'required|string|size:11',
+                'repayment_plan' => 'required|string|in:weekly,bi-weekly,monthly',
+                'repayment_amount' => 'required|numeric|min:1',
+                'bill_image' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                'bankStatement' => 'required|file|mimes:jpg,jpeg,png,pdf|max:4096',
+            ]);
+        }
+    
         // Validate items exist and prices are correct
         $foodIds = collect($request->items)->pluck('id');
         $foods = Food::whereIn('id', $foodIds)->get()->keyBy('id');
-
+    
         $calculatedTotal = 0;
         foreach ($request->items as $item) {
             $food = $foods->get($item['id']);
             if (!$food) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'One or more items are no longer available'
-                ], 400);
+                return response()->json(['success' => false, 'message' => 'One or more items are no longer available'], 400);
             }
-
             if ($food->amount != $item['price']) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Price mismatch detected. Please refresh and try again.'
-                ], 400);
+                return response()->json(['success' => false, 'message' => 'Price mismatch detected. Please refresh and try again.'], 400);
             }
-
             $calculatedTotal += $item['qty'] * $item['price'];
         }
-
+    
         if (abs($calculatedTotal - $request->total_amount) > 0.01) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Total amount mismatch. Please refresh and try again.'
-            ], 400);
+            return response()->json(['success' => false, 'message' => 'Total amount mismatch. Please refresh and try again.'], 400);
         }
-
+    
         try {
             DB::beginTransaction();
-
-            $repayment_plan = $request->loan_data;
-            $plan = $repayment_plan['repayment_plan'] ?? NULL;
-
+    
+            $has_paid_delivery_fee = 'no';
+            $extra_fee = 1000;
+    
             if ($request->payment_method == 'wallet') {
-                $extra_fee = 1000;
                 User::where('id', Auth::id())->decrement('wallet_balance', $request->total_amount + $extra_fee);
                 $has_paid_delivery_fee = 'yes';
                 $reference = strtoupper('Wallet') . '_' . Str::uuid();
-
+    
                 DB::table('payments')->insert([
                     'user_id'    => Auth::id(),
                     'package'    => 'purchase',
@@ -80,9 +88,45 @@ class OrderController extends Controller
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
-            } else {
-                $has_paid_delivery_fee = 'no';
             }
+    
+            // Handle uploads if loan
+            $utilityBillFile = null;
+            $bankStatement = null;
+    
+            if ($request->payment_method === 'loan') {
+                if ($request->hasFile('bill_image')) {
+                    $file = $request->file('bill_image');
+                    $utilityBillFileName = time() . '_utility.' . $file->getClientOriginalExtension();
+                
+                    $utilityBillPath = public_path('uploads/utility_bills');
+                    if (!file_exists($utilityBillPath)) {
+                        mkdir($utilityBillPath, 0755, true);
+                    }
+                
+                    $file->move($utilityBillPath, $utilityBillFileName);
+                
+                    // Save full path
+                    $utilityBillFile = $utilityBillPath . '/' . $utilityBillFileName;
+                }
+                
+                if ($request->hasFile('bankStatement')) {
+                    $file = $request->file('bankStatement');
+                    $bankStatementFileName = time() . '_bank.' . $file->getClientOriginalExtension();
+                
+                    $bankStatementPath = public_path('uploads/bank_statements');
+                    if (!file_exists($bankStatementPath)) {
+                        mkdir($bankStatementPath, 0755, true);
+                    }
+                
+                    $file->move($bankStatementPath, $bankStatementFileName);
+                
+                    // Save full path
+                    $bankStatement = $bankStatementPath . '/' . $bankStatementFileName;
+                }
+                
+            }
+    
             // Create order
             $order = Order::create([
                 'user_id' => Auth::id(),
@@ -93,28 +137,31 @@ class OrderController extends Controller
                 'status' => 'pending',
                 'delivery_address' => $request->address,
                 'payment_method' => $request->payment_method,
-                'repayment_plan' => $plan,
+                'repayment_plan' => $request->repayment_plan ?? null,
                 'has_paid_delivery_fee' => $has_paid_delivery_fee,
-
+                'utility_bill_file' => $utilityBillFile,
+                'bank_statement' => $bankStatement,
+                'bvn' => $request->bvn,
+                'repayment_amount' => $request->repayment_amount,
             ]);
-
-            if ($request->payment_method === 'loan') {
-                $update_loan_amount  = $request->total_amount;
-            } else {
-                $update_loan_amount  = 0;
-            }
+    
+            // Loan balance update
+            $update_loan_amount  = $request->payment_method === 'loan' ? $request->total_amount : 0;
+    
             // Clear user's cart
             Cart::where('user_id', Auth::id())->delete();
-
+    
             User::where('id', Auth::id())->update([
-                'last_payment_method' => $plan,
+                'last_payment_method' => $request->payment_method,
                 'home_address' => $request->address
             ]);
-            
-            User::where('id', Auth::id())->increment('loan_balance', $update_loan_amount);
-
+    
+            if ($update_loan_amount > 0) {
+                User::where('id', Auth::id())->increment('loan_balance', $update_loan_amount);
+            }
+    
             DB::commit();
-
+    
             return response()->json([
                 'success' => true,
                 'message' => 'Order placed successfully!',
@@ -127,13 +174,15 @@ class OrderController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollback();
-
+    
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to place order. Please try again.' . $e->getMessage()
+                'message' => 'Failed to place order. Please try again. ' . $e->getMessage()
             ], 500);
         }
     }
+    
+
 
 
     public function index()

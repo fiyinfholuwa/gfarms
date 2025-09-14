@@ -206,6 +206,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cart/update', [CartController::class, 'update_cart'])->name('cart.update');
     Route::post('/cart/remove', [CartController::class, 'remove_from_cart'])->name('cart.remove');
     Route::post('/cart/clear', [CartController::class, 'clear_cart'])->name('cart.clear');
+    Route::post('/pay/processing-fee', [PackageController::class, 'pay_processing_fee_onspot'])
+    ->name('pay.processing.fee.onspot');
 
     // Order API routes
     Route::post('/orders/checkout', [OrderController::class, 'checkout'])->name('checkout');
