@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Mail;
 use App\Models\Category;
+
+
 use App\Models\Food;
-
-
 use App\Models\KycLevel;
 use App\Models\Order;
 use App\Models\Payment;
@@ -252,32 +253,52 @@ class AdminController extends Controller
 
 
     public function updateStatus(Request $request)
-    {
-        $request->validate([
-            'order_id' => 'required|integer|exists:orders,id',
-            'status'   => 'required|in:pending,confirmed,preparing,ready,delivered,cancelled',
-        ]);
+{
+    $request->validate([
+        'order_id' => 'required|integer|exists:orders,id',
+        'status'   => 'required|string',
+        'reason'   => 'nullable|string|max:1000',
+    ]);
 
-        try {
-            $order = Order::findOrFail($request->order_id);
-            $order->status = $request->status;
-            $order->save();
+    try {
+        $order = Order::findOrFail($request->order_id);
+        $order->status = $request->status;
+        $order->reason = $request->reason;
+        $order->save();
 
-            $notification = [
-                'message'    => 'Order status updated successfully!',
-                'alert-type' => 'success'
-            ];
+        // Build HTML inline
+        $html = "
+            <h2>Hello {$order->user->name},</h2>
+            <p>Your order <strong>#{$order->id}</strong> has been updated.</p>
+            <p><strong>Status:</strong> " . ucfirst($order->status) . "</p>";
 
-            return redirect()->back()->with($notification);
-        } catch (\Exception $e) {
-            $notification = [
-                'message'    => 'Failed to update status. ' . $e->getMessage(),
-                'alert-type' => 'error'
-            ];
-
-            return redirect()->back()->with($notification);
+        if (!empty($order->reason)) {
+            $html .= "<p><strong>Reason:</strong> {$order->reason}</p>";
         }
+
+        $html .= "
+            <p>Thank you for shopping with us!</p>
+            <p><strong>" . config('app.name') . "</strong></p>
+        ";
+
+        // Send mail immediately
+        Mail::send([], [], function ($message) use ($order, $html) {
+            $message->to($order->user->email)
+                    ->subject('Order #' . $order->id . ' Status Update')
+                    ->html($html);
+        });
+
+        return redirect()->back()->with([
+            'message'    => 'Order status updated and email sent!',
+            'alert-type' => 'success'
+        ]);
+    } catch (\Exception $e) {
+        return redirect()->back()->with([
+            'message'    => 'Failed to update status. ' . $e->getMessage(),
+            'alert-type' => 'error'
+        ]);
     }
+}
 
 
     public function admin_order_show($order)

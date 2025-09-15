@@ -42,7 +42,7 @@
                                                 @if($food->image && file_exists(public_path($food->image)))
                                                     <img class="tbl-thumb" src="{{ asset($food->image) }}" alt="{{ $food->name }}" style="width:50px; height:auto;">
                                                 @else
-                                                    <img class="tbl-thumb" src="{{ asset('assets/img/products/vender-upload-preview.jpg') }}" alt="No Image" style="width:50px; height:auto;">
+                                                    <img class="tbl-thumb" src="{{ asset('assets_old/img/products/vender-upload-preview.jpg') }}" alt="No Image" style="width:50px; height:auto;">
                                                 @endif
                                             </td>
                                             <td>{{ $food->name }}</td>

@@ -61,9 +61,7 @@
 <div style="margin-top:50px;" class="container">
     <div class="orders-header">
         <h1 class="orders-title">My Orders</h1>
-        <a href="{{ route('user.packages') }}" class="back-btn">
-            <i class="fas fa-arrow-left"></i> Back to Market
-        </a>
+        
     </div>
 
     @if(session('success')) <div class="alert alert-success">{{ session('success') }}</div> @endif
@@ -132,17 +130,21 @@
                 <h5 class="modal-title">Change Order Status</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
-                <label for="status" class="form-label">Select Status</label>
-                <select class="form-select" name="status" id="modal_status">
-                    <option value="pending">Under Review</option>
-                    <option value="confirmed">Approved</option>
-                    <option value="preparing">Preparing</option>
-                    <option value="ready">Dispatched</option>
-                    <option value="delivered">Delivered</option>
-                    <option value="cancelled">Denied</option>
-                </select>
-            </div>
+            <<div class="modal-body">
+    <label for="status" class="form-label">Select Status</label>
+    <select class="form-select" name="status" id="modal_status">
+        <option value="pending">Under Review</option>
+        <option value="Approved">Approved</option>
+        <option value="preparing">Preparing</option>
+        <option value="ready">Dispatched</option>
+        <option value="delivered">Delivered</option>
+        <option value="cancelled">Denied</option>
+    </select>
+
+    <label for="reason" class="form-label mt-3">Reason</label>
+    <textarea class="form-control" name="reason" id="modal_reason" rows="3" placeholder="Enter reason..."></textarea>
+</div>
+
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success">Update</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

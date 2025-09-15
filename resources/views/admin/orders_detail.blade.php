@@ -1,4 +1,4 @@
-@extends('user.app')
+@extends('admin.app')
 
 @section('content')
 <style>
@@ -25,6 +25,87 @@
         --radius-lg: 0.75rem;
         --radius-xl: 1rem;
     }
+
+
+    /* Card-style refinement */
+.order-details, .order-management {
+    background: #ffffff;
+    border-radius: var(--radius-xl);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid #f1f5f9;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.order-details:hover, .order-management:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Section title styling */
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    border-left: 4px solid var(--primary-color);
+    padding-left: 0.75rem;
+}
+
+/* Info-item refinements */
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    background: #f8fafc;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.info-item:hover {
+    background: #f1f5f9;
+    border-color: var(--primary-color);
+}
+
+/* Buttons hierarchy */
+.back-btn {
+    background: linear-gradient(135deg, #6366f1, #4338ca);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    box-shadow: var(--shadow-md);
+}
+
+.back-btn:hover {
+    background: linear-gradient(135deg, #4f46e5, #3730a3);
+    transform: translateY(-2px);
+}
+
+/* Order item refinement */
+.order-item {
+    background: #ffffff;
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    border: 1px solid #e5e7eb;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.order-item:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+}
+
+/* Notes section enhancement */
+.notes-section {
+    background: #fefce8;
+    border: 1px solid #fef08a;
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    font-style: italic;
+}
+
 
     .order-header {
         margin-bottom: 2rem;
@@ -552,7 +633,46 @@
                         {{ $order->delivered_at ? $order->delivered_at->format('M d, Y - h:i A') : 'Not Delivered' }}
                     </span>
                 </div>
+
+                @if($order->utility_bill_file)
+    <div class="info-item">
+        <span class="info-label">Utility Bill</span>
+        <span class="info-value">
+            <a href="{{ asset($order->utility_bill_file) }}" target="_blank" class="btn btn-sm btn-primary">
+                View File
+            </a>
+        </span>
+    </div>
+    @endif
+
+    @if($order->bank_statement)
+    <div class="info-item">
+        <span class="info-label">Bank Statement</span>
+        <span class="info-value">
+            <a href="{{ asset($order->bank_statement) }}" target="_blank" class="btn btn-sm btn-primary">
+                View File
+            </a>
+        </span>
+    </div>
+    @endif
+
+    @if($order->bvn)
+    <div class="info-item">
+        <span class="info-label">BVN</span>
+        <span class="info-value">{{ $order->bvn }}</span>
+    </div>
+    @endif
+
+    
+    @if($order->repayment_amount)
+    <div class="info-item">
+        <span class="info-label">Repayment Amount</span>
+        <span class="info-value">₦{{ number_format($order->repayment_amount) }}</span>
+    </div>
+    @endif
             </div>
+
+
 
             <!-- Order Items -->
             <div class="order-items">
@@ -591,60 +711,7 @@
         </div>
 
         <!-- Management Panel -->
-        <div class="order-management">
-            <h2 class="section-title">Management Panel</h2>
-
-            <!-- Delivery Status Management -->
-            <div class="management-section">
-                <div class="section-header">
-                    <span class="section-icon"></span>
-                    <span class="section-label">Delivery Status</span>
-                    <span class="current-value">
-                        {{ $order->delivered_at ? 'Delivered' : 'Pending' }}
-                    </span>
-                </div>
-                
-                @if(!$order->delivered_at && $order->status === 'ready')
-                    <button class="update-btn btn-delivery" onclick="markAsDelivered()">
-                     Mark as Delivered
-                    </button>
-                    @endif
-                {{-- @else
-                    <button class="update-btn btn-delivery" onclick="unmarkDelivered()">
-                     Unmark Delivery
-                    </button>
-                @endif --}}
-            </div>
-
-            @if($order->has_paid_delivery_fee =='no')
-            <!-- Payment Type Management -->
-            <div class="management-section">
-                <h4 class="mb-3">Processing Fee Payment #1000.00</h4>
-                <div class="radio-group">
-                    <label class="radio-option">
-                        <input type="radio" name="payment_type" value="fincra" class="radio-input" >
-                        <div>
-                            <div class="radio-label">Fincra</div>
-                            {{-- <div class="radio-description">Pay from user's wallet balance</div> --}}
-                        </div>
-                    </label>
-                    
-                    <label class="radio-option ">
-                        <input type="radio" name="payment_type" value="paystack" class="radio-input">
-                        <div>
-                            <div class="radio-label">Paystack</div>
-                            {{-- <div class="radio-description">Add to user's loan account</div> --}}
-                        </div>
-                    </label>
-                </div>
-                
-                <button class="update-btn btn-payment" onclick="updatePaymentType()">
-                    Pay Processing Fee
-                </button>
-            </div>
-            @endif
-
-        </div>
+        
     </div>
 </div>
 

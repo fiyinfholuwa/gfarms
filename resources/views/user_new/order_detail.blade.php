@@ -512,9 +512,10 @@
                 {{ ucfirst($order->status) }}
             </div>
         </div>
-        <a href="{{ url('/orders') }}" class="back-btn">
-             Back to Orders
-        </a>
+        <a href="{{ route('admin.orders') }}" class="back-btn">
+    <i class="fas fa-arrow-left"></i> Back to Orders
+</a>
+
     </div>
 
     <div class="order-content">
@@ -551,7 +552,46 @@
                         {{ $order->delivered_at ? $order->delivered_at->format('M d, Y - h:i A') : 'Not Delivered' }}
                     </span>
                 </div>
+
+                @if($order->utility_bill_file)
+    <div class="info-item">
+        <span class="info-label">Utility Bill</span>
+        <span class="info-value">
+            <a href="{{ asset($order->utility_bill_file) }}" target="_blank" class="btn btn-sm btn-primary">
+                View File
+            </a>
+        </span>
+    </div>
+    @endif
+
+    @if($order->bank_statement)
+    <div class="info-item">
+        <span class="info-label">Bank Statement</span>
+        <span class="info-value">
+            <a href="{{ asset($order->bank_statement) }}" target="_blank" class="btn btn-sm btn-primary">
+                View File
+            </a>
+        </span>
+    </div>
+    @endif
+
+    @if($order->bvn)
+    <div class="info-item">
+        <span class="info-label">BVN</span>
+        <span class="info-value">{{ $order->bvn }}</span>
+    </div>
+    @endif
+
+    
+    @if($order->repayment_amount)
+    <div class="info-item">
+        <span class="info-label">Repayment Amount</span>
+        <span class="info-value">₦{{ number_format($order->repayment_amount) }}</span>
+    </div>
+    @endif
             </div>
+
+
 
             <!-- Order Items -->
             <div class="order-items">
@@ -589,61 +629,6 @@
             @endif
         </div>
 
-        <!-- Management Panel -->
-        <div class="order-management">
-            <h2 class="section-title">Management Panel</h2>
-
-            <!-- Delivery Status Management -->
-            <div class="management-section">
-                <div class="section-header">
-                    <span class="section-icon"></span>
-                    <span class="section-label">Delivery Status</span>
-                    <span class="current-value">
-                        {{ $order->delivered_at ? 'Delivered' : 'Pending' }}
-                    </span>
-                </div>
-                
-                @if(!$order->delivered_at && $order->status === 'ready')
-                    <button class="update-btn btn-delivery" onclick="markAsDelivered()">
-                     Mark as Delivered
-                    </button>
-                    @endif
-                {{-- @else
-                    <button class="update-btn btn-delivery" onclick="unmarkDelivered()">
-                     Unmark Delivery
-                    </button>
-                @endif --}}
-            </div>
-
-            @if($order->has_paid_delivery_fee =='no')
-            <!-- Payment Type Management -->
-            <div class="management-section">
-                <h4 class="mb-3">Processing Fee Payment #1000.00</h4>
-                <div class="radio-group">
-                    <label class="radio-option">
-                        <input type="radio" name="payment_type" value="fincra" class="radio-input" >
-                        <div>
-                            <div class="radio-label">Fincra</div>
-                            {{-- <div class="radio-description">Pay from user's wallet balance</div> --}}
-                        </div>
-                    </label>
-                    
-                    <label class="radio-option ">
-                        <input type="radio" name="payment_type" value="paystack" class="radio-input">
-                        <div>
-                            <div class="radio-label">Paystack</div>
-                            {{-- <div class="radio-description">Add to user's loan account</div> --}}
-                        </div>
-                    </label>
-                </div>
-                
-                <button class="update-btn btn-payment" onclick="updatePaymentType()">
-                    Pay Processing Fee
-                </button>
-            </div>
-            @endif
-
-        </div>
     </div>
 </div>
 
@@ -852,77 +837,6 @@ async function updateMandatoryFee() {
         setLoading(btn, false);
     }
 }
-</script>
-
-<script>
-    const orderData = {
-        paymentMethod: "{{ $order->payment_method }}",
-        hasPaidDeliveryFee: "{{ $order->has_paid_delivery_fee }}",
-        orderId: "{{ $order->id }}",
-    };
-</script>
-<div class="modal fade" id="processingFeeModal" tabindex="-1" aria-hidden="true" 
-     data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog">
-    <div class="modal-content rounded-3 shadow">
-      <div class="modal-header bg-dark text-white">
-        <h5 class="modal-title">Processing Fee Required</h5>
-      </div>
-      <div class="modal-body text-center">
-        <p>You must pay a <strong>₦1,000 processing fee</strong> to continue.</p>
-        
-        <div class="form-check text-start my-2">
-          <input class="form-check-input" type="radio" name="gateway" id="paystackOption" value="paystack" checked>
-          <label class="form-check-label" for="paystackOption">Pay with Paystack</label>
-        </div>
-        
-        <div class="form-check text-start">
-          <input class="form-check-input" type="radio" name="gateway" id="fincraOption" value="fincra">
-          <label class="form-check-label" for="fincraOption">Pay with Fincra</label>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button id="proceedPaymentBtn" class="btn btn-warning w-100">Proceed to Payment</button>
-      </div>
-    </div>
-  </div>
-</div>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    // Check condition
-    if (orderData.paymentMethod === "loan" && orderData.hasPaidDeliveryFee === "no") {
-        const modal = new bootstrap.Modal(document.getElementById("processingFeeModal"));
-        modal.show();
-
-        document.getElementById("proceedPaymentBtn").addEventListener("click", () => {
-            const selectedGateway = document.querySelector("input[name='gateway']:checked").value;
-
-            fetch("{{ route('pay.processing.fee.onspot') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                },
-                body: JSON.stringify({
-                    payment_type: selectedGateway,
-                    order_id: orderData.orderId
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === "success") {
-                    window.location.href = data.url; // redirect to gateway
-                } else {
-                    alert(data.message || "Something went wrong. Try again later.");
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert("Server error. Please try again later.");
-            });
-        });
-    }
-});
 </script>
 
 @endsection

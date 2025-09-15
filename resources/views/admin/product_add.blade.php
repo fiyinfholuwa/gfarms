@@ -31,11 +31,11 @@
                                     <div class="avatar-upload">
                                         <div class="avatar-edit">
                                             <input type='file' id="imageUpload" name="image" accept=".png, .jpg, .jpeg" />
-                                            <label for="imageUpload"><img src="{{ asset('assets/img/icons/edit.svg') }}" class="svg_img header_svg" alt="edit" /></label>
+                                            <label for="imageUpload"><img src="{{ asset('assets_old/img/icons/edit.svg') }}" class="svg_img header_svg" alt="edit" /></label>
                                         </div>
                                         <div class="avatar-preview ec-preview">
                                             <div class="imagePreview ec-div-preview">
-                                                <img id="previewImage" src="{{ asset('assets/img/products/vender-upload-preview.jpg') }}" alt="preview" style="width: 100%; height: auto;" />
+                                                <img id="previewImage" src="{{ asset('assets_old/img/products/vender-upload-preview.jpg') }}" alt="preview" style="width: 100%; height: auto;" />
                                             </div>
                                         </div>
                                     </div>
