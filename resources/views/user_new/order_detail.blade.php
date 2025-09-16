@@ -632,6 +632,79 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="processingFeeModal" tabindex="-1" aria-hidden="true" 
+     data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-3 shadow">
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title">Processing Fee Required</h5>
+      </div>
+      <div class="modal-body text-center">
+        <p>You must pay a <strong>₦1,000 processing fee</strong> to continue.</p>
+        
+        <div class="form-check text-start my-2">
+          <input class="form-check-input" type="radio" name="gateway" id="paystackOption" value="paystack" checked>
+          <label class="form-check-label" for="paystackOption">Pay with Paystack</label>
+        </div>
+        
+        <div class="form-check text-start">
+          <input class="form-check-input" type="radio" name="gateway" id="fincraOption" value="fincra">
+          <label class="form-check-label" for="fincraOption">Pay with Fincra</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="proceedPaymentBtn" class="btn btn-warning w-100">Proceed to Payment</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+    // Pass order details from PHP to JS
+    const orderData = {
+        paymentMethod: "{{ $order->payment_method }}",
+        hasPaidDeliveryFee: "{{ $order->has_paid_delivery_fee }}",
+        orderId: "{{ $order->id }}"
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        if (orderData.paymentMethod === "loan" && orderData.hasPaidDeliveryFee === "no") {
+            const modalEl = document.getElementById("processingFeeModal");
+            const modal = new bootstrap.Modal(modalEl);
+            modal.show();
+
+            document.getElementById("proceedPaymentBtn").addEventListener("click", () => {
+                const selectedGateway = document.querySelector("input[name='gateway']:checked").value;
+
+                fetch("{{ route('pay.processing.fee.onspot') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({
+                        payment_type: selectedGateway,
+                        order_id: orderData.orderId
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        window.location.href = data.url; // redirect to Paystack/Fincra
+                    } else {
+                        alert(data.message || "Something went wrong. Try again later.");
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Server error. Please try again later.");
+                });
+            });
+        }
+    });
+</script>
 <!-- CSRF Token -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
