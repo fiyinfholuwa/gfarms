@@ -169,13 +169,15 @@
                         <span id="grand-total">₦{{ number_format($totalAmount) }}</span>
                     </div>
 
-                    <div class="limit-info">
+                    <div  style="display:none;" class="limit-info">
                         Spending limit: ₦{{ number_format($limit) }}
                         <br>
                         Remaining: ₦{{ number_format($limit - $totalAmount) }}
                     </div>
 
-                    <button class="checkout-btn" {{ $totalAmount > $limit ? 'disabled' : '' }} onclick="openCheckoutModal()">
+                    <button class="checkout-btn"
+                     {{-- {{ $totalAmount > $limit ? 'disabled' : '' }}  --}}
+                     onclick="openCheckoutModal()">
                         <span>Proceed to Checkout</span>
                     </button>
                 </div>
@@ -236,7 +238,7 @@
 
           <div class="mb-3">
             <label class="form-label">Bank Statement Slip (Not less than 6months)*</label>
-            <input type="file" id="bankStatement" class="form-control" accept="pdf" />
+            <input type="file" id="bankStatement" class="form-control" accept="image/*" />
             <div id="bankStatementError" class="mt-1 text-danger" style="display:none;"></div>
           </div>
 
@@ -251,10 +253,11 @@
           <div class="mb-3">
             <label class="form-label">Select Repayment Plan *</label>
             <select id="loanRepaymentPlan" class="form-select">
-              <option value="weekly">Weekly (8 payments over 8 weeks)</option>
-              <option value="bi-weekly">Bi-weekly (4 payments over 8 weeks)</option>
-              <option value="monthly">Monthly (2 payments over 2 months)</option>
-            </select>
+  <option value="semi-weekly">Semi-weekly (twice per week)</option>
+  <option value="weekly">Weekly</option>
+  <option value="bi-weekly">Bi-weekly (every 2 weeks)</option>
+</select>
+
             <div id="paymentSplit" class=" mt-3" style="display:none;"></div>
           </div>
         </div>
@@ -473,31 +476,39 @@ function checkbankStatementFileSelected() {
 }
 
 function computeRepaymentSplit() {
+    user_type = "user";
     const total = calculateCartTotalFromDOM();
-    const plan = repaymentPlan?.value || 'weekly';
-    
+    const plan = document.getElementById('loanRepaymentPlan')?.value || 'weekly';
+
+    // Apply 10% interest
+    const totalWithInterest = total + (total * 0.10);
+
+    // Spread duration based on user type
+    const spreadWeeks = (user_type === 'market_woman') ? 8 : 4;
+
     let periods, duration;
-    
-    console.log('Computing repayment for plan:', plan, 'total:', total); // Debug log
-    
+
     // Different repayment periods based on plan
-    if (plan === 'weekly') {
-        periods = 8;  // 8 weekly payments = 8 weeks
-        duration = '8 weeks';
+    if (plan === 'semi-weekly') {
+        periods = spreadWeeks * 2; // 2 payments per week
+        duration = `${spreadWeeks} weeks (semi-weekly)`;
+    } else if (plan === 'weekly') {
+        periods = spreadWeeks; // 1 payment per week
+        duration = `${spreadWeeks} weeks (weekly)`;
     } else if (plan === 'bi-weekly') {
-        periods = 4;  // 4 bi-weekly payments = 8 weeks
-        duration = '8 weeks (every 2 weeks)';
-    } else if (plan === 'monthly') {
-        periods = 2;  // 2 monthly payments = 2 months
-        duration = '2 months';
+        periods = Math.ceil(spreadWeeks / 2); // 1 payment every 2 weeks
+        duration = `${spreadWeeks} weeks (bi-weekly)`;
     }
-    
-    const perPayment = Math.ceil(total / periods);
-    
-    console.log('Repayment calculation:', { periods, perPayment, duration, total }); // Debug log
-    
-    return { periods, perPayment, duration, total };
+
+    const perPayment = Math.ceil(totalWithInterest / periods);
+
+    console.log('Repayment calculation:', { 
+        user_type, plan, periods, perPayment, duration, total, totalWithInterest 
+    });
+
+    return { periods, perPayment, duration, total, totalWithInterest };
 }
+
 
 function updateLoanValidation() {
     console.log('Updating loan validation...'); // Debug log
@@ -538,20 +549,22 @@ creditScoreMessage.innerHTML = `<span style="color:green"><i style="padding:2px;
     }
     
     // Both valid - show payment split
-    const { periods, perPayment, duration, total } = computeRepaymentSplit();
+    const { periods, perPayment, duration, total ,totalWithInterest} = computeRepaymentSplit();
     
-    if (paymentSplit) {
-        paymentSplit.style.display = 'block';
-        paymentSplit.className = ' mt-3';
-        paymentSplit.innerHTML = `
-    <div><strong>Payment Plan:</strong></div>
-    <div><strong>Total Amount:</strong> ₦${numberWithCommas(total)}</div>
-    <div><strong>Payment Split:</strong> ${periods} payments of ₦${numberWithCommas(perPayment)} each</div>
-    <div><strong>Duration:</strong> ${duration}</div>
-    <div class="text-danger"><em>Note:</em> ₦1,000 processing fee applies and is non-refundable.</div>
-`;
+   if (paymentSplit) {
+    paymentSplit.style.display = 'block';
+    paymentSplit.className = 'mt-3';
+    paymentSplit.innerHTML = `
+        <div><strong>Principal Amount:</strong> ₦${numberWithCommas(total)}</div>
+        <div><strong>Interest (10%):</strong> ₦${numberWithCommas(totalWithInterest - total)}</div>
+        <div><strong>Total Amount (with Interest):</strong> ₦${numberWithCommas(totalWithInterest)}</div>
+        <div><strong>Payment Split:</strong> ${periods} payments of ₦${numberWithCommas(perPayment)} each</div>
+        <div><strong>Duration:</strong> ${duration}</div>
+        <div class="text-danger"><em>Note:</em> ₦1,000 processing fee applies and is non-refundable.</div>
+    `;
+}
 
-    }
+
     
     if (confirmCheckoutBtn) confirmCheckoutBtn.disabled = false;
     return true;
@@ -865,11 +878,11 @@ async function clearCart() {
 /* ---------- Open Modal Function ---------- */
 function openCheckoutModal() {
     const total = calculateCartTotalFromDOM();
-    if (total + DELIVERY_FEE > LIMIT) {
+    {{-- if (total + DELIVERY_FEE > LIMIT) {
         showAlert("Cannot checkout: Amount exceeds limit", "error");
         return;
     }
-    
+     --}}
     console.log('Opening checkout modal...'); // Debug log
     
     // Refresh UI before opening

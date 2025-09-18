@@ -40,7 +40,7 @@ class OrderController extends Controller
         if ($request->payment_method === 'loan') {
             $request->validate([
                 'bvn' => 'required|string|size:11',
-                'repayment_plan' => 'required|string|in:weekly,bi-weekly,monthly',
+                'repayment_plan' => 'required|string|in:weekly,bi-weekly,semi-weekly',
                 'repayment_amount' => 'required|numeric|min:1',
                 'bill_image' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
                 'bankStatement' => 'required|file|mimes:jpg,jpeg,png,pdf|max:4096',

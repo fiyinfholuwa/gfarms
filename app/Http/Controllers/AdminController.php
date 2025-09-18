@@ -375,6 +375,7 @@ class AdminController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'term_condition' => 'required|string',
             'repayment_period' => 'nullable|string',
             'credit_limit' => 'nullable|string',
             'credit_amount_limit' => 'required|integer|min:0',
@@ -388,6 +389,7 @@ class AdminController extends Controller
             'repayment_period',
             'credit_limit',
             'credit_amount_limit',
+            'term_condition'
         ]));
 
         return GeneralController::sendNotification('', 'success', '', 'KYC Level updated successfully!');

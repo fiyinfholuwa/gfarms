@@ -83,7 +83,7 @@
 
 <div class="ec-content-wrapper">
     <div class="content">
-        <div class="breadcrumb-wrapper d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <div style="padding:20px;" class="breadcrumb-wrapper d-flex flex-wrap align-items-center justify-content-between gap-2">
             <h1 class="mb-0">Support Tickets</h1>
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTicketModal">
                 <i class="fa fa-plus-circle me-1"></i> Add Ticket

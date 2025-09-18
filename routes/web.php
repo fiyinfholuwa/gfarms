@@ -194,6 +194,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Logout
     Route::get('/logout', [UserDashboardController::class, 'logout'])->name('logout');
+    Route::get('/terms', [UserDashboardController::class, 'terms'])->name('terms');
 
     Route::get('/orders', [OrderController::class, 'index'])->name('user.orders');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('user.orders.show');

@@ -72,7 +72,14 @@
                                                                 <textarea id="myTextarea_{{ $level->key }}" name="description" class="form-control" rows="4" required>
     {{ old('description', $level->description) }}
 </textarea>
+                                                               
 
+                                                                <div class="form-group mt-2">
+                                                                    <label>Terms & Conditions</label>
+                                                                     <textarea id="myTextarea_{{ $level->key }}" name="term_condition" class="form-control" rows="4" required>
+    {{ old('term_condition', $level->term_condition) }}
+</textarea>
+                                                                </div>
                                                                 <div class="form-group mt-2">
                                                                     <label>Repayment Period</label>
                                                                     <input type="text" name="repayment_period" class="form-control"

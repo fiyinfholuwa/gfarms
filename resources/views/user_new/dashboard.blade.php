@@ -234,9 +234,9 @@ function generateAccount() {
 
     
     <?php
-// Demo ambassador data (from DB or API later)
+// Demo ambassador data
 $ambassadors = [
-    ["name" => "John Doe", "role" => "Top Ambassador", "image" => "https://chezmorandi.com/wp-content/uploads/contenuti_1.jpg"],
+    ["name" => "John Doe", "role" => "Top Ambassador", "image" => asset('assets/banner.jpg')],
     ["name" => "Jane Smith", "role" => "Brand Ambassador", "image" => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSMDNk-w0MsmcNFxCas0QhU62Tfpn3OLgohA&s"],
     ["name" => "Mike Johnson", "role" => "Community Ambassador", "image" => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPjR3Q-NqrZiPRllsJXOuBrr_0t8hOAsG-ZA&s"],
 ];
@@ -245,7 +245,7 @@ $ambassadors = [
 <style>
 /* Ambassador Section */
 .ambassador-section {
-  max-width:90%;
+  max-width: 90%;
   margin: 15px auto;
   border-radius: 12px;
   overflow: hidden;
@@ -253,36 +253,12 @@ $ambassadors = [
   position: relative;
 }
 
-/* Gradient background for each slide */
-.ambassador-card {
-  display: flex;
-  align-items: center;
-  padding: 8px 12px;
-  height: 70px; /* compact */
-  background: linear-gradient(135deg, #ff9966, #ff5e62); /* gradient */
-  color: #fff;
-}
-.ambassador-img {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  border: 2px solid #fff;
+/* Image as banner */
+.ambassador-banner {
+  width: 100%;
+  height: 120px; /* adjust as needed */
   object-fit: cover;
-  margin-right: 12px;
-}
-.ambassador-info {
-  flex-grow: 1;
-  line-height: 1.1;
-}
-.ambassador-name {
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin: 0;
-}
-.ambassador-role {
-  font-size: 0.7rem;
-  opacity: 0.9;
-  margin: 0;
+  display: block;
 }
 
 /* Controls (tiny and stylish) */
@@ -308,13 +284,7 @@ $ambassadors = [
     <div class="carousel-inner">
       <?php foreach ($ambassadors as $index => $amb): ?>
         <div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>">
-          <div class="ambassador-card">
-            <img src="<?= $amb['image'] ?>" class="ambassador-img" alt="<?= $amb['name'] ?>">
-            <div class="ambassador-info">
-              <p class="ambassador-name"><?= $amb['name'] ?></p>
-              <p class="ambassador-role"><?= $amb['role'] ?></p>
-            </div>
-          </div>
+          <img src="<?= $amb['image'] ?>" class="ambassador-banner" alt="Ambassador">
         </div>
       <?php endforeach; ?>
     </div>

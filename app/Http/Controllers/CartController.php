@@ -48,12 +48,12 @@ class CartController extends Controller
         $totalAmount = collect($items)->sum('total');
     
         // Limit check
-        if ($totalAmount + $itemTotal > $limit) {
-            return response()->json([
-                'success' => false,
-                'message' => " Cannot exceed ₦" . number_format($limit),
-            ]);
-        }
+        // if ($totalAmount + $itemTotal > $limit) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => " Cannot exceed ₦" . number_format($limit),
+        //     ]);
+        // }
     
         // Update or add item
         if (isset($items[$id])) {
@@ -158,10 +158,10 @@ class CartController extends Controller
     // Check limit
     $totalAmount = collect($items)->sum('total');
     if ($totalAmount > $limit) {
-        return response()->json([
-            'success' => false,
-            'message' => " Cannot exceed ₦" . number_format($limit),
-        ]);
+        // return response()->json([
+        //     'success' => false,
+        //     'message' => " Cannot exceed ₦" . number_format($limit),
+        // ]);
     }
 
     // Save back to DB

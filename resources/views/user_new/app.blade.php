@@ -86,6 +86,12 @@
     <i class="ri-arrow-drop-right-line"></i>
   </a>
 </li>
+<li>
+  <a href="{{ route('terms') }}" class="pages {{ request()->routeIs('terms') ? 'active' : '' }}">
+    <h4>Terms & Condition</h4>
+    <i class="ri-arrow-drop-right-line"></i>
+  </a>
+</li>
 
 <li>
   <a href="#" class="pages"
