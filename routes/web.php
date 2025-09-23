@@ -123,6 +123,8 @@ Route::post('/kyc/webhook', [PackageController::class, 'webhook'])->name('kyc.we
 Route::post('/kyc/process/{level}', [PackageController::class, 'launch'])->name('kyc.process');
 Route::match(['get', 'post'], '/kyc/complete', [PackageController::class, 'complete'])->name('kyc.complete');
 
+Route::match(['get', 'post'],'/dojah/webhook', [PackageController::class, 'handleWebhook']);
+
 Route::get('/select-package', [PackageController::class, 'showForm'])->name('package.form');
 
 Route::post('/payment/webhook', [PackageController::class, 'webhook'])->name('package.webhook');
