@@ -156,9 +156,9 @@ class OrderController extends Controller
                 'home_address' => $request->address
             ]);
     
-            if ($update_loan_amount > 0) {
-                User::where('id', Auth::id())->increment('loan_balance', $update_loan_amount);
-            }
+            // if ($update_loan_amount > 0) {
+            //     User::where('id', Auth::id())->increment('loan_balance', $update_loan_amount);
+            // }
     
             DB::commit();
     

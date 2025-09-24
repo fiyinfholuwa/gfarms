@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Food;
 use App\Models\KycLevel;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -30,6 +31,16 @@ class UserDashboardController extends Controller
         return view('user_new.shop_category', compact('foods', 'category'));
     }
     public function shop_detail($name){
+
+        $get_pending_orders = Order::where('status', 'pending')->where('user_id', Auth::user()->id)->count();
+        if($get_pending_orders > 0){
+            return GeneralController::sendNotification(
+                '', 
+                'error', 
+                '', 
+                'You have an outstanding order, you cannot make a new order.'
+            );
+        }
         if (Auth::check() && Auth::user()->loan_balance > 0) {
             return GeneralController::sendNotification(
                 '', 

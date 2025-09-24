@@ -120,7 +120,6 @@ public function complete()
     $user = Auth::user();
 
     if ($user->has_done_kyc === 'yes') {
-        // ✅ KYC completed
         return GeneralController::sendNotification(
             'dashboard',
             'success',
