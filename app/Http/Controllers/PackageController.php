@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class PackageController extends Controller
 {
@@ -70,33 +70,46 @@ public function launch(Request $request)
 public function handleWebhook(Request $request)
 {
     try {
-        // Get full payload
+        // Parse payload safely
         $payload = $request->all();
+        if (empty($payload)) {
+            $payload = json_decode($request->getContent(), true);
+        }
+
+        Log::info('Dojah Webhook Payload:', [
+            'raw' => $request->getContent(),
+            'parsed' => $payload,
+        ]);
+
+        // Ensure Completed status
+        if (($payload['verification_status'] ?? '') !== 'Completed') {
+            return response()->json(['message' => 'Verification not completed'], 200);
+        }
 
         // Extract reference
         $reference = $payload['metadata']['reference'] ?? null;
-
         if (!$reference) {
             return response()->json(['message' => 'Reference not found'], 400);
         }
-        $user = User::where('kyc_reference', $reference)->first();
 
+        $user = User::where('kyc_reference', $reference)->first();
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
-        // Extract first and last name from BVN data
+        // Update names
         $firstName = $payload['data']['government_data']['data']['bvn']['entity']['first_name'] ?? null;
         $lastName  = $payload['data']['government_data']['data']['bvn']['entity']['last_name'] ?? null;
 
         $user->first_name   = $firstName ?? $user->first_name;
         $user->last_name    = $lastName ?? $user->last_name;
-        $user->kyc_response = json_encode($payload); // Save entire payload
+        $user->kyc_response = json_encode($payload);
         $user->has_done_kyc = 'yes';
         $user->save();
 
         return response()->json(['message' => 'User updated successfully']);
     } catch (\Exception $e) {
+        Log::error('Dojah Webhook Error: ' . $e->getMessage());
         return response()->json(['message' => 'Server error'], 500);
     }
 }
