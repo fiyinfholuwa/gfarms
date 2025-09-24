@@ -1,35 +1,16 @@
+{{-- i want the dojah widget to be big on big sscreen and small on smaill screen --}}
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>KYC Verification</title>
     <script src="https://widget.dojah.io/widget.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        /* Make widget responsive */
-        iframe {
-            max-width: 90vw;
-            max-height: 90vh;
-        }
-
-        @media (min-width: 1024px) {
-            iframe {
-                width: 70vw !important;
-                height: 80vh !important;
-            }
-        }
-
-        @media (max-width: 768px) {
-            iframe {
-                width: 95vw !important;
-                height: 80vh !important;
-            }
-        }
-    </style>
 </head>
 <body>
 <script>
     window.onload = function () {
-        let kycCompleted = false;
+        let kycCompleted = false; // ✅ Track if KYC succeeded
 
         const options = {
             app_id: "{{ $appId }}",
@@ -46,46 +27,14 @@
                 reference: "{{ $reference }}",
             },
 
+            // ✅ When KYC is successful, set flag and redirect
             onSuccess: (response) => {
                 console.log('KYC Success', response);
                 kycCompleted = true;
-
-                let countdown = 20; // seconds
-
-                Swal.fire({
-                    icon: 'info',
-                    title: 'Verification Pending',
-                    html: `
-                        <p>Your KYC submission was successful and is now under review.<br>
-                        Please wait a moment before confirming.</p>
-                        <button id="confirmBtn" class="swal2-confirm swal2-styled" disabled>
-                            Confirm (20s)
-                        </button>
-                    `,
-                    showConfirmButton: false,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    didOpen: () => {
-                        const confirmBtn = Swal.getPopup().querySelector('#confirmBtn');
-
-                        const timer = setInterval(() => {
-                            countdown--;
-                            confirmBtn.textContent = countdown > 0 ? `Confirm (${countdown}s)` : "Confirm";
-                            
-                            if (countdown <= 0) {
-                                confirmBtn.disabled = false;
-                                clearInterval(timer);
-                            }
-                        }, 1000);
-
-                        confirmBtn.addEventListener('click', () => {
-                            Swal.close();
-                            window.location.href = "{{ route('kyc.complete') }}";
-                        });
-                    }
-                });
+                window.location.href = "{{ route('kyc.complete') }}";
             },
 
+            // ✅ Only show SweetAlert if KYC was NOT successful
             onClose: () => {
                 if (!kycCompleted) {
                     Swal.fire({
@@ -103,6 +52,7 @@
                 }
             },
 
+            // ✅ Show alert for errors only
             onError: (err) => {
                 console.error('KYC Error', err);
                 Swal.fire({

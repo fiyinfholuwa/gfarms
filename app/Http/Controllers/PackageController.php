@@ -115,58 +115,28 @@ public function handleWebhook(Request $request)
 }
 
 
-public function complete(Request $request)
+public function complete()
 {
-    return GeneralController::sendNotification(
-        'dashboard',
-        'success',
-        'Onboarding Complete!',
-        'Your KYC verification was successful. Our System will Update your info Shortly'
-    );
+    $user = Auth::user();
 
-    // $user = Auth::user();
-    // $reference = $user->kyc_reference;
+    if ($user->has_done_kyc === 'yes') {
+        // ✅ KYC completed
+        return GeneralController::sendNotification(
+            'dashboard',
+            'success',
+            'Onboarding Complete!',
+            'Your KYC completed successfully!'
+        );    }
 
-    // $client = new \GuzzleHttp\Client([
-    //     'base_uri' => 'https://sandbox.dojah.io/',
-    //     'headers' => [
-    //         'AppId'         => env('DOJAH_APP_ID'),
-    //         'Authorization' => env('DOJAH_SECRET_KEY'), // 👈 must be secret key
-    //     ]
-    // ]);
+        return GeneralController::sendNotification(
+            'dashboard',
+            'info',
+            'Onboarding In Progress!',
+            'Your KYC verification was successful. Our System will Update your info Shortly'
+        );
 
-    // try {
-    //     $response = $client->get('/api/v1/kyc/verification', [
-    //         'query' => [
-    //             'reference_id' => $reference, // 👈 correct query parameter
-    //         ]
-    //     ]);
-
-    //     dd($response);
-    //     $data = json_decode($response->getBody()->getContents(), true);
-
-    //     $user->kyc_response = json_encode($data);
-    //     $user->has_done_kyc = 'yes';
-    //     $user->kyc_status   = $data['entity']['status'] ?? 'failed';
-    //     $user->save();
-
-    //     return GeneralController::sendNotification(
-    //         'dashboard',
-    //         'success',
-    //         'Onboarding Complete!',
-    //         'Your KYC verification was successful.'
-    //     );
-
-    // } catch (\Exception $e) {
-
-    //     return GeneralController::sendNotification(
-    //         'dashboard',
-    //         'error',
-    //         'KYC Verification Failed',
-    //         'We could not complete your KYC. Please try again later.'
-    //     );
-    // }
 }
+
 
 public function complete_old(Request $request)
 {
