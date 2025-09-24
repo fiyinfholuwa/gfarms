@@ -67,106 +67,92 @@ public function launch(Request $request)
 
 
 
-
-
 public function handleWebhook(Request $request)
 {
-    $logPath = storage_path('logs/dojah_webhook.log');
+    try {
+        // Get full payload
+        $payload = $request->all();
 
-    // ✅ Ensure the directory exists
-    if (!File::exists(dirname($logPath))) {
-        File::makeDirectory(dirname($logPath), 0755, true);
-    }
+        // Extract reference
+        $reference = $payload['metadata']['reference'] ?? null;
 
-    // ✅ Log into custom file
-    Log::build([
-        'driver' => 'single',
-        'path'   => $logPath,
-        'level'  => 'info',
-    ])->info('Dojah Webhook Payload', $request->all());
-
-    $data = $request->all();
-    $reference = $data['reference'] ?? null;
-
-    if ($reference) {
-        $user = User::where('kyc_reference', $reference)->first();
-        if ($user) {
-            $user->kyc_status   = $data['status'] ?? 'failed';
-            $user->kyc_response = json_encode($data);
-            $user->has_done_kyc = 'yes';
-            $user->save();
-
-            Log::build([
-                'driver' => 'single',
-                'path'   => $logPath,
-                'level'  => 'info',
-            ])->info("KYC updated for user {$user->id}", [
-                'status'    => $user->kyc_status,
-                'reference' => $reference,
-            ]);
-        } else {
-            Log::build([
-                'driver' => 'single',
-                'path'   => $logPath,
-                'level'  => 'warning',
-            ])->warning("No user found for reference {$reference}");
+        if (!$reference) {
+            return response()->json(['message' => 'Reference not found'], 400);
         }
-    } else {
-        Log::build([
-            'driver' => 'single',
-            'path'   => $logPath,
-            'level'  => 'warning',
-        ])->warning("Webhook received without reference", $data);
-    }
+        $user = User::where('kyc_reference', $reference)->first();
 
-    return response()->json(['status' => 'ok']);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        // Extract first and last name from BVN data
+        $firstName = $payload['data']['government_data']['data']['bvn']['entity']['first_name'] ?? null;
+        $lastName  = $payload['data']['government_data']['data']['bvn']['entity']['last_name'] ?? null;
+
+        $user->first_name   = $firstName ?? $user->first_name;
+        $user->last_name    = $lastName ?? $user->last_name;
+        $user->kyc_response = json_encode($payload); // Save entire payload
+        $user->has_done_kyc = 'yes';
+        $user->save();
+
+        return response()->json(['message' => 'User updated successfully']);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Server error'], 500);
+    }
 }
 
 
 public function complete(Request $request)
 {
-    $user = Auth::user();
-    $reference = $user->kyc_reference;
+    return GeneralController::sendNotification(
+        'dashboard',
+        'success',
+        'Onboarding Complete!',
+        'Your KYC verification was successful. Our System will Update your info Shortly'
+    );
 
-    $client = new \GuzzleHttp\Client([
-        'base_uri' => 'https://sandbox.dojah.io/',
-        'headers' => [
-            'AppId'         => env('DOJAH_APP_ID'),
-            'Authorization' => env('DOJAH_SECRET_KEY'), // 👈 must be secret key
-        ]
-    ]);
+    // $user = Auth::user();
+    // $reference = $user->kyc_reference;
 
-    try {
-        $response = $client->get('/api/v1/kyc/verification', [
-            'query' => [
-                'reference_id' => $reference, // 👈 correct query parameter
-            ]
-        ]);
+    // $client = new \GuzzleHttp\Client([
+    //     'base_uri' => 'https://sandbox.dojah.io/',
+    //     'headers' => [
+    //         'AppId'         => env('DOJAH_APP_ID'),
+    //         'Authorization' => env('DOJAH_SECRET_KEY'), // 👈 must be secret key
+    //     ]
+    // ]);
 
-        dd($response);
-        $data = json_decode($response->getBody()->getContents(), true);
+    // try {
+    //     $response = $client->get('/api/v1/kyc/verification', [
+    //         'query' => [
+    //             'reference_id' => $reference, // 👈 correct query parameter
+    //         ]
+    //     ]);
 
-        $user->kyc_response = json_encode($data);
-        $user->has_done_kyc = 'yes';
-        $user->kyc_status   = $data['entity']['status'] ?? 'failed';
-        $user->save();
+    //     dd($response);
+    //     $data = json_decode($response->getBody()->getContents(), true);
 
-        return GeneralController::sendNotification(
-            'dashboard',
-            'success',
-            'Onboarding Complete!',
-            'Your KYC verification was successful.'
-        );
+    //     $user->kyc_response = json_encode($data);
+    //     $user->has_done_kyc = 'yes';
+    //     $user->kyc_status   = $data['entity']['status'] ?? 'failed';
+    //     $user->save();
 
-    } catch (\Exception $e) {
+    //     return GeneralController::sendNotification(
+    //         'dashboard',
+    //         'success',
+    //         'Onboarding Complete!',
+    //         'Your KYC verification was successful.'
+    //     );
 
-        return GeneralController::sendNotification(
-            'dashboard',
-            'error',
-            'KYC Verification Failed',
-            'We could not complete your KYC. Please try again later.'
-        );
-    }
+    // } catch (\Exception $e) {
+
+    //     return GeneralController::sendNotification(
+    //         'dashboard',
+    //         'error',
+    //         'KYC Verification Failed',
+    //         'We could not complete your KYC. Please try again later.'
+    //     );
+    // }
 }
 
 public function complete_old(Request $request)
