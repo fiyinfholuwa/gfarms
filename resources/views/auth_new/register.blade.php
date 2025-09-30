@@ -90,8 +90,8 @@
         {{-- Student Fields --}}
         <div id="student_fields" style="display:none;">
             <div class="form-group">
-                <label for="student_id" class="form-label">Student ID</label>
-                <input type="text" id="student_id" name="student_id" 
+                <label for="student_id" class="form-label">Student ID Card</label>
+                <input type="file" id="student_id" name="student_id" 
                        class="form-control @error('student_id') is-invalid @enderror" 
                        placeholder="Enter Student ID">
                 @error('student_id')<small class="text-danger">{{ $message }}</small>@enderror

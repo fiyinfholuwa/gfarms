@@ -47,10 +47,23 @@ public function store(Request $request): RedirectResponse
         'password' => ['required', 'confirmed', Rules\Password::defaults()],
         'terms' => ['accepted'],
         'employee_status' => 'required|in:Employed,Non Student/ Non Employed,Trader,Student',
-        'student_id' => 'required_if:employee_status,Student|string|nullable|max:255',
+        'student_id' => 'required_if:employee_status,Student|file|mimes:jpg,jpeg,png,pdf|max:2048|nullable',
         'school_name' => 'required_if:employee_status,Student|string|nullable|max:255',
 
     ]);
+
+    $studentIdPath = null;
+if ($request->hasFile('student_id')) {
+    $file = $request->file('student_id');
+    $studentIdPath = 'uploads/student_ids/';
+    if (!file_exists(public_path($studentIdPath))) {
+        mkdir(public_path($studentIdPath), 0755, true);
+    }
+    $filename = time().'_'.$file->getClientOriginalName();
+    $file->move(public_path($studentIdPath), $filename);
+    $studentIdPath .= $filename;
+}
+
 
     // ✅ Create user
     $user = User::create([
@@ -62,7 +75,7 @@ public function store(Request $request): RedirectResponse
         'lga' => $request->lga,
         'country' => $request->country,
         'employee_status' => $request->employee_status,
-        'student_id' => $request->student_id,
+        'student_id' => $studentIdPath, // 👈 now it stores the file path
         'school_name' => $request->school_name,
         'password' => Hash::make($request->password),
     ]);
@@ -86,18 +99,43 @@ public function store(Request $request): RedirectResponse
     return redirect()->route('otp.verify')->with('status', 'Registration successful! Check your email for OTP.');
 }
 
-    public function getStates()
-    {
-        $response = Http::get('https://api.facts.ng/v1/states');
-        return $response->json(); // return states to frontend
+public function getStates()
+{
+    $response = Http::get('https://api.facts.ng/v1/states');
+    $states = $response->json();
+
+    // Append FCT in same format
+    $states[] = [
+        'id' => 'fct',   // this matches your frontend "value"
+        'name' => 'Federal Capital Territory (Abuja)',
+    ];
+
+    return $states;
+}
+
+public function getLgas($state)
+{
+    $state = strtolower(trim($state));
+
+    // Handle FCT manually
+    if ($state === 'fct') {
+        return [
+            'lgas' => [
+                'Abaji',
+                'Abuja Municipal Area Council',
+                'Bwari',
+                'Gwagwalada',
+                'Kuje',
+                'Kwali'
+            ]
+        ];
     }
 
-    public function getLgas($state)
-    {
-        $state = urlencode($state);
-        $response = Http::get("https://api.facts.ng/v1/states/{$state}");
-        return $response->json(); // return LGAs to frontend
-    }
+    // Default: fetch from API
+    $state = urlencode($state);
+    $response = Http::get("https://api.facts.ng/v1/states/{$state}");
+    return $response->json();
+}
 
     
 

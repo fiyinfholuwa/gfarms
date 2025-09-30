@@ -381,68 +381,9 @@ $kycLevels = kyc_levels();
 ?>
 
 {{-- 🔹 If user has NOT paid onboarding, show onboarding modal --}}
-@if(!$has_paid_onboarding)
-    <button type="button" class="btn btn-warning d-none" id="showOnboardingModal" data-bs-toggle="modal" data-bs-target="#onboardingModal"></button>
+@if(!$has_done_kyc)
 
-   {{-- ✅ Clean Onboarding Modal --}}
-<div class="modal fade" id="onboardingModal" tabindex="-1" aria-labelledby="onboardingLabel" aria-hidden="true" 
-     data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content pwa-modal">
 
-            <!-- Clean Header -->
-            <div class="modal-header pwa-header">
-                <div class="w-100 text-center">
-                    <div class="pwa-icon mb-3">🚀</div>
-                    <h3 class="modal-title fw-bold mb-2 text-white">Complete Your Onboarding</h3>
-                    <p class="mb-0 pwa-subtitle">Make a one-time payment to unlock full access</p>
-                </div>
-            </div>
-
-            <!-- Clean Body -->
-            <div class="modal-body pwa-body"> 
-               <div class="text-center mb-4">
-                   <h4 class="pwa-price mb-3">Pay only ₦500 for account activation</h4>
-                   <p class="pwa-text">Complete your KYC later to fully unlock all features.</p>
-               </div>
-
-               <div class="pwa-features mb-4">
-                   <div class="feature-item">
-                       <div class="feature-icon">✅</div>
-                       <div class="feature-text">Full access to all basic platform features after activation</div>
-                   </div>
-                   <div class="feature-item">
-                       <div class="feature-icon">✅</div>
-                       <div class="feature-text">Option to complete KYC for advanced benefits</div>
-                   </div>
-               </div>
-
-               <!-- Clean Payment Buttons -->
-               <div class="pwa-buttons">
-                   <a href="{{ route('pay.onboarding', ['gateway' => 'paystack']) }}" 
-                      class="pwa-btn pwa-btn-primary">
-                        Pay with Paystack
-                   </a>
-                   <a href="{{ route('pay.onboarding', ['gateway' => 'fincra']) }}" 
-                      class="pwa-btn pwa-btn-secondary">
-                       Pay with Fincra
-                   </a>
-               </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-{{-- ✅ Auto-show onboarding modal --}}
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById('showOnboardingModal').click();
-    });
-</script>
-
-{{-- 🔹 If user paid onboarding but has NOT done KYC, show KYC modal --}}
-@elseif(!$has_done_kyc)
-    <!-- Hidden Trigger Button -->
 <button type="button" class="btn btn-warning d-none" id="showKycModal" data-bs-toggle="modal" data-bs-target="#kycModal"></button>
 
 {{-- ✅ Clean KYC Modal --}}
@@ -519,6 +460,69 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+</script>
+
+    
+
+{{-- 🔹 If user paid onboarding but has NOT done KYC, show KYC modal --}}
+@elseif(!$has_paid_onboarding)
+    <!-- Hidden Trigger Button -->
+<button type="button" class="btn btn-warning d-none" id="showOnboardingModal" data-bs-toggle="modal" data-bs-target="#onboardingModal"></button>
+
+   {{-- ✅ Clean Onboarding Modal --}}
+<div class="modal fade" id="onboardingModal" tabindex="-1" aria-labelledby="onboardingLabel" aria-hidden="true" 
+     data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content pwa-modal">
+
+            <!-- Clean Header -->
+            <div class="modal-header pwa-header">
+                <div class="w-100 text-center">
+                    <div class="pwa-icon mb-3">🚀</div>
+                    <h3 class="modal-title fw-bold mb-2 text-white">Complete Your Onboarding</h3>
+                    <p class="mb-0 pwa-subtitle">Make a one-time payment to unlock full access</p>
+                </div>
+            </div>
+
+            <!-- Clean Body -->
+            <div class="modal-body pwa-body"> 
+               <div class="text-center mb-4">
+                   <h4 class="pwa-price mb-3">Pay only ₦500 for account activation</h4>
+                   <p class="pwa-text">Complete your KYC later to fully unlock all features.</p>
+               </div>
+
+               <div class="pwa-features mb-4">
+                   <div class="feature-item">
+                       <div class="feature-icon">✅</div>
+                       <div class="feature-text">Full access to all basic platform features after activation</div>
+                   </div>
+                   <div class="feature-item">
+                       <div class="feature-icon">✅</div>
+                       <div class="feature-text">Option to complete KYC for advanced benefits</div>
+                   </div>
+               </div>
+
+               <!-- Clean Payment Buttons -->
+               <div class="pwa-buttons">
+                   <a href="{{ route('pay.onboarding', ['gateway' => 'paystack']) }}" 
+                      class="pwa-btn pwa-btn-primary">
+                        Pay with Paystack
+                   </a>
+                   <a href="{{ route('pay.onboarding', ['gateway' => 'fincra']) }}" 
+                      class="pwa-btn pwa-btn-secondary">
+                       Pay with Fincra
+                   </a>
+               </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- ✅ Auto-show onboarding modal --}}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById('showOnboardingModal').click();
+    });
 </script>
 @endif
 

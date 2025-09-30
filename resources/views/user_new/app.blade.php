@@ -519,6 +519,19 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
     
+    <!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/64a3f86294cf5d49dc617131/1j6d8cfcp';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
   </body>
 
 <!-- Mirrored from themes.pixelstrap.com/fuzzy/landing.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 02 Sep 2025 07:35:23 GMT -->

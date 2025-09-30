@@ -512,7 +512,7 @@
                 {{ ucfirst($order->status) }}
             </div>
         </div>
-        <a href="{{ route('admin.orders') }}" class="back-btn">
+        <a href="{{ route('user.orders') }}" class="back-btn">
     <i class="fas fa-arrow-left"></i> Back to Orders
 </a>
 
@@ -553,7 +553,7 @@
                     </span>
                 </div>
 
-                @if($order->utility_bill_file)
+                {{-- @if($order->utility_bill_file)
     <div class="info-item">
         <span class="info-label">Utility Bill</span>
         <span class="info-value">
@@ -573,14 +573,14 @@
             </a>
         </span>
     </div>
-    @endif
+    @endif --}}
 
-    @if($order->bvn)
+    {{-- @if($order->bvn)
     <div class="info-item">
         <span class="info-label">BVN</span>
         <span class="info-value">{{ $order->bvn }}</span>
     </div>
-    @endif
+    @endif --}}
 
     
     @if($order->repayment_amount)

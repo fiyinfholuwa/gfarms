@@ -149,7 +149,7 @@
 <div id="student_fields" style="display:none;">
     <div class="form-group col-md-12 mb-3">
         <label for="student_id" class="fw-bold">Student ID</label>
-        <input type="text" id="student_id" name="student_id" class="form-control" placeholder="Enter Student ID">
+        <input type="file" id="student_id" name="student_id" class="form-control" placeholder="Enter Student ID">
         @error('student_id')<small class="text-danger">{{ $message }}</small>@enderror
     </div>
 

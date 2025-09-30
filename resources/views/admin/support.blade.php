@@ -69,36 +69,40 @@
                                                 </td>
                                             </tr>
 
-                                            <!-- Update Status Modal -->
-                                            <div class="modal fade" id="statusTicketModal_{{ $ticket->id }}" tabindex="-1" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <form action="{{ route('support.updateStatus', $ticket->id) }}" method="POST">
-                                                        @csrf
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">Update Ticket Status</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="form-group">
-                                                                    <label>Select Status</label>
-                                                                    <select name="status" class="form-control" required>
-                                                                        <option value="pending" {{ $ticket->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                                                        <option value="resolved" {{ $ticket->status == 'resolved' ? 'selected' : '' }}>Resolved</option>
-                                                                        <option value="closed" {{ $ticket->status == 'closed' ? 'selected' : '' }}>Closed</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="submit" class="btn btn-primary">
-                                                                    <i class="fa fa-save me-1"></i> Update Status
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
+                                           <!-- Update Status Modal -->
+<div class="modal fade" id="statusTicketModal_{{ $ticket->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="{{ route('support.updateStatus', $ticket->id) }}" method="POST">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Ticket Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label>Select Status</label>
+                        <select name="status" class="form-control" required>
+                            <option value="pending" {{ $ticket->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="resolved" {{ $ticket->status == 'resolved' ? 'selected' : '' }}>Resolved</option>
+                            <option value="closed" {{ $ticket->status == 'closed' ? 'selected' : '' }}>Closed</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Response</label>
+                        <textarea name="response" class="form-control" rows="4" placeholder="Write your response here..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-save me-1"></i> Update Status
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
                                             <!-- Delete Ticket Modal -->
                                             <div class="modal fade" id="deleteTicket_{{ $ticket->id }}" tabindex="-1" aria-hidden="true">

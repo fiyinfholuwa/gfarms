@@ -245,14 +245,13 @@ class AdminController extends Controller
 
     public function admin_orders()
     {
-        $orders = Order::orderBy('created_at', 'desc')
-            ->paginate(50);
+        $orders = Order::orderBy('created_at', 'desc')->get();
 
         return view('admin.orders', compact('orders'));
     }
 
 
-    public function updateStatus(Request $request)
+    public function updateStatus_old(Request $request)
 {
     $request->validate([
         'order_id' => 'required|integer|exists:orders,id',
@@ -269,7 +268,7 @@ class AdminController extends Controller
         // Build HTML inline
         $html = "
             <h2>Hello {$order->user->name},</h2>
-            <p>Your order <strong>#{$order->id}</strong> has been updated.</p>
+            <p>Your order <strong>#{$order->order_number}</strong> has been updated.</p>
             <p><strong>Status:</strong> " . ucfirst($order->status) . "</p>";
 
         if (!empty($order->reason)) {
@@ -299,6 +298,70 @@ class AdminController extends Controller
         ]);
     }
 }
+
+
+public function updateStatus(Request $request)
+{
+    $request->validate([
+        'order_id' => 'required|integer|exists:orders,id',
+        'status'   => 'required|string',
+        'reason'   => 'nullable|string|max:1000',
+    ]);
+
+    try {
+        $order = Order::findOrFail($request->order_id);
+        $order->status = $request->status;
+        $order->reason = $request->reason;
+
+        // ✅ Extra check for loan adjustment
+        if (strtolower($request->status) === 'approved' && strtolower($order->payment_method) === 'loan') {
+            $user = User::findOrFail($order->user_id);
+        
+            $user->increment('loan_balance', $order->total_amount + ($order->total_amount * 0.10));
+        }
+        
+
+        $order->save();
+
+        // Build HTML inline
+        $html = "
+            <h2>Hello {$order->user->name},</h2>
+            <p>Your order <strong>#{$order->order_number}</strong> has been updated.</p>
+            <p><strong>Status:</strong> " . ucfirst($order->status) . "</p>";
+
+        if (!empty($order->reason)) {
+            $html .= "<p><strong>Reason:</strong> {$order->reason}</p>";
+        }
+
+        $html .= "
+            <p>Thank you for shopping with us!</p>
+            <p><strong>" . config('app.name') . "</strong></p>
+        ";
+
+        try{
+            Mail::send([], [], function ($message) use ($order, $html) {
+                $message->to($order->user->email)
+                        ->subject('Order #' . $order->id . ' Status Update')
+                        ->html($html);
+            });
+    
+        }catch(\Exception $e){
+
+        }
+        // Send mail immediately
+       
+        return redirect()->back()->with([
+            'message'    => 'Order status updated and email sent!',
+            'alert-type' => 'success'
+        ]);
+    } catch (\Exception $e) {
+        return redirect()->back()->with([
+            'message'    => 'Failed to update status. ' . $e->getMessage(),
+            'alert-type' => 'error'
+        ]);
+    }
+}
+
 
 
     public function admin_order_show($order)

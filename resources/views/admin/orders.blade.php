@@ -1,3 +1,4 @@
+```blade
 @extends('admin.app')
 
 @section('content')
@@ -61,7 +62,9 @@
 <div style="margin-top:50px;" class="container">
     <div class="orders-header">
         <h1 class="orders-title">My Orders</h1>
-        
+        <input type="text" id="searchInput" class="form-control" 
+               placeholder="Search orders..." 
+               style="max-width: 250px;">
     </div>
 
     @if(session('success')) <div class="alert alert-success">{{ session('success') }}</div> @endif
@@ -109,7 +112,6 @@
                     @endforeach
                 </tbody>
             </table>
-            {{ $orders->links() }}
         </div>
     @else
         <div class="empty-state text-center p-5">
@@ -130,20 +132,20 @@
                 <h5 class="modal-title">Change Order Status</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <<div class="modal-body">
-    <label for="status" class="form-label">Select Status</label>
-    <select class="form-select" name="status" id="modal_status">
-        <option value="pending">Under Review</option>
-        <option value="Approved">Approved</option>
-        <option value="preparing">Preparing</option>
-        <option value="ready">Dispatched</option>
-        <option value="delivered">Delivered</option>
-        <option value="cancelled">Denied</option>
-    </select>
+            <div class="modal-body">
+                <label for="status" class="form-label">Select Status</label>
+                <select class="form-select" name="status" id="modal_status">
+                    <option value="pending">Under Review</option>
+                    <option value="Approved">Approved</option>
+                    <option value="preparing">Preparing</option>
+                    <option value="ready">Dispatched</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="cancelled">Denied</option>
+                </select>
 
-    <label for="reason" class="form-label mt-3">Reason</label>
-    <textarea class="form-control" name="reason" id="modal_reason" rows="3" placeholder="Enter reason..."></textarea>
-</div>
+                <label for="reason" class="form-label mt-3">Reason</label>
+                <textarea class="form-control" name="reason" id="modal_reason" rows="3" placeholder="Enter reason..."></textarea>
+            </div>
 
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success">Update</button>
@@ -156,6 +158,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // Modal status change
         const modal = new bootstrap.Modal(document.getElementById('statusModal'));
         document.querySelectorAll('.change-status-btn').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -168,6 +171,19 @@
                 modal.show();
             });
         });
+
+        // Real-time search
+        const searchInput = document.getElementById("searchInput");
+        const rows = document.querySelectorAll("table tbody tr");
+
+        searchInput.addEventListener("keyup", function () {
+            const searchText = this.value.toLowerCase();
+            rows.forEach(row => {
+                const rowText = row.innerText.toLowerCase();
+                row.style.display = rowText.includes(searchText) ? "" : "none";
+            });
+        });
     });
 </script>
 @endsection
+```

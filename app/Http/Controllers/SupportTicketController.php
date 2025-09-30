@@ -5,6 +5,8 @@ use App\Models\SupportTicket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Mail;
+
 class SupportTicketController extends Controller
 {
     // List all tickets (admin)
@@ -71,16 +73,49 @@ class SupportTicketController extends Controller
     }
 
     public function updateStatus(Request $request, $id)
-    {
-        $request->validate([
-            'status' => 'required|in:pending,resolved,closed',
-        ]);
+{
+    $request->validate([
+        'status'   => 'required|in:pending,resolved,closed',
+        'response' => 'nullable|string|max:2000',
+    ]);
 
-        $ticket = SupportTicket::findOrFail($id);
-        $ticket->status = $request->status;
-        $ticket->save();
-        return GeneralController::sendNotification('', 'success', '', 'Ticket status updated successfully!');
+    $ticket = SupportTicket::findOrFail($id);
+    $ticket->status = $request->status;
+
+    // If you have a response column in DB
+    if ($request->filled('response')) {
+        $ticket->response = $request->response;
     }
+
+    $ticket->save();
+
+    // Send email to the user
+    try{
+        $user = $ticket->user; // assuming relationship exists
+        if ($user && $user->email) {
+            $messageBody = "Hello {$user->name},\n\n"
+                . "Your support ticket #{$ticket->id} has been updated.\n\n"
+                . "Status: " . ucfirst($ticket->status) . "\n";
+        
+            if ($request->filled('response')) {
+                $messageBody .= "Response: {$request->response}\n\n";
+            }
+        
+            $messageBody .= "Thank you,\nSupport Team";
+        
+            Mail::raw($messageBody, function ($message) use ($user) {
+                $message->to($user->email)
+                        ->subject('Your Support Ticket Status Has Been Updated');
+            });
+        }
+        
+
+    }catch(\Exception $e){
+
+    }
+    return GeneralController::sendNotification('', 'success', '', 'Ticket status updated successfully!');
+}
+
 }
 
 ?>
