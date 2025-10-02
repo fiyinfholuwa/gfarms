@@ -110,12 +110,36 @@ Route::middleware(['auth', 'onboard_kyc'])->group(function () {
     // Logout
     Route::get('/logout', [UserDashboardController::class, 'logout'])->name('logout');
     Route::get('/user/payment', [PackageController::class, 'payment_user'])->name('user.payment');
+    Route::get('/select-package', [PackageController::class, 'showForm'])->name('package.form');
+
+
+    Route::post('/orders/checkout', [OrderController::class, 'checkout'])->name('checkout');
+    Route::post('/orders/processing/payment', [PackageController::class, 'pay_processing_fee'])->name('order.processing');
+    Route::get('/generate/virtual/account/', [PackageController::class, 'generate_virtual_account'])->name('generate_virtual_account');
+
+    // Assuming you have a food market route
+    Route::get('/food-market', 'YourFoodMarketController@index')->name('food-market');
+    Route::get('/orders', [OrderController::class, 'index'])->name('user.orders');
+
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('user.orders.show');
+    Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('user.orders.cancel');
+
+    // Route::get('/cart', [CartController::class, 'index']);
+    Route::post('/cart', [CartController::class, 'store']);
+    Route::delete('/cart', [CartController::class, 'destroy']);
+
+    Route::post('/cart/update', [CartController::class, 'update_cart'])->name('cart.update');
+    Route::post('/cart/remove', [CartController::class, 'remove_from_cart'])->name('cart.remove');
+    Route::post('/cart/clear', [CartController::class, 'clear_cart'])->name('cart.clear');
+    Route::post('/pay/processing-fee', [PackageController::class, 'pay_processing_fee_onspot'])
+    ->name('pay.processing.fee.onspot');
+
 });
 
 
-
-
 Route::get('/pay/onboarding', [PackageController::class, 'startPayment'])->name('pay.onboarding');
+
+
 Route::get('/payment/callback', [PackageController::class, 'paymentCallback'])->name('package.callback');
 
 Route::post('/kyc/webhook', [PackageController::class, 'webhook'])->name('kyc.webhook');
@@ -125,9 +149,9 @@ Route::match(['get', 'post'], '/kyc/complete', [PackageController::class, 'compl
 
 Route::match(['get', 'post'],'/dojah/webhook', [PackageController::class, 'handleWebhook']);
 
-Route::get('/select-package', [PackageController::class, 'showForm'])->name('package.form');
 
 Route::post('/payment/webhook', [PackageController::class, 'webhook'])->name('package.webhook');
+Route::get('/my/onboarding', [PackageController::class, 'onboarding_page'])->name('onboarding_page');
 
 Route::post('/cart/add', [App\Http\Controllers\CartController::class, 'add_cart'])->name('cart.add');
 
@@ -157,6 +181,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/kyc-levels', [AdminController::class, 'kyc_level'])->name('manage.account.level');
     Route::get('/manage/user/', [AdminController::class, 'manage_user'])->name('manage.user');
     Route::post('/kyc-levels/{key}/update', [AdminController::class, 'update_kyc_level'])->name('admin.kyc.update');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('user.orders.show');
 
 });
 
@@ -198,27 +223,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/logout', [UserDashboardController::class, 'logout'])->name('logout');
     Route::get('/terms', [UserDashboardController::class, 'terms'])->name('terms');
 
-    Route::get('/orders', [OrderController::class, 'index'])->name('user.orders');
-    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('user.orders.show');
-    Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('user.orders.cancel');
-
-    // Route::get('/cart', [CartController::class, 'index']);
-    Route::post('/cart', [CartController::class, 'store']);
-    Route::delete('/cart', [CartController::class, 'destroy']);
-
-    Route::post('/cart/update', [CartController::class, 'update_cart'])->name('cart.update');
-    Route::post('/cart/remove', [CartController::class, 'remove_from_cart'])->name('cart.remove');
-    Route::post('/cart/clear', [CartController::class, 'clear_cart'])->name('cart.clear');
-    Route::post('/pay/processing-fee', [PackageController::class, 'pay_processing_fee_onspot'])
-    ->name('pay.processing.fee.onspot');
-
+    
     // Order API routes
-    Route::post('/orders/checkout', [OrderController::class, 'checkout'])->name('checkout');
-    Route::post('/orders/processing/payment', [PackageController::class, 'pay_processing_fee'])->name('order.processing');
-    Route::get('/generate/virtual/account/', [PackageController::class, 'generate_virtual_account'])->name('generate_virtual_account');
-
-    // Assuming you have a food market route
-    Route::get('/food-market', 'YourFoodMarketController@index')->name('food-market');
+    
 });
 
 Route::post('/paystack/webhook', [PaymentWebhookController::class, 'handleWebhook']);

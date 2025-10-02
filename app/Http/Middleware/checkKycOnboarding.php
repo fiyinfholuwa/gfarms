@@ -25,7 +25,7 @@ class CheckKycOnboarding
         // ✅ Check if the user has not paid onboarding
         if ($user->has_paid_onboarding === 'no') {
             return GeneralController::sendNotification(
-                null, 
+                'onboarding_page', 
                 'error', 
                 'Onboarding Payment Required', 
                 'You must complete your onboarding payment before you can access this section.'
@@ -35,7 +35,7 @@ class CheckKycOnboarding
         // ✅ Check if the user has not completed KYC
         if ($user->has_done_kyc === 'no') {
             return GeneralController::sendNotification(
-                null, 
+                'onboarding_page', 
                 'error', 
                 'KYC Verification Required', 
                 'You must complete your KYC verification before you can access this section.'

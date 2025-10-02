@@ -6,24 +6,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         /* Make widget responsive */
-        iframe {
-            max-width: 90vw;
-            max-height: 90vh;
-        }
-
-        @media (min-width: 1024px) {
-            iframe {
-                width: 70vw !important;
-                height: 80vh !important;
-            }
-        }
-
-        @media (max-width: 768px) {
-            iframe {
-                width: 95vw !important;
-                height: 80vh !important;
-            }
-        }
+        
     </style>
 </head>
 <body>

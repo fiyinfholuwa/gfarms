@@ -132,11 +132,94 @@
 
         {{-- Terms --}}
         <div class="form-group">
-            <label>
-                <input type="checkbox" name="terms" {{ old('terms') ? 'checked' : '' }}> I Agree to the Terms
-            </label>
-            @error('terms')<small class="text-danger">{{ $message }}</small>@enderror
-        </div>
+    <label>
+        <input type="checkbox" name="terms" {{ old('terms') ? 'checked' : '' }}>
+        I Agree to the 
+        <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms of Use</a>
+    </label>
+    @error('terms')<small class="text-danger">{{ $message }}</small>@enderror
+</div>
+
+<!-- Terms Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="termsModalLabel">Terms of Use</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+        <h6>1. Introduction</h6>
+        <p>
+          Welcome to our food ordering platform. By accessing or using our service, 
+          you agree to be bound by these Terms of Use. Please read them carefully before proceeding.
+        </p>
+
+        <h6>2. Ordering</h6>
+        <p>
+          Orders placed through the platform are considered final once payment is completed. 
+          We prepare meals fresh, and therefore cancellations are not possible once the order is confirmed.
+        </p>
+
+        <h6>3. Payments</h6>
+        <p>
+          All payments are processed securely through our trusted payment partners. 
+          We do not store your payment card details. You agree to pay all charges incurred by you or any users of your account.
+        </p>
+
+        <h6>4. Delivery</h6>
+        <p>
+          Delivery times are estimated and may vary due to traffic, weather, or availability. 
+          Our team will do its best to ensure your food arrives on time and in good condition.
+        </p>
+
+        <h6>5. Food Safety & Allergies</h6>
+        <p>
+          We strive to provide accurate information about ingredients and allergens. 
+          However, we cannot guarantee that food is free from traces of allergens. 
+          Customers are advised to review meal descriptions carefully before ordering.
+        </p>
+
+        <h6>6. Refunds</h6>
+        <p>
+          Refunds will only be provided if your order cannot be fulfilled due to circumstances on our end. 
+          In cases of late delivery or dissatisfaction, please contact customer support for assistance.
+        </p>
+
+        <h6>7. User Responsibilities</h6>
+        <p>
+          You agree to use the platform lawfully and not for fraudulent or abusive purposes. 
+          Misuse of the service may result in suspension or termination of your account.
+        </p>
+
+        <h6>8. Limitation of Liability</h6>
+        <p>
+          Our company shall not be held liable for any indirect, incidental, or consequential damages 
+          arising from the use of the service, including but not limited to allergic reactions or late deliveries.
+        </p>
+
+        <h6>9. Governing Law</h6>
+        <p>
+          These Terms of Use are governed by and construed in accordance with the laws of your jurisdiction. 
+          Any disputes shall be resolved in the competent courts within our operational area.
+        </p>
+
+        <h6>10. Changes to Terms</h6>
+        <p>
+          We reserve the right to modify or update these terms at any time. 
+          Continued use of the service indicates your acceptance of the updated terms.
+        </p>
+
+        <p>
+          Thank you for choosing our platform to buy food and pay small!
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
         {{-- Submit --}}
         <div class="submit-btn mt-3">

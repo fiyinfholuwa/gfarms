@@ -1,126 +1,6 @@
 @extends('user_new.app')
 
 @section('content')
-
-<?php 
-$has_paid_onboarding = has_paid_onboarding(Auth::user()->id);
-$has_done_kyc = has_done_kyc(Auth::user()->id);
-$kycLevels = kyc_levels();
-?>
-
-{{-- KYC Modal --}}
-@if(!$has_done_kyc)
-<div class="modal fade" id="kycModal" tabindex="-1" aria-labelledby="kycModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content custom-modal">
-      <div class="modal-header custom-header">
-        <h5 class="modal-title" id="kycModalLabel">⚠️ KYC Required</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body custom-body">
-        <p>
-          You need to complete your <strong>KYC verification</strong> before continuing with your account usage.
-        </p>
-        <p class="small text-muted">
-          This ensures your account is secured and compliant with regulations.
-        </p>
-      </div>
-      <div class="modal-footer custom-footer">
-        <a href="{{ route('onboarding_page') }}" class="btn btn-warning text-white fw-bold">Proceed to KYC</a>
-        <button type="button" class="btn btn-dark text-white" data-bs-dismiss="modal">Cancel</button>
-      </div>
-    </div>
-  </div>
-</div>
-@endif
-
-{{-- Onboarding Payment Modal --}}
-@if(!$has_paid_onboarding)
-<div class="modal fade" id="onboardingModal" tabindex="-1" aria-labelledby="onboardingModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content custom-modal">
-      <div class="modal-header custom-header">
-        <h5 class="modal-title" id="onboardingModalLabel">💳 Onboarding Payment Required</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body custom-body">
-        <p>
-          To <strong>activate your account</strong>, you need to pay the onboarding fee.  
-        </p>
-        <p class="small text-muted">
-          This one-time fee unlocks full access to our services.
-        </p>
-      </div>
-      <div class="modal-footer custom-footer">
-        <a href="{{ route('onboarding_page') }}" class="btn btn-warning text-white fw-bold">Pay Now</a>
-        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button>
-      </div>
-    </div>
-  </div>
-</div>
-@endif
-
-{{-- Custom Styling --}}
-<style>
-.custom-modal {
-  border-radius: 12px;
-  overflow: hidden;
-  color: #fff;
-  {{-- box-shadow: 0 8px 25px rgba(0,0,0,0.7); --}}
-}
-
-.custom-header {
-  background: #ff6600; /* Dark Orange */
-  color: #fff;
-  border-bottom: none;
-  padding: 1rem 1.5rem;
-}
-
-.custom-body {
-  padding: 1.5rem;
-  font-size: 15px;
-  line-height: 1.6;
-}
-
-.custom-footer {
-  border-top: 1px solid rgba(255,255,255,0.1);
-  padding: 1rem 1.5rem;
-}
-
-.btn-warning {
-  background: #ff6600 !important;
-  border: none;
-  transition: 0.3s;
-}
-
-.btn-warning:hover {
-  background: #e65c00 !important;
-}
-
-.btn-outline-light {
-  border: 1px solid #fff;
-}
-
-.btn-outline-light:hover {
-  background: #fff;
-  color: #000;
-}
-</style>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    @if(!$has_done_kyc)
-        var kycModal = new bootstrap.Modal(document.getElementById('kycModal'));
-        kycModal.show();
-    @elseif(!$has_paid_onboarding)
-        var onboardingModal = new bootstrap.Modal(document.getElementById('onboardingModal'));
-        onboardingModal.show();
-    @endif
-});
-</script>
-
-
-
 <!-- banner section start -->
    <section class="banner-wrapper">
   <div class="custom-container">
@@ -141,23 +21,12 @@ document.addEventListener("DOMContentLoaded", function() {
   <!-- Account section -->
   <div class="account-section p-2">
     @if(empty(Auth::user()->virtual_account_number))
-
-
-    @if($has_paid_onboarding && $has_done_kyc)
-    
       <h6 class="mb-1 fw-bold text-dark">Virtual Account</h6>
       <p class="text-muted small mb-2">Generate your personal account number</p>
       <button class="btn btn-darkorange w-100 btn-sm" id="generateBtn" onclick="generateAccount()">
         <span id="btnText">Generate Account Number</span>
         <i id="spinner" class="fas fa-spinner fa-spin d-none ms-2"></i>
       </button>
-@else
-    {{-- Show Complete Onboarding Button --}}
-    <a href="{{ route('onboarding_page') }}" class="btn btn-secondary w-100 btn-sm">
-        Complete Onboarding
-    </a>
-@endif
-
     @else
       @php
         $accountData = json_decode(Auth::user()->virtual_account_number, true);
@@ -199,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function() {
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
+  border: 1px dashed black; /* dashed border */
 }
 
 /* Header */
@@ -504,7 +374,374 @@ $ambassadors = [
 <!-- Foods Section End -->
  <!-- other furniture section end -->
 
+<?php 
+$has_paid_onboarding = has_paid_onboarding(Auth::user()->id);
+$has_done_kyc = has_done_kyc(Auth::user()->id);
+$kycLevels = kyc_levels();
+?>
 
+{{-- 🔹 If user has NOT paid onboarding, show onboarding modal --}}
+@if(!$has_done_kyc)
+
+
+<button type="button" class="btn btn-warning d-none" id="showKycModal" data-bs-toggle="modal" data-bs-target="#kycModal"></button>
+
+{{-- ✅ Clean KYC Modal --}}
+<div class="modal fade" id="kycModal" tabindex="-1" aria-hidden="true" 
+     data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content pwa-modal">
+
+            <!-- Clean Header -->
+            <div class="modal-header pwa-header">
+                <div class="w-100 text-center">
+                    <div class="pwa-icon mb-3">🎯</div>
+                    <h3 class="modal-title fw-bold mb-2 text-white">Choose Account Type</h3>
+                    <p class="mb-0 pwa-subtitle">Select the verification level you wish to complete</p>
+                </div>
+            </div>
+
+            <!-- Clean Body -->
+            <div class="modal-body pwa-body">
+
+                <div class="text-center mb-4">
+                    <p class="pwa-text">Select an Account level below to see its details and start verification.</p>
+                </div>
+
+                <!-- Clean KYC Level Cards -->
+                <div class="kyc-grid mb-4">
+                    @foreach($kycLevels as $key => $level)
+                        <div class="kyc-level-card" data-level="{{ $key }}">
+                            <h5 class="kyc-title">{{ $level['title'] }}</h5>
+                            <p class="kyc-subtitle">Click to view details</p>
+                        </div>
+                    @endforeach
+                </div>
+
+                <!-- KYC Details Section -->
+                <div id="kyc-details" class="kyc-details-section">
+                    <div class="kyc-selected-info">
+                        <h4 id="kyc-title" class="selected-title"></h4>
+                        <p id="kyc-desc" class="selected-desc"></p>
+                    </div>
+
+                    <form id="kyc-form" method="POST">
+                        @csrf
+                        <button type="submit" class="pwa-btn pwa-btn-primary w-100">
+                             Proceed
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- ✅ Auto-show KYC modal & dynamic behavior --}}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('showKycModal').click();
+
+    const kycData = @json($kycLevels);
+    const title = document.getElementById('kyc-title');
+    const desc = document.getElementById('kyc-desc');
+    const form = document.getElementById('kyc-form');
+    const details = document.getElementById('kyc-details');
+
+    document.querySelectorAll('.kyc-level-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const data = kycData[card.dataset.level];
+            title.textContent = data.title;
+            desc.innerHTML = data.description; 
+            form.action = data.endpoint || "#";
+            details.style.display = 'block';
+            document.querySelectorAll('.kyc-level-card').forEach(c => c.classList.remove('active-card'));
+            card.classList.add('active-card');
+        });
+    });
+});
+</script>
+
+    
+
+{{-- 🔹 If user paid onboarding but has NOT done KYC, show KYC modal --}}
+@elseif(!$has_paid_onboarding)
+    <!-- Hidden Trigger Button -->
+<button type="button" class="btn btn-warning d-none" id="showOnboardingModal" data-bs-toggle="modal" data-bs-target="#onboardingModal"></button>
+
+   {{-- ✅ Clean Onboarding Modal --}}
+<div class="modal fade" id="onboardingModal" tabindex="-1" aria-labelledby="onboardingLabel" aria-hidden="true" 
+     data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content pwa-modal">
+
+            <!-- Clean Header -->
+            <div class="modal-header pwa-header">
+                <div class="w-100 text-center">
+                    <div class="pwa-icon mb-3">🚀</div>
+                    <h3 class="modal-title fw-bold mb-2 text-white">Complete Your Onboarding</h3>
+                    <p class="mb-0 pwa-subtitle">Make a one-time payment to unlock full access</p>
+                </div>
+            </div>
+
+            <!-- Clean Body -->
+            <div class="modal-body pwa-body"> 
+               <div class="text-center mb-4">
+                   <h4 class="pwa-price mb-3">Pay only ₦500 for account activation</h4>
+                   <p class="pwa-text">Complete your KYC later to fully unlock all features.</p>
+               </div>
+
+               <div class="pwa-features mb-4">
+                   <div class="feature-item">
+                       <div class="feature-icon">✅</div>
+                       <div class="feature-text">Full access to all basic platform features after activation</div>
+                   </div>
+                   <div class="feature-item">
+                       <div class="feature-icon">✅</div>
+                       <div class="feature-text">Option to complete KYC for advanced benefits</div>
+                   </div>
+               </div>
+
+               <!-- Clean Payment Buttons -->
+               <div class="pwa-buttons">
+                   <a href="{{ route('pay.onboarding', ['gateway' => 'paystack']) }}" 
+                      class="pwa-btn pwa-btn-primary">
+                        Pay with Paystack
+                   </a>
+                   <a href="{{ route('pay.onboarding', ['gateway' => 'fincra']) }}" 
+                      class="pwa-btn pwa-btn-secondary">
+                       Pay with Fincra
+                   </a>
+               </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- ✅ Auto-show onboarding modal --}}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById('showOnboardingModal').click();
+    });
+</script>
+@endif
+
+{{-- ✅ Clean PWA Styles --}}
+<style>
+/* Clean PWA Modal Styles */
+.pwa-modal {
+    border: none;
+    border-radius: 20px;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.pwa-header {
+    background: linear-gradient(135deg, #ff7e00, #ff5500);
+    border: none;
+    padding: 2rem 1.5rem;
+}
+
+.pwa-icon {
+    font-size: 3rem;
+    line-height: 1;
+}
+
+.pwa-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+}
+
+.pwa-body {
+    background: #ffffff;
+    padding: 2rem 1.5rem;
+}
+
+.pwa-price {
+    color: #ff5500;
+    font-weight: 700;
+    font-size: 1.3rem;
+}
+
+.pwa-text {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.pwa-features {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.feature-item:last-child {
+    margin-bottom: 0;
+}
+
+.feature-icon {
+    font-size: 1.1rem;
+    margin-right: 0.75rem;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+}
+
+.feature-text {
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.pwa-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.pwa-btn {
+    display: block;
+    text-align: center;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.pwa-btn-primary {
+    background: #00b9f1;
+    color: white;
+}
+
+.pwa-btn-primary:hover {
+    background: #007ad9;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.pwa-btn-secondary {
+    background: #ff7e00;
+    color: white;
+}
+
+.pwa-btn-secondary:hover {
+    background: #ff5500;
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* KYC Grid */
+.kyc-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.kyc-level-card {
+    flex: 1;
+    min-width: 160px;
+    max-width: 200px;
+    padding: 1.25rem;
+    border-radius: 12px;
+    background: #f8f9fa;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    text-align: center;
+}
+
+.kyc-level-card:hover {
+    background: #e9ecef;
+    border-color: #ff7e00;
+}
+
+.kyc-level-card.active-card {
+    background: #fff5f0;
+    border-color: #ff7e00;
+}
+
+.kyc-title {
+    color: #ff5500;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.kyc-subtitle {
+    color: #666;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.kyc-details-section {
+    display: none;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.kyc-selected-info {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.selected-title {
+    color: #ff5500;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.selected-desc {
+    color: #666;
+    margin: 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 576px) {
+    .pwa-header {
+        padding: 1.5rem 1rem;
+    }
+    
+    .pwa-body {
+        padding: 1.5rem 1rem;
+    }
+    
+    .pwa-icon {
+        font-size: 2.5rem;
+    }
+    
+    .kyc-grid {
+        flex-direction: column;
+    }
+    
+    .kyc-level-card {
+        max-width: none;
+    }
+}
+
+/* Remove all shadows globally for clean PWA look */
+.modal-content {
+    box-shadow: none !important;
+}
+
+.btn {
+    box-shadow: none !important;
+}
+
+.btn:hover {
+    box-shadow: none !important;
+}
+</style>
 
     <!-- banner section start -->
     {{-- <section class="banner-wapper grid-banner">

@@ -46,7 +46,7 @@ public function store(Request $request): RedirectResponse
         'country' => ['required', 'string'],
         'password' => ['required', 'confirmed', Rules\Password::defaults()],
         'terms' => ['accepted'],
-        'employee_status' => 'required|in:Employed,Non Student/ Non Employed,Trader,Student',
+        'employee_status' => 'required',
         'student_id' => 'required_if:employee_status,Student|file|mimes:jpg,jpeg,png,pdf|max:2048|nullable',
         'school_name' => 'required_if:employee_status,Student|string|nullable|max:255',
 

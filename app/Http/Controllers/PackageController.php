@@ -640,6 +640,10 @@ public function payment_user(Request $request)
 }
 
 
+public function onboarding_page(){
+    return view('user_new.onboarding');
+}
+
 }
 
 
