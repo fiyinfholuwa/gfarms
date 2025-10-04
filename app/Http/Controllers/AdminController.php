@@ -482,12 +482,20 @@ public function updateStatus(Request $request)
     }
     
 
-    public function admin_user_destory($id)
-{
-    $user = User::findOrFail($id);
-    $user->delete();
-    return GeneralController::sendNotification('', 'success', '', 'User deleted successfully!');
-}
+    public function admin_user_destroy($id)
+    {
+        $user = User::findOrFail($id);
+    
+        // Prevent deleting the currently logged-in user
+        if ($user->id === auth()->id()) {
+            return GeneralController::sendNotification('', 'error', '', 'You cannot delete your own account!');
+        }
+    
+        $user->delete();
+    
+        return GeneralController::sendNotification('', 'success', '', 'User deleted successfully!');
+    }
+    
     public function admin_user_view($id)
 {
     $user = User::findOrFail($id);
