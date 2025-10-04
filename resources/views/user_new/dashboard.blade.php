@@ -365,11 +365,15 @@ function generateAccount() {
     
     <?php
 // Demo ambassador data
-$ambassadors = [
-    ["name" => "John Doe", "role" => "Top Ambassador", "image" => asset('assets/banner.jpg')],
-    ["name" => "Jane Smith", "role" => "Brand Ambassador", "image" => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSMDNk-w0MsmcNFxCas0QhU62Tfpn3OLgohA&s"],
-    ["name" => "Mike Johnson", "role" => "Community Ambassador", "image" => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPjR3Q-NqrZiPRllsJXOuBrr_0t8hOAsG-ZA&s"],
-];
+$ambassadors = $settings->slider_images;
+
+if(is_null($ambassadors)){
+  $ambassadors = [];
+}else{
+    $ambassadors = json_decode($ambassadors, true) ?? [];
+
+}
+ 
 ?>
 
 <style>
@@ -415,7 +419,7 @@ $ambassadors = [
     <div class="carousel-inner">
       <?php foreach ($ambassadors as $index => $amb): ?>
         <div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>">
-          <img src="<?= $amb['image'] ?>" class="ambassador-banner" alt="Ambassador">
+          <img src="<?= $amb?>" class="ambassador-banner" alt="Ambassador">
         </div>
       <?php endforeach; ?>
     </div>

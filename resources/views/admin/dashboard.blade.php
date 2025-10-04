@@ -23,11 +23,9 @@
                                             </div>
 
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h3 class="mb-0 fs-22 text-dark me-3">3,456</h3>
+                                                <h3 class="mb-0 fs-22 text-dark me-3">{{ $total_users }}</h3>
                                                 <div class="text-center">
-                                                    <span class="text-primary fs-14"><i
-                                                            class="mdi mdi-trending-up fs-14"></i> 12.5%</span>
-                                                    <p class="text-dark fs-13 mb-0">Last 7 days</p>
+                                                    
                                                 </div>
                                             </div>
 
@@ -52,16 +50,16 @@
                                                         </svg>
                                                     </div>
                                                 </div>
-                                                <p class="mb-0 text-dark fs-15">Task Pending</p>
+                                                <p class="mb-0 text-dark fs-15">Total Orders</p>
                                             </div>
 
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h3 class="mb-0 fs-22 text-dark me-3">2,839</h3>
-                                                <div class="text-center">
+                                                <h3 class="mb-0 fs-22 text-dark me-3">{{ $total_orders }}</h3>
+                                                {{-- <div class="text-center">
                                                     <span class="text-danger fs-14 me-2"><i
                                                             class="mdi mdi-trending-down fs-14"></i> 1.5%</span>
                                                     <p class="text-dark fs-13 mb-0">Last 7 days</p>
-                                                </div>
+                                                </div> --}}
                                             </div>
 
                                         </div>
@@ -85,16 +83,16 @@
                                                         </svg>
                                                     </div>
                                                 </div>
-                                                <p class="mb-0 text-dark fs-15">Total Deals</p>
+                                                <p class="mb-0 text-dark fs-15">Pending Orders</p>
                                             </div>
 
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h3 class="mb-0 fs-22 text-dark me-3">2,254</h3>
-                                                <div class="text-center">
+                                                <h3 class="mb-0 fs-22 text-dark me-3">{{ $pending_orders }}</h3>
+                                                {{-- <div class="text-center">
                                                     <span class="text-primary fs-14 me-2"><i
                                                             class="mdi mdi-trending-up fs-14"></i> 12.8%</span>
                                                     <p class="text-dark fs-13 mb-0">Last 7 days</p>
-                                                </div>
+                                                </div> --}}
                                             </div>
 
                                         </div>
@@ -123,13 +121,13 @@
 
 
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h3 class="mb-0 fs-22 text-dark me-3">$4,578</h3>
+<h3 class="mb-0 fs-22 text-dark me-3">₦{{ number_format($total_revenues, 2) }}</h3>
 
-                                                <div class="text-muted">
+                                                {{-- <div class="text-muted">
                                                     <span class="text-danger fs-14 me-2"><i
                                                             class="mdi mdi-trending-down fs-14"></i> 18%</span>
                                                     <p class="text-dark fs-13 mb-0">Last 7 days</p>
-                                                </div>
+                                                </div> --}}
                                             </div>
 
                                         </div>
@@ -157,18 +155,18 @@
                                                         </svg>
                                                     </div>
                                                 </div>
-                                                <p class="mb-0 text-dark fs-15">Conversion Rate</p>
+                                                <p class="mb-0 text-dark fs-15">Total Loan Amount</p>
                                             </div>
 
 
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h3 class="mb-0 fs-22 text-dark me-3">14.57%</h3>
+<h3 class="mb-0 fs-22 text-dark me-3">₦{{ number_format($total_loan_amount, 2) }}</h3>
 
-                                                <div class="text-muted">
+                                                {{-- <div class="text-muted">
                                                     <span class="text-primary fs-14 me-2"><i
                                                             class="mdi mdi-trending-up fs-14"></i> 5.8%</span>
                                                     <p class="text-dark fs-13 mb-0">Last 7 days</p>
-                                                </div>
+                                                </div> --}}
                                             </div>
 
                                         </div>
@@ -181,171 +179,105 @@
 
                        
                        
-                        <div class="row">
-                            
-                            <div class="col-xl-12">
-                                <div class="card overflow-hidden">
+                       <div class="row">
+    <div class="col-xl-12">
+        <div class="card overflow-hidden">
 
-                                    <div class="card-header">
-                                        <div class="d-flex align-items-center">
-                                            <h5 class="card-title mb-0">Leads Report</h5>
-                                        </div>
-                                    </div>
+            <!-- Card Header -->
+            <div class="card-header">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h5 class="card-title mb-0">Recent Food Orders</h5>
+                    <a href="{{ route('admin.orders') }}" class="btn btn-sm btn-primary">View All Orders</a>
+                </div>
+            </div>
 
-                                    <div class="card-body mt-0">
-                                        <div class="table-responsive table-card mt-0">
-                                            <table
-                                                class="table table-borderless table-centered align-middle table-nowrap mb-0">
-                                                <thead class="text-muted table-light">
-                                                    <tr>
-                                                        <th scope="col" class="cursor-pointer">Lead</th>
-                                                        <th scope="col" class="cursor-pointer">Email</th>
-                                                        <th scope="col" class="cursor-pointer">Phone No</th>
-                                                        <th scope="col" class="cursor-pointer">Campany</th>
-                                                        <th scope="col" class="cursor-pointer">Status</th>
-                                                        <th scope="col" class="cursor-pointer">Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <img src="assets/images/users/user-22.jpg"
-                                                                class="avatar avatar-sm rounded-circle me-3">
-                                                            John Hamilton
-                                                        </td>
-                                                        <td>johnehamilton@gmail.com</td>
-                                                        <td>+48, 65610085</td>
-                                                        <td>Mufti</td>
-                                                        <td>
-                                                            <span
-                                                                class="badge bg-primary-subtle text-primary fw-semibold">New
-                                                                Lead</span>
-                                                        </td>
-                                                        <td>
-                                                            <a aria-label="anchor"
-                                                                class="btn btn-icon btn-sm bg-primary-subtle me-1"
-                                                                data-bs-toggle="tooltip" data-bs-original-title="Edit">
-                                                                <i class="mdi mdi-pencil-outline fs-14 text-primary"></i>
-                                                            </a>
-                                                            <a aria-label="anchor"
-                                                                class="btn btn-icon btn-sm bg-danger-subtle"
-                                                                data-bs-toggle="tooltip" data-bs-original-title="Delete">
-                                                                <i class="mdi mdi-delete fs-14 text-danger"></i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <img src="assets/images/users/user-23.jpg"
-                                                                class="avatar avatar-sm rounded-circle me-3">
-                                                            Janice Reese
-                                                        </td>
-                                                        <td>janicecreese@gmail.com</td>
-                                                        <td>+45, 32678972</td>
-                                                        <td>Gucci</td>
-                                                        <td>
-                                                            <span
-                                                                class="badge bg-secondary-subtle text-secondary fw-semibold">In
-                                                                Progress</span>
-                                                        </td>
-                                                        <td>
-                                                            <a aria-label="anchor"
-                                                                class="btn btn-icon btn-sm bg-primary-subtle me-1"
-                                                                data-bs-toggle="tooltip" data-bs-original-title="Edit">
-                                                                <i class="mdi mdi-pencil-outline fs-14 text-primary"></i>
-                                                            </a>
-                                                            <a aria-label="anchor"
-                                                                class="btn btn-icon btn-sm bg-danger-subtle"
-                                                                data-bs-toggle="tooltip" data-bs-original-title="Delete">
-                                                                <i class="mdi mdi-delete fs-14 text-danger"></i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <img src="assets/images/users/user-19.jpg"
-                                                                class="avatar avatar-sm rounded-circle me-3">
-                                                            Andrew Kim
-                                                        </td>
-                                                        <td>andrewekim@gmail.com</td>
-                                                        <td>+30, 84787124</td>
-                                                        <td>Vans</td>
-                                                        <td>
-                                                            <span
-                                                                class="badge bg-danger-subtle text-danger fw-semibold">Loss</span>
-                                                        </td>
-                                                        <td>
-                                                            <a aria-label="anchor"
-                                                                class="btn btn-icon btn-sm bg-primary-subtle me-1"
-                                                                data-bs-toggle="tooltip" data-bs-original-title="Edit">
-                                                                <i class="mdi mdi-pencil-outline fs-14 text-primary"></i>
-                                                            </a>
-                                                            <a aria-label="anchor"
-                                                                class="btn btn-icon btn-sm bg-danger-subtle"
-                                                                data-bs-toggle="tooltip" data-bs-original-title="Delete">
-                                                                <i class="mdi mdi-delete fs-14 text-danger"></i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <img src="assets/images/users/user-20.jpg"
-                                                                class="avatar avatar-sm rounded-circle me-3">
-                                                            Kathryn Sanchez
-                                                        </td>
-                                                        <td>kathryntsanchez@gmail.com</td>
-                                                        <td>+30, 23794209</td>
-                                                        <td>Myntra</td>
-                                                        <td>
-                                                            <span
-                                                                class="badge bg-success-subtle text-success fw-semibold">Won</span>
-                                                        </td>
-                                                        <td>
-                                                            <a aria-label="anchor"
-                                                                class="btn btn-icon btn-sm bg-primary-subtle me-1"
-                                                                data-bs-toggle="tooltip" data-bs-original-title="Edit">
-                                                                <i class="mdi mdi-pencil-outline fs-14 text-primary"></i>
-                                                            </a>
-                                                            <a aria-label="anchor"
-                                                                class="btn btn-icon btn-sm bg-danger-subtle"
-                                                                data-bs-toggle="tooltip" data-bs-original-title="Delete">
-                                                                <i class="mdi mdi-delete fs-14 text-danger"></i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <img src="assets/images/users/user-21.jpg"
-                                                                class="avatar avatar-sm rounded-circle me-3">
-                                                            Diane Richards
-                                                        </td>
-                                                        <td>dianetrichards@gmail.com</td>
-                                                        <td>+78, 37569176</td>
-                                                        <td>HCLTech</td>
-                                                        <td>
-                                                            <span
-                                                                class="badge bg-warning-subtle text-warning fw-semibold">Converted</span>
-                                                        </td>
-                                                        <td>
-                                                            <a aria-label="anchor"
-                                                                class="btn btn-icon btn-sm bg-primary-subtle me-1"
-                                                                data-bs-toggle="tooltip" data-bs-original-title="Edit">
-                                                                <i class="mdi mdi-pencil-outline fs-14 text-primary"></i>
-                                                            </a>
-                                                            <a aria-label="anchor"
-                                                                class="btn btn-icon btn-sm bg-danger-subtle"
-                                                                data-bs-toggle="tooltip" data-bs-original-title="Delete">
-                                                                <i class="mdi mdi-delete fs-14 text-danger"></i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                </tbody><!-- end tbody -->
-                                            </table><!-- end table -->
-                                        </div>
-                                    </div>
+            <!-- Card Body -->
+            <div class="card-body mt-0">
+                <div class="table-responsive table-card mt-0">
+                    <table class="table table-borderless table-centered align-middle table-nowrap mb-0">
+                        <thead class="text-muted table-light">
+                            <tr>
+                                <th scope="col">Order ID</th>
+                                <th scope="col">Food Items</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Order Date</th>
+                                <th scope="col">Order Cost</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($recent_orders as $order)
+                                <tr>
+                                    <!-- Order Number -->
+                                    <td>#{{ $order->order_number }}</td>
 
-                                </div>
-                            </div>
+                                    <!-- Food Items -->
+                                    <td>
+                                        @php
+                                            $items = $order->items;
+                                        @endphp
+                                        @if(is_array($items))
+                                            @foreach($items as $item)
+                                                <div>{{ $item['name'] ?? 'Item' }} <span class="text-muted">(x{{ $item['qty'] ?? 1 }})</span></div>
+                                            @endforeach
+                                        @else
+                                            <span>-</span>
+                                        @endif
+                                    </td>
 
-                        </div>
+                                    <!-- Quantity -->
+                                    <td>
+                                        @if(is_array($items))
+                                            {{ collect($items)->sum('qty') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+
+                                    <!-- Order Date -->
+                                    <td>{{ $order->created_at->format('M d, Y') }}</td>
+
+                                    <!-- Order Cost -->
+                                    <td>₦{{ number_format($order->total_amount, 2) }}</td>
+
+                                    <!-- Status -->
+                                    <td>
+                                        @php
+                                            $statusClass = [
+                                                'completed' => 'success',
+                                                'pending'   => 'warning',
+                                                'cancelled' => 'danger',
+                                                'confirmed' => 'primary',
+                                            ][$order->status] ?? 'secondary';
+                                        @endphp
+                                        <span class="badge bg-{{ $statusClass }}-subtle text-{{ $statusClass }} fw-semibold">
+                                            {{ ucfirst($order->status) }}
+                                        </span>
+                                    </td>
+
+                                    <!-- Actions -->
+                                    <td>
+                                        <a href="{{ route('admin.orders.show', $order->order_number) }}" 
+                                           class="btn btn-icon btn-sm bg-primary-subtle me-1" 
+                                           data-bs-toggle="tooltip" data-bs-original-title="View">
+                                            <i class="mdi mdi-eye fs-14 text-primary"></i>
+                                        </a>
+                                        
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center">No recent orders</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 @endsection

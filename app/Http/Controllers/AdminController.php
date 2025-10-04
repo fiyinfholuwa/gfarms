@@ -13,6 +13,10 @@ use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+
+
 
 class AdminController extends Controller
 {
@@ -21,16 +25,20 @@ class AdminController extends Controller
         $recent_orders = Order::latest()->paginate(10);
     
         $total_orders   = Order::count();
+        $pending_orders   = Order::where('status', 'pending')->count();
         $total_users    = User::count();
-        $total_revenues = Payment::sum('amount');
+        $total_revenues = Payment::where('status', 'success')->sum('amount');
         $total_products = Food::count();
+        $total_loan_amount = User::sum('loan_balance');
     
         return view('admin.dashboard', [
             'recent_orders'  => $recent_orders,
             'total_orders'   => $total_orders,
+            'pending_orders'   => $pending_orders,
             'total_users'    => $total_users,
             'total_revenues' => $total_revenues,
             'total_products' => $total_products,
+            'total_loan_amount' => $total_loan_amount,
         ]);
     }
     
@@ -57,7 +65,7 @@ class AdminController extends Controller
             'amount'          => 'required|string',
             'short_description' => 'nullable|string',
             'full_description'  => 'nullable|string',
-            'image'             => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'image'             => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         // Handle Image Upload
@@ -129,8 +137,6 @@ class AdminController extends Controller
 
         $food = Food::findOrFail($id);
 
-        // Generate unique slug based on name
-        // Generate slug based on name
         $slug = Str::slug($request->name);
 
         $originalSlug = $slug;
@@ -216,14 +222,31 @@ class AdminController extends Controller
     }
 
     public function category_delete($id)
-    {
-        Category::findOrFail($id)->delete();
-        $notification = array(
-            'message' => 'Category Successfully Deleted',
-            'alert-type' => 'success'
-        );
+{
+    $category = Category::findOrFail($id);
+
+    // Check if any Food is linked to this category
+    $foodExists = Food::where('category', $id)->exists();
+
+    if ($foodExists) {
+        // Prevent deletion and show error notification
+        $notification = [
+            'message' => 'This category cannot be deleted because it is linked to food items.',
+            'alert-type' => 'error'
+        ];
         return redirect()->back()->with($notification);
     }
+
+    // Safe to delete
+    $category->delete();
+
+    $notification = [
+        'message' => 'Category Successfully Deleted',
+        'alert-type' => 'success'
+    ];
+    return redirect()->back()->with($notification);
+}
+
 
     public function category_update(Request $request, $id)
     {
@@ -458,4 +481,73 @@ public function updateStatus(Request $request)
         return GeneralController::sendNotification('', 'success', '', 'KYC Level updated successfully!');
     }
     
+
+    public function admin_user_destory($id)
+{
+    $user = User::findOrFail($id);
+    $user->delete();
+    return GeneralController::sendNotification('', 'success', '', 'User deleted successfully!');
+}
+    public function admin_user_view($id)
+{
+    $user = User::findOrFail($id);
+    return view('admin.user_view', compact('user'));
+}
+
+
+public function view_platform()
+    {
+        $settings = DB::table('platform_settings')->first();
+        return view('admin.platform', compact('settings'));
+    }
+
+    public function save_platform(Request $request)
+    {
+        $request->validate([
+            'slider_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'existing_slider_images.*' => 'nullable|string',
+            'login_terms' => 'nullable|string',
+        ]);
+    
+        $settings = DB::table('platform_settings')->first();
+    
+        // Start with existing images that are still in the form
+        $sliderImages = $request->input('existing_slider_images', []);
+    
+        // Handle new uploads
+        if ($request->hasFile('slider_images')) {
+            foreach ($request->file('slider_images') as $image) {
+                if(count($sliderImages) >= 4) break;
+    
+                $dir = public_path('uploads/sliders');
+                if (!file_exists($dir)) {
+                    mkdir($dir, 0755, true);
+                }
+    
+                $filename = time().'_'.$image->getClientOriginalName();
+                $image->move($dir, $filename);
+    
+                $sliderImages[] = 'uploads/sliders/' . $filename;
+            }
+        }
+    
+        // Make sure we never exceed 4
+        $sliderImages = array_slice($sliderImages, 0, 4);
+    
+        $data = [
+            'slider_images' => json_encode($sliderImages),
+            'login_terms' => $request->login_terms ?? '',
+            'updated_at' => now()
+        ];
+    
+        if($settings){
+            DB::table('platform_settings')->update($data);
+        } else {
+            $data['created_at'] = now();
+            DB::table('platform_settings')->insert($data);
+        }
+        return GeneralController::sendNotification('', 'success', '', 'Platform settings updated successfully!');
+    }
+    
+
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Food;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -200,6 +201,12 @@ class OrderController extends Controller
         $order = Order::where('order_number', '=', $order)->first();
         return view('user_new.order_detail', compact('order'));
     }
+    public function admin_order_show($order)
+    {
+
+        $order = Order::where('order_number', '=', $order)->first();
+        return view('admin.orders_detail', compact('order'));
+    }
 
     public function cancel(Order $order)
     {
@@ -234,4 +241,10 @@ class OrderController extends Controller
     return GeneralController::sendNotification('', 'success', '', 'Order deleted successfully.');
 }
 
+public function admin_user_repayment($id){
+$payments = Payment::where('user_id', $id)->where('package', 'loan_repayment')->get();
+$info = User::find($id);
+$full_name = $info->first_name . " ". $info->last_name;
+return view('admin.user_repayment', compact('payments', 'full_name'));
+}
 }

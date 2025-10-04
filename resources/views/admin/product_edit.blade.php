@@ -1,103 +1,93 @@
 @extends('admin.app')
 
 @section('content')
-<div class="ec-content-wrapper">
-    <div class="content">
-        <div class="breadcrumb-wrapper d-flex align-items-center justify-content-between">
-            <div>
-                <h1>Edit Food</h1>
-                <p class="breadcrumbs"><span><a href="{{ url('admin/dashboard') }}">Home</a></span>
-                    <span><i class="mdi mdi-chevron-right"></i></span>Edit Food</p>
-            </div>
-            <div>
-                <a href="{{ route('foods.all') }}" class="btn btn-primary">View All</a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-dark mb-0">Edit Food Item</h3>
+        <a href="{{ route('foods.all') }}" class="btn btn-outline-warning rounded-pill px-3">
+            <i class="fas fa-list me-1"></i> View All
+        </a>
+    </div>
 
-                <div class="card card-default">
-                    <div class="card-body">
-                        <form class="row g-3" method="POST" action="{{ route('foods.update', $food->id) }}" enctype="multipart/form-data">
-                            @csrf
+    <!-- Card -->
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body p-4">
+            <form class="row g-4" method="POST" action="{{ route('foods.update', $food->id) }}" enctype="multipart/form-data">
+                @csrf
 
-                            {{-- Image Upload --}}
-                            <div class="col-lg-4">
-                                <div class="ec-vendor-img-upload">
-                                    <div class="avatar-upload">
-                                        <div class="avatar-edit">
-                                            <input type='file' id="imageUpload" name="image" accept=".png, .jpg, .jpeg" />
-                                            <label for="imageUpload"><img src="{{ asset('assets_old/img/icons/edit.svg') }}" class="svg_img header_svg" alt="edit" /></label>
-                                        </div>
-                                        <div class="avatar-preview ec-preview">
-                                            <div class="imagePreview ec-div-preview">
-                                                <img id="previewImage" 
-                                                     src="{{ $food->image ? asset($food->image) : asset('assets_old/img/products/vender-upload-preview.jpg') }}" 
-                                                     alt="preview" style="width: 100%; height: auto;" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                <!-- Image Upload -->
+                <div class="col-lg-4 text-center">
+                    <div class="mb-3">
+                        <div class="position-relative d-inline-block">
+                            <img id="previewImage" 
+                                 src="{{ $food->image ? asset($food->image) : asset('https://community.softr.io/uploads/db9110/original/2X/7/74e6e7e382d0ff5d7773ca9a87e6f6f8817a68a6.jpeg') }}" 
+                                 alt="preview" 
+                                 class="rounded shadow-sm img-fluid border" 
+                                 style="max-height: 220px; object-fit: cover;">
 
-                            {{-- Form Fields --}}
-                            <div class="col-lg-8">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label class="form-label">Product name</label>
-                                        <input type="text" class="form-control" name="name" value="{{ old('name', $food->name) }}">
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label">Select Category</label>
-                                        <select name="category" class="form-select">
-                                            <option value="">-- Select Category --</option>
-                                            @foreach($categories as $cat)
-                                                <option value="{{ $cat->id }}" {{ old('category', $food->category) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <label class="form-label">Short Description</label>
-                                    <textarea class="form-control" name="short_description" rows="2">{{ old('short_description', $food->short_description) }}</textarea>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <label class="form-label">Amount</label>
-                                    <input type="text" class="form-control" name="amount" value="{{ old('amount', $food->amount) }}">
-                                </div>
-
-                                <div class="col-md-12">
-                                    <label class="form-label">Full Description</label>
-                                    <textarea class="form-control" name="full_description" rows="4">{{ old('full_description', $food->full_description) }}</textarea>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary">Update</button>
-                                </div>
-                            </div>
-                        </form>
-
-                        {{-- Image Preview JS --}}
-                        <script>
-                            document.getElementById('imageUpload').addEventListener('change', function (event) {
-                                let reader = new FileReader();
-                                reader.onload = function () {
-                                    document.getElementById('previewImage').src = reader.result;
-                                };
-                                reader.readAsDataURL(event.target.files[0]);
-                            });
-                        </script>
-
+                            <label for="imageUpload" class="btn btn-sm btn-dark position-absolute bottom-0 end-0 m-2 rounded-circle shadow">
+                                <i class="fas fa-edit"></i>
+                            </label>
+                            <input type="file" id="imageUpload" name="image" accept=".png, .jpg, .jpeg" class="d-none" />
+                        </div>
+                        <p class="text-muted small mt-2">Change food image (JPG/PNG)</p>
                     </div>
                 </div>
-            </div>
+
+                <!-- Food Details -->
+                <div class="col-lg-8">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Product Name</label>
+                            <input type="text" class="form-control" name="name" value="{{ old('name', $food->name) }}" placeholder="e.g. Grilled Chicken">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Select Category</label>
+                            <select name="category" class="form-select">
+                                <option value="">-- Choose Category --</option>
+                                @foreach($categories as $cat)
+                                    <option value="{{ $cat->id }}" {{ old('category', $food->category) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Short Description</label>
+                            <textarea id='myTextarea2' class="form-control" name="short_description" rows="2" placeholder="Brief intro">{{ old('short_description', $food->short_description) }}</textarea>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Amount (₦)</label>
+                            <input type="number" step="0.01" class="form-control" name="amount" value="{{ old('amount', $food->amount) }}" placeholder="Enter price">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Full Description</label>
+                            <textarea id='myTextarea' class="form-control" name="full_description" rows="4" placeholder="Detailed description of the food">{{ old('full_description', $food->full_description) }}</textarea>
+                        </div>
+
+                        <div class="col-md-12 text-end">
+                            <button type="submit" class="btn btn-success px-4 rounded-pill">
+                                <i class="fas fa-save me-1"></i> Update Food
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+<!-- Image Preview Script -->
+<script>
+    document.getElementById('imageUpload').addEventListener('change', function (event) {
+        let reader = new FileReader();
+        reader.onload = function () {
+            document.getElementById('previewImage').src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    });
+</script>
 @endsection

@@ -571,50 +571,21 @@ background: linear-gradient(
 
 <div class="container">
     <!-- Enhanced Payment Header -->
-    <div class="payment-header">
-        <div class="header-content">
-            <div class="header-left">
-                <h1>Payment History</h1>
-                <p class="header-subtitle">Track and manage all your payment transactions</p>
-            </div>
-            <div class="payment-stats">
-                <div class="stat-item">
-                    <span class="stat-value">₦{{ number_format($totalAmount ?? 0, 2) }}</span>
-                    <span class="stat-label">Total Paid</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">{{ $totalPayments ?? 0 }}</span>
-                    <span class="stat-label">Transactions</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">{{ $successfulPayments ?? 0 }}</span>
-                    <span class="stat-label">Successful</span>
-                </div>
-            </div>
+    <!-- Go Back Button -->
+    <!-- Enhanced Payment Header -->
+<div class="payment-header">
+    <div class="header-content" style="align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <a href="{{ url()->previous() }}" class="filter-btn btn-reset" style="padding:0.5rem 1rem; font-size:0.9rem;">
+                <i class="fas fa-arrow-left"></i> Go Back
+            </a>
+            <h1 style="margin:0; font-size:2rem;">Repayment History ( {{ $full_name }} )</h1>
         </div>
     </div>
+</div>
 
     <!-- Enhanced Filter Section -->
-    <div class="filter-section">
-        <div class="filter-left">
-            <div class="search-box">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="Search by reference, package..." id="searchInput">
-            </div>
-        </div>
-        <div class="filter-right">
-            <button 
-    class="filter-btn" 
-    id="openFilterModal"
-    style="background: linear-gradient(135deg, #ff7b00 0%, #ff9800 50%, #ffb84d 100%); color: white;"
->
-    <i class="fas fa-filter"></i>
-    <span>Advanced Filters</span>
-</button>
-
-        </div>
-    </div>
-
+    
     <!-- Payments Table -->
     @if($payments && $payments->count() > 0)
         <div class="payments-container">
@@ -662,10 +633,7 @@ background: linear-gradient(
             </table>
         </div>
         
-        <!-- Pagination -->
-        <div class="pagination-container">
-            {{ $payments->appends(request()->query())->links() }}
-        </div>
+       
     @else
         <div class="payments-container">
             <div class="empty-state">
@@ -683,94 +651,6 @@ background: linear-gradient(
     @endif
 </div>
 
-<!-- Enhanced Filter Modal -->
-<div id="filterModal" class="filter-modal-overlay">
-    <div class="filter-modal">
-        <div class="filter-modal-header">
-            <h3 class="modal-title">Advanced Filters</h3>
-            <span class="filter-close" id="closeFilterModal">&times;</span>
-        </div>
-
-        <form method="GET" action="{{ route('user.payment') }}">
-            <div class="filters-grid">
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-check-circle" style="margin-right: 0.5rem; color: var(--success-color);"></i>
-                        Status
-                    </label>
-                    <select name="status" class="filter-select">
-                        <option value="">All Statuses</option>
-                        <option value="success" {{ request('status') == 'success' ? 'selected' : '' }}>Success</option>
-                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                        <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>Failed</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-credit-card" style="margin-right: 0.5rem; color: var(--info-color);"></i>
-                        Gateway
-                    </label>
-                    <select name="gateway" class="filter-select">
-                        <option value="">All Gateways</option>
-                        <option value="paystack" {{ request('gateway') == 'paystack' ? 'selected' : '' }}>Paystack</option>
-                        <option value="fincra" {{ request('gateway') == 'fincra' ? 'selected' : '' }}>Fincra</option>
-                        <option value="flutterwave" {{ request('gateway') == 'flutterwave' ? 'selected' : '' }}>Flutterwave</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-box" style="margin-right: 0.5rem; color: var(--warning-color);"></i>
-                        Package
-                    </label>
-                    <select name="package" class="filter-select">
-                        <option value="">All Packages</option>
-                        <option value="onboarding" {{ request('package') == 'onboarding' ? 'selected' : '' }}>Onboarding</option>
-                        <option value="premium" {{ request('package') == 'premium' ? 'selected' : '' }}>Premium</option>
-                        <option value="basic" {{ request('package') == 'basic' ? 'selected' : '' }}>Basic</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-calendar-alt" style="margin-right: 0.5rem; color: var(--primary-color);"></i>
-                        Date From
-                    </label>
-                    <input type="date" name="date_from" value="{{ request('date_from') }}" class="filter-input">
-                </div>
-                
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-calendar-alt" style="margin-right: 0.5rem; color: var(--primary-color);"></i>
-                        Date To
-                    </label>
-                    <input type="date" name="date_to" value="{{ request('date_to') }}" class="filter-input">
-                </div>
-                
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-money-bill-wave" style="margin-right: 0.5rem; color: var(--success-color);"></i>
-                        Amount Range
-                    </label>
-                    <input type="number" name="amount_min" value="{{ request('amount_min') }}" placeholder="Minimum amount" class="filter-input" style="margin-bottom: 0.5rem;">
-                    <input type="number" name="amount_max" value="{{ request('amount_max') }}" placeholder="Maximum amount" class="filter-input">
-                </div>
-            </div>
-            
-            <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid var(--border-light);">
-                <a href="{{ route('user.payment') }}" class="filter-btn btn-reset">
-                    <i class="fas fa-times"></i>
-                    <span>Clear All</span>
-                </a>
-                <button type="submit" class="filter-btn btn-filter">
-                    <i class="fas fa-search"></i>
-                    <span>Apply Filters</span>
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
 
 <script>
     // Enhanced Modal Functionality

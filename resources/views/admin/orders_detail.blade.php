@@ -161,13 +161,7 @@
         box-shadow: var(--shadow-lg);
     }
 
-    .order-content {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 2rem;
-        align-items: start;
-    }
-
+    
     .order-details {
         background: var(--bg-primary);
         border-radius: var(--radius-xl);
@@ -607,6 +601,19 @@
             <!-- Order Info -->
             <div class="info-grid">
                 
+                <div class="info-item">
+                    <span class="info-label">Full Name</span>
+                    <span class="info-value">{{ $order->user->first_name }} {{ $order->user->last_name }} </span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">{{ $order->user->email }} </span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Phone</span>
+                    <span class="info-value">{{ $order->user->phone }} </span>
+                </div>
+
                 <div class="info-item">
                     <span class="info-label">Order Date</span>
                     <span class="info-value">{{ $order->created_at->format('M d, Y - h:i A') }}</span>

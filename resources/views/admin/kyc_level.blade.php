@@ -4,15 +4,13 @@
 <div class="ec-content-wrapper">
     <div class="content">
         <div class="breadcrumb-wrapper d-flex align-items-center justify-content-between">
-            <div>
-                <h1>KYC Levels</h1>
-            </div>
+            
         </div>
 
         <div class="row p-3">
             <div class="col-md-12">
                 <div class="card shadow-sm border-0">
-                    <div class="card-header bg-primary text-white">
+                    <div class="card-header bg-warning text-white">
                         <h5 class="card-title mb-0">All KYC Levels</h5>
                     </div>
                     <div class="card-body">
@@ -25,7 +23,6 @@
                                     <thead>
                                         <tr>
                                             <th>S/N</th>
-                                            <th>Key</th>
                                             <th>Title</th>
                                             <th>Credit Limit</th>
                                             <th>Credit Amount</th>
@@ -37,14 +34,13 @@
                                         @foreach($levels as $index => $level)
                                             <tr>
                                                 <td>{{ $index + 1 }}</td>
-                                                <td><span class="">{{ $level->key }}</span></td>
                                                 <td>{{ $level->title }}</td>
                                                 <td>{{ $level->credit_limit ?? 'N/A' }}</td>
                                                 <td>{{ number_format($level->credit_amount_limit) }}</td>
                                                 <td>{{ $level->repayment_period ?? 'N/A' }}</td>
                                                 <td class="text-center">
                                                     <!-- Edit Button -->
-                                                    <button class="btn btn-sm btn-outline-primary"
+                                                    <button class="btn btn-sm btn-outline-dark"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#editKycModal_{{ $level->key }}"
                                                             title="Edit">
@@ -64,33 +60,33 @@
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <div class="form-group">
+                                                                <div class="form-group mb-2 mt-2">
                                                                     <label>Title</label>
                                                                     <input type="text" name="title" class="form-control"
                                                                            value="{{ old('title', $level->title) }}" required>
                                                                 </div>
-                                                                <textarea id="myTextarea_{{ $level->key }}" name="description" class="form-control" rows="4" required>
+                                                                <textarea id="myTextareaBox" name="description" class="form-control" rows="4" required>
     {{ old('description', $level->description) }}
 </textarea>
                                                                
 
-                                                                <div class="form-group mt-2">
+                                                                <div class="form-group mt-2 mb-2">
                                                                     <label>Terms & Conditions</label>
-                                                                     <textarea id="myTextarea_{{ $level->key }}" name="term_condition" class="form-control" rows="4" required>
+                                                                     <textarea id="myTextareaBox" name="term_condition" class="form-control" rows="4" required>
     {{ old('term_condition', $level->term_condition) }}
 </textarea>
                                                                 </div>
-                                                                <div class="form-group mt-2">
+                                                                <div class="form-group mt-2 mb-2">
                                                                     <label>Repayment Period</label>
                                                                     <input type="text" name="repayment_period" class="form-control"
                                                                            value="{{ old('repayment_period', $level->repayment_period) }}">
                                                                 </div>
-                                                                <div class="form-group mt-2">
+                                                                <div class="form-group mt-2 mb-2">
                                                                     <label>Credit Limit</label>
                                                                     <input type="text" name="credit_limit" class="form-control"
                                                                            value="{{ old('credit_limit', $level->credit_limit) }}">
                                                                 </div>
-                                                                <div class="form-group mt-2">
+                                                                <div class="form-group mt-2 mb-2">
                                                                     <label>Credit Amount Limit</label>
                                                                     <input type="number" name="credit_amount_limit" class="form-control"
                                                                            value="{{ old('credit_amount_limit', $level->credit_amount_limit) }}" required>

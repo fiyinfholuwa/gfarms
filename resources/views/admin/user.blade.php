@@ -2,30 +2,10 @@
 
 @section('content')
 <div class="user-management-container">
-    <!-- Header Section -->
-    <div class="page-header">
-        <div class="header-content">
-            <div class="header-text">
-                <h3 class="page-title">User Management</h1>
-            </div>
-            <div class="header-stats">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="stat-info">
-                        <span class="stat-number">{{ $users->count() }}</span>
-                        <span class="stat-label">Total Users</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Table Container -->
     <div class="table-container">
         <div class="table-wrapper">
-            <table class="modern-table">
+            <table id="my-table" class="modern-table display nowrap" style="width:100%">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -73,7 +53,7 @@
                             </div>
                         </td>
                         <td>
-                            @if($user->email_verified_at)
+                            @if($user->has_verified_email ==='yes')
                                 <span class="status-badge verified">
                                     <i class="fas fa-check-circle"></i>
                                     Verified
@@ -87,131 +67,38 @@
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <button class="btn-action btn-view" 
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#userModal_{{ $user->id }}"
-                                        title="View Details">
+                                <!-- View -->
+                                <a href="{{ route('admin.users.view', $user->id) }}" class="btn-action btn-view" 
+                                       >
                                     <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="btn-action btn-edit" title="Edit User">
-                                    <i class="fas fa-edit"></i>
-                                </button>
+                                </a>
+
+                                
+                                <!-- View Repayment -->
+                                <a href="{{ route('admin.users.repayments', $user->id) }}" 
+                                   class="btn-action btn-repayment" title="View Repayments">
+                                    <i class="fas fa-file-invoice-dollar"></i>
+                                </a>
+
+                                <!-- Delete -->
+                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="btn-action btn-delete" 
+                                            onclick="return confirm('Are you sure you want to delete this user?')"
+                                            title="Delete User">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
-
-                    <!-- Enhanced User Detail Modal -->
-                    <div class="modal fade" id="userModal_{{ $user->id }}" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content modern-modal">
-                                <div class="modal-header">
-                                    <div class="modal-user-info">
-                                        <div class="modal-avatar">
-                                            <span>{{ substr($user->first_name, 0, 1) }}{{ substr($user->last_name, 0, 1) }}</span>
-                                        </div>
-                                        <div class="modal-user-details">
-                                            <h5 class="modal-title">{{ $user->first_name }} {{ $user->last_name }}</h5>
-                                            <span class="modal-subtitle">User ID: #{{ $user->id }}</span>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn-close-modal" data-bs-dismiss="modal">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="user-details-grid">
-                                        <div class="detail-group">
-                                            <h6 class="detail-title">Personal Information</h6>
-                                            <div class="detail-items">
-                                                <div class="detail-item">
-                                                    <span class="detail-label">Full Name</span>
-                                                    <span class="detail-value">{{ $user->first_name }} {{ $user->last_name }}</span>
-                                                </div>
-                                                <div class="detail-item">
-                                                    <span class="detail-label">Email</span>
-                                                    <span class="detail-value">{{ $user->email }}</span>
-                                                </div>
-                                                <div class="detail-item">
-                                                    <span class="detail-label">Phone</span>
-                                                    <span class="detail-value">{{ $user->phone ?? 'Not provided' }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="detail-group">
-                                            <h6 class="detail-title">Account Information</h6>
-                                            <div class="detail-items">
-                                                <div class="detail-item">
-                                                    <span class="detail-label">Role</span>
-                                                    <span class="role-badge role-{{ strtolower($user->user_role ?? 'user') }}">
-                                                        {{ ucfirst($user->user_role ?? 'user') }}
-                                                    </span>
-                                                </div>
-                                                <div class="detail-item">
-                                                    <span class="detail-label">Email Status</span>
-                                                    @if($user->email_verified_at)
-                                                        <span class="status-badge verified">
-                                                            <i class="fas fa-check-circle"></i>
-                                                            Verified on {{ $user->email_verified_at->format('M j, Y') }}
-                                                        </span>
-                                                    @else
-                                                        <span class="status-badge unverified">
-                                                            <i class="fas fa-exclamation-circle"></i>
-                                                            Not verified
-                                                        </span>
-                                                    @endif
-                                                </div>
-                                                <div class="detail-item">
-                                                    <span class="detail-label">Member Since</span>
-                                                    <span class="detail-value">{{ $user->created_at->format('M j, Y g:i A') }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="detail-group">
-                                            <h6 class="detail-title">Location</h6>
-                                            <div class="detail-items">
-                                                <div class="detail-item">
-                                                    <span class="detail-label">Country</span>
-                                                    <span class="detail-value">{{ $user->country ?? 'Not provided' }}</span>
-                                                </div>
-                                                <div class="detail-item">
-                                                    <span class="detail-label">State</span>
-                                                    <span class="detail-value">{{ $user->state ?? 'Not provided' }}</span>
-                                                </div>
-                                                <div class="detail-item">
-                                                    <span class="detail-label">LGA</span>
-                                                    <span class="detail-value">{{ $user->lga ?? 'Not provided' }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        @if($user->kyc_reference)
-                                        <div class="detail-group">
-                                            <h6 class="detail-title">KYC Information</h6>
-                                            <div class="detail-items">
-                                                <div class="detail-item">
-                                                    <span class="detail-label">KYC Reference</span>
-                                                    <span class="detail-value kyc-ref">{{ $user->kyc_reference }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Edit User</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     @endforeach
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
 
 <style>
 /* Main Container */
@@ -221,68 +108,12 @@
     min-height: 100vh;
 }
 
-/* Header Styles */
-.page-header {
-background: linear-gradient(135deg, #FF4500 0%, #000000 100%);
-    border-radius: 16px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    color: white;
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
-}
-
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.page-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin: 0 0 0.5rem 0;
-}
-
-.page-subtitle {
-    font-size: 1.1rem;
-    opacity: 0.9;
-    margin: 0;
-}
-
-.stat-card {
-    display: flex;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    border-radius: 12px;
-    padding: 1.5rem;
-    min-width: 160px;
-}
-
-.stat-icon {
-    font-size: 2rem;
-    margin-right: 1rem;
-    opacity: 0.8;
-}
-
-.stat-number {
-    display: block;
-    font-size: 2rem;
-    font-weight: 700;
-    line-height: 1;
-}
-
-.stat-label {
-    font-size: 0.9rem;
-    opacity: 0.8;
-}
-
 /* Table Container */
 .table-container {
     background: white;
     border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     overflow: hidden;
+    padding:10px;
 }
 
 .table-wrapper {
@@ -446,7 +277,6 @@ background: linear-gradient(135deg, #FF4500 0%, #000000 100%);
     background: #eff6ff;
     color: #2563eb;
 }
-
 .btn-view:hover {
     background: #dbeafe;
     transform: translateY(-1px);
@@ -456,193 +286,109 @@ background: linear-gradient(135deg, #FF4500 0%, #000000 100%);
     background: #f0fdf4;
     color: #16a34a;
 }
-
 .btn-edit:hover {
     background: #dcfce7;
     transform: translateY(-1px);
 }
 
-/* Modal Styles */
-.modern-modal {
-    border: none;
-    border-radius: 16px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+.btn-repayment {
+    background: #fff7ed;
+    color: #ea580c;
 }
-
-.modern-modal .modal-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border-radius: 16px 16px 0 0;
-    padding: 2rem;
-    border: none;
-}
-
-.modal-user-info {
-    display: flex;
-    align-items: center;
-}
-
-.modal-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 600;
-    font-size: 1.2rem;
-    margin-right: 1rem;
-}
-
-.modal-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0 0 0.25rem 0;
-}
-
-.modal-subtitle {
-    opacity: 0.8;
-    font-size: 0.9rem;
-}
-
-.btn-close-modal {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    color: white;
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.btn-close-modal:hover {
-    background: rgba(255, 255, 255, 0.3);
-}
-
-/* Modal Body */
-.user-details-grid {
-    display: grid;
-    gap: 2rem;
-}
-
-.detail-group {
-    background: #f8fafc;
-    border-radius: 12px;
-    padding: 1.5rem;
-}
-
-.detail-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #374151;
-    margin: 0 0 1rem 0;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #e5e7eb;
-}
-
-.detail-items {
-    display: grid;
-    gap: 1rem;
-}
-
-.detail-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 0;
-}
-
-.detail-label {
-    font-weight: 500;
-    color: #6b7280;
-    font-size: 0.9rem;
-}
-
-.detail-value {
-    color: #111827;
-    font-weight: 500;
-}
-
-.kyc-ref {
-    font-family: 'Courier New', monospace;
-    background: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 6px;
-    font-size: 0.85rem;
-}
-
-/* Modal Footer */
-.modern-modal .modal-footer {
-    padding: 1.5rem 2rem;
-    border-top: 1px solid #e5e7eb;
-    background: #f8fafc;
-}
-
-.btn {
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    border: none;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.btn-secondary {
-    background: #f3f4f6;
-    color: #374151;
-}
-
-.btn-secondary:hover {
-    background: #e5e7eb;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-}
-
-.btn-primary:hover {
+.btn-repayment:hover {
+    background: #ffedd5;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .user-management-container {
-        padding: 1rem;
-    }
-    
-    .header-content {
-        flex-direction: column;
-        text-align: center;
-        gap: 1.5rem;
-    }
-    
-    .page-title {
-        font-size: 2rem;
-    }
-    
-    .modern-table th,
-    .modern-table td {
-        padding: 1rem 0.5rem;
-    }
-    
-    .user-info {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-    
-    .user-avatar {
-        margin-right: 0;
-        margin-bottom: 0.5rem;
-    }
+.btn-delete {
+    background: #fef2f2;
+    color: #dc2626;
+}
+.btn-delete:hover {
+    background: #fee2e2;
+    transform: translateY(-1px);
 }
 </style>
+
+
+
+<script>
+// ====== CONFIG ======
+const rowsPerPage = 20; // number of rows per page
+
+document.addEventListener("DOMContentLoaded", function () {
+    const table = document.getElementById("my-table");
+    const tbody = table.querySelector("tbody");
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+
+    // --- Create search box ---
+    const searchBox = document.createElement("input");
+    searchBox.type = "text";
+    searchBox.placeholder = "Search...";
+    searchBox.classList.add("form-control");
+    searchBox.style.margin = "1rem 0";
+    table.parentNode.insertBefore(searchBox, table);
+
+    // --- Create pagination container ---
+    const pagination = document.createElement("div");
+    pagination.classList.add("pagination-container");
+    pagination.style.marginTop = "1rem";
+    pagination.style.display = "flex";
+    pagination.style.gap = "0.5rem";
+    pagination.style.flexWrap = "wrap";
+    table.parentNode.appendChild(pagination);
+
+    let currentPage = 1;
+
+    function renderTable() {
+        const query = searchBox.value.toLowerCase();
+        const filteredRows = rows.filter(row =>
+            row.innerText.toLowerCase().includes(query)
+        );
+
+        // Pagination logic
+        const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        const visibleRows = filteredRows.slice(start, end);
+
+        // Clear and re-append
+        tbody.innerHTML = "";
+        visibleRows.forEach(r => tbody.appendChild(r));
+
+        // Render pagination buttons
+        pagination.innerHTML = "";
+        if (totalPages > 1) {
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement("button");
+                btn.textContent = i;
+                btn.classList.add("page-btn");
+                btn.style.padding = "0.4rem 0.8rem";
+                btn.style.border = "1px solid #ddd";
+                btn.style.borderRadius = "6px";
+                btn.style.background = (i === currentPage) ? "#2563eb" : "#f3f4f6";
+                btn.style.color = (i === currentPage) ? "white" : "#111827";
+                btn.style.cursor = "pointer";
+
+                btn.addEventListener("click", function () {
+                    currentPage = i;
+                    renderTable();
+                });
+
+                pagination.appendChild(btn);
+            }
+        }
+    }
+
+    // Initial render
+    renderTable();
+
+    // Re-render on search
+    searchBox.addEventListener("input", function () {
+        currentPage = 1; // reset to first page on search
+        renderTable();
+    });
+});
+</script>
+
 @endsection

@@ -13,6 +13,7 @@ use App\Http\Controllers\UserDashboardController;
 use App\Models\Cart;
 use App\Models\Food;
 use App\Models\Order;
+use App\Models\PlatformSetting;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -35,7 +36,9 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     $recent_orders = Order::where('user_id', Auth::id())->paginate(5);
     $foods = Food::paginate(5);
-    return view('user_new.dashboard', compact('foods'));
+    $settings = PlatformSetting::first();
+
+    return view('user_new.dashboard', compact('foods', 'settings'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -193,8 +196,12 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/kyc-levels', [AdminController::class, 'kyc_level'])->name('manage.account.level');
     Route::get('/manage/user/', [AdminController::class, 'manage_user'])->name('manage.user');
     Route::post('/kyc-levels/{key}/update', [AdminController::class, 'update_kyc_level'])->name('admin.kyc.update');
-    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('admin.orders.show');
-
+    Route::get('/orders/{order}', [OrderController::class, 'admin_order_show'])->name('admin.orders.show');
+    Route::get('/user/repayment/{id}', [OrderController::class, 'admin_user_repayment'])->name('admin.users.repayments');
+    Route::post('/user/destory/{id}', [AdminController::class, 'admin_user_destory'])->name('admin.users.destroy');
+    Route::get('/user/view/{id}', [AdminController::class, 'admin_user_view'])->name('admin.users.view');
+    Route::get('/platform', [AdminController::class, 'view_platform'])->name('platform');
+    Route::post('/platform', [AdminController::class, 'save_platform'])->name('platform.update');
 });
 
 

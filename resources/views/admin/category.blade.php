@@ -3,26 +3,15 @@
 @section('content')
 <div class="ec-content-wrapper">
     <div class="content">
-        <div class="breadcrumb-wrapper d-flex align-items-center justify-content-between">
-            <div>
-                <h1>Food Category</h1>
-                <p class="breadcrumbs"><span><a href="{{ url('admin/dashboard') }}">Home</a></span>
-                    <span><i class="mdi mdi-chevron-right"></i></span>Foods</p>
-            </div>
-            <div>
-                <!-- Button trigger modal -->
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
-                    <i class="fa fa-plus-circle me-1"></i> Add Category
-                </button>
-            </div>
-        </div>
-
+        
         <div class="row p-3">
             <!-- Categories Table -->
             <div class="col-md-12">
                 <div class="card shadow-sm border-0">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="card-title mb-0">All Categories</h5>
+                    <div class="card-header bg-warning text-white">
+                        <h5 class="card-title mb-0 me-2">Food Categories &nbsp;&nbsp;   <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                    <i class="fa fa-plus-circle me-1"></i> Add Category
+                </button></h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -128,7 +117,7 @@
             <div class="modal-content">
                 <form action="{{ route('category.add') }}" method="POST">
                     @csrf
-                    <div class="modal-header bg-primary text-white">
+                    <div class="modal-header bg-warning text-white">
                         <h5 class="modal-title">Add  Category</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>

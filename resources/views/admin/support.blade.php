@@ -3,16 +3,11 @@
 @section('content')
 <div class="ec-content-wrapper">
     <div class="content">
-        <div class="breadcrumb-wrapper d-flex align-items-center justify-content-between">
-            <div>
-                <h1>Support Tickets</h1>
-            </div>
-        </div>
-
+        
         <div class="row p-3">
             <div class="col-md-12">
                 <div class="card shadow-sm border-0">
-                    <div class="card-header bg-primary text-white">
+                    <div class="card-header bg-warning text-white">
                         <h5 class="card-title mb-0">All Tickets</h5>
                     </div>
                     <div class="card-body">
@@ -28,6 +23,7 @@
                                             <th>User</th>
                                             <th>Subject</th>
                                             <th>Message</th>
+                                            <th>Response</th>
                                             <th>Status</th>
                                             <th class="text-center">Action</th>
                                         </tr>
@@ -38,7 +34,14 @@
                                                 <td>{{ $index + 1 }}</td>
                                                 <td>{{ $ticket->user->name ?? 'N/A' }}</td>
                                                 <td>{{ $ticket->subject }}</td>
-                                                <td>{{ Str::limit($ticket->message, 40) }}</td>
+                                                <td>{{ ($ticket->message) }}</td>
+<td>
+    @empty($ticket->response)
+        Provide response
+    @else
+        {{ $ticket->response }}
+    @endempty
+</td>
                                                 <td>
                                                     <span class="badge 
                                                         @if($ticket->status == 'pending') bg-warning
@@ -90,7 +93,7 @@
                     </div>
                     <div class="form-group">
                         <label>Response</label>
-                        <textarea name="response" class="form-control" rows="4" placeholder="Write your response here..."></textarea>
+                        <textarea name="response" class="form-control" rows="4" placeholder="Write your response here...">{{ $ticket->response }}</textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
