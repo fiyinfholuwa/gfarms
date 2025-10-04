@@ -134,6 +134,18 @@ Route::middleware(['auth', 'onboard_kyc'])->group(function () {
     Route::post('/pay/processing-fee', [PackageController::class, 'pay_processing_fee_onspot'])
     ->name('pay.processing.fee.onspot');
 
+    Route::get('/profile', [UserDashboardController::class, 'user_profile'])->name('profile');
+
+    Route::post('/profile/add-address', [UserDashboardController::class, 'addAddress'])->name('profile.addAddress');
+Route::post('/profile/delete-address/{index}', [UserDashboardController::class, 'deleteAddress'])->name('profile.deleteAddress');
+Route::post('/profile/change-password', [UserDashboardController::class, 'changePassword'])->name('profile.changePassword');
+Route::post('/profile/delete-account', [UserDashboardController::class, 'deleteAccount'])->name('profile.deleteAccount');
+
+Route::delete('/orders/delete/{order}', [OrderController::class, 'delete_user_order'])
+    ->name('user.orders.delete')
+    ->middleware('auth');
+
+
 });
 
 

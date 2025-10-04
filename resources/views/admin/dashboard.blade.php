@@ -1,665 +1,351 @@
-
-
 @extends('admin.app')
+
 @section('content')
+ <!-- Start Main Widgets -->
+                        <div class="row">
+                            <div class="col-md-6 col-lg-4 col-xl">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="widget-first">
+
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div
+                                                    class="p-2 border border-primary border-opacity-10 bg-primary-subtle rounded-2 me-2">
+                                                    <div class="bg-primary rounded-circle widget-size text-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                            viewBox="0 0 24 24">
+                                                            <path fill="#ffffff"
+                                                                d="M12 4a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <p class="mb-0 text-dark fs-15">Total Customers</p>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h3 class="mb-0 fs-22 text-dark me-3">3,456</h3>
+                                                <div class="text-center">
+                                                    <span class="text-primary fs-14"><i
+                                                            class="mdi mdi-trending-up fs-14"></i> 12.5%</span>
+                                                    <p class="text-dark fs-13 mb-0">Last 7 days</p>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-4 col-xl">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="widget-first">
+
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div
+                                                    class="p-2 border border-secondary border-opacity-10 bg-secondary-subtle rounded-2 me-2">
+                                                    <div class="bg-secondary rounded-circle widget-size text-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                            viewBox="0 0 24 24">
+                                                            <path fill="#ffffff"
+                                                                d="m10 17l-5-5l1.41-1.42L10 14.17l7.59-7.59L19 8m-7-6A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <p class="mb-0 text-dark fs-15">Task Pending</p>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h3 class="mb-0 fs-22 text-dark me-3">2,839</h3>
+                                                <div class="text-center">
+                                                    <span class="text-danger fs-14 me-2"><i
+                                                            class="mdi mdi-trending-down fs-14"></i> 1.5%</span>
+                                                    <p class="text-dark fs-13 mb-0">Last 7 days</p>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-4 col-xl">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="widget-first">
+
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div
+                                                    class="p-2 border border-danger border-opacity-10 bg-danger-subtle rounded-2 me-2">
+                                                    <div class="bg-danger rounded-circle widget-size text-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                            viewBox="0 0 24 24">
+                                                            <path fill="#ffffff"
+                                                                d="M22 19H2v2h20zM4 15c0 .5.2 1 .6 1.4s.9.6 1.4.6V6c-.5 0-1 .2-1.4.6S4 7.5 4 8zm9.5-9h-3c0-.4.1-.8.4-1.1s.6-.4 1.1-.4c.4 0 .8.1 1.1.4c.2.3.4.7.4 1.1M7 6v11h10V6h-2q0-1.2-.9-2.1C13.2 3 12.8 3 12 3q-1.2 0-2.1.9T9 6zm11 11c.5 0 1-.2 1.4-.6s.6-.9.6-1.4V8c0-.5-.2-1-.6-1.4S18.5 6 18 6z" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <p class="mb-0 text-dark fs-15">Total Deals</p>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h3 class="mb-0 fs-22 text-dark me-3">2,254</h3>
+                                                <div class="text-center">
+                                                    <span class="text-primary fs-14 me-2"><i
+                                                            class="mdi mdi-trending-up fs-14"></i> 12.8%</span>
+                                                    <p class="text-dark fs-13 mb-0">Last 7 days</p>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-6 col-xl">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="widget-first">
+
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div
+                                                    class="p-2 border border-warning border-opacity-10 bg-warning-subtle rounded-2 me-2">
+                                                    <div class="bg-warning rounded-circle widget-size text-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                            viewBox="0 0 24 24">
+                                                            <path fill="#ffffff"
+                                                                d="M7 15h2c0 1.08 1.37 2 3 2s3-.92 3-2c0-1.1-1.04-1.5-3.24-2.03C9.64 12.44 7 11.78 7 9c0-1.79 1.47-3.31 3.5-3.82V3h3v2.18C15.53 5.69 17 7.21 17 9h-2c0-1.08-1.37-2-3-2s-3 .92-3 2c0 1.1 1.04 1.5 3.24 2.03C14.36 11.56 17 12.22 17 15c0 1.79-1.47 3.31-3.5 3.82V21h-3v-2.18C8.47 18.31 7 16.79 7 15" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <p class="mb-0 text-dark fs-15">Total Revenue</p>
+                                            </div>
 
 
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h3 class="mb-0 fs-22 text-dark me-3">$4,578</h3>
 
-			<!-- CONTENT WRAPPER -->
-			<div class="ec-content-wrapper">
-				<div class="content">
-					<!-- Top Statistics -->
-					<div class="row">
-    <div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
-        <div class="card card-mini dash-card card-1">
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <div>
-                    <h2 class="mb-1">{{ $total_orders }}</h2>
-                    <p>Total Orders</p>
-                </div>
-                <span class="mdi mdi-cart-outline icon-lg text-primary"></span>
-            </div>
-        </div>
-    </div>
+                                                <div class="text-muted">
+                                                    <span class="text-danger fs-14 me-2"><i
+                                                            class="mdi mdi-trending-down fs-14"></i> 18%</span>
+                                                    <p class="text-dark fs-13 mb-0">Last 7 days</p>
+                                                </div>
+                                            </div>
 
-    <div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
-        <div class="card card-mini dash-card card-2">
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <div>
-                    <h2 class="mb-1">{{ $total_products }}</h2>
-                    <p>Total Food Products</p>
-                </div>
-                <span class="mdi mdi-food-fork-drink icon-lg text-success"></span>
-            </div>
-        </div>
-    </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-    <div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
-        <div class="card card-mini dash-card card-3">
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <div>
-                    <h2 class="mb-1">{{ $total_users }}</h2>
-                    <p>Total Users</p>
-                </div>
-                <span class="mdi mdi-account-group-outline icon-lg text-warning"></span>
-            </div>
-        </div>
-    </div>
+                            <div class="col-md-12 col-lg-6 col-xl">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="widget-first">
 
-    <div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
-        <div class="card card-mini dash-card card-4">
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <div>
-                    <h2 class="mb-1">{{ $total_revenues }}</h2>
-                    <p>Total Revenues</p>
-                </div>
-                <span class="mdi mdi-cash-multiple icon-lg text-danger"></span>
-            </div>
-        </div>
-    </div>
-</div>
-
-					{{-- <div class="row">
-						<div class="col-xl-8 col-md-12 p-b-15">
-							<!-- Sales Graph -->
-							<div id="user-acquisition" class="card card-default">
-								<div class="card-header">
-									<h2>Sales Report</h2>
-								</div>
-								<div class="card-body">
-									<ul class="nav nav-tabs nav-style-border justify-content-between justify-content-lg-start border-bottom"
-										role="tablist">
-										<li class="nav-item">
-											<a class="nav-link active" data-bs-toggle="tab" href="#todays" role="tab"
-												aria-selected="true">Today's</a>
-										</li>
-										<li class="nav-item">
-											<a class="nav-link" data-bs-toggle="tab" href="#monthly" role="tab"
-												aria-selected="false">Monthly </a>
-										</li>
-										<li class="nav-item">
-											<a class="nav-link" data-bs-toggle="tab" href="#yearly" role="tab"
-												aria-selected="false">Yearly</a>
-										</li>
-									</ul>
-									<div class="tab-content pt-4" id="salesReport">
-										<div class="tab-pane fade show active" id="source-medium" role="tabpanel">
-											<div class="mb-6" style="max-height:247px">
-												<canvas id="acquisition" class="chartjs2"></canvas>
-												<div id="acqLegend" class="customLegend mb-2"></div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-xl-4 col-md-12 p-b-15">
-							<!-- Doughnut Chart -->
-							<div class="card card-default">
-								<div class="card-header justify-content-center">
-									<h2>Orders Overview</h2>
-								</div>
-								<div class="card-body">
-									<canvas id="doChart"></canvas>
-								</div>
-								<a href="#" class="pb-5 d-block text-center text-muted"><i
-										class="mdi mdi-download mr-2"></i> Download overall report</a>
-								<div class="card-footer d-flex flex-wrap bg-white p-0">
-									<div class="col-6">
-										<div class="p-20">
-											<ul class="d-flex flex-column justify-content-between">
-												<li class="mb-2"><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
-														style="color: #4c84ff"></i>Order Completed</li>
-												<li class="mb-2"><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
-														style="color: #80e1c1 "></i>Order Unpaid</li>
-												<li><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
-														style="color: #ff7b7b "></i>Order returned</li>
-											</ul>
-										</div>
-									</div>
-									<div class="col-6 border-left">
-										<div class="p-20">
-											<ul class="d-flex flex-column justify-content-between">
-												<li class="mb-2"><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
-														style="color: #8061ef"></i>Order Pending</li>
-												<li class="mb-2"><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
-														style="color: #ffa128"></i>Order Canceled</li>
-												<li><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
-														style="color: #7be6ff"></i>Order Broken</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div> --}}
-
-					{{-- <div class="row">
-						<div class="col-xl-8 col-md-12 p-b-15">
-							<!-- User activity statistics -->
-							<div class="card card-default" id="user-activity">
-								<div class="no-gutters">
-									<div>
-										<div class="card-header justify-content-between">
-											<h2>User Activity</h2>
-											<div class="date-range-report ">
-												<span></span>
-											</div>
-										</div>
-										<div class="card-body">
-											<div class="tab-content" id="userActivityContent"> 
-												<div class="tab-pane fade show active" id="user" role="tabpanel">
-													<canvas id="activity" class="chartjs"></canvas>
-												</div>
-											</div>
-										</div>
-										<div class="card-footer d-flex flex-wrap bg-white border-top">
-											<a href="#" class="text-uppercase py-3">In-Detail Overview</a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-xl-4 col-md-12 p-b-15">
-							<div class="card card-default">
-								<div class="card-header flex-column align-items-start">
-									<h2>Current Users</h2>
-								</div>
-								<div class="card-body">
-									<canvas id="currentUser" class="chartjs"></canvas>
-								</div>
-								<div class="card-footer d-flex flex-wrap bg-white border-top">
-									<a href="#" class="text-uppercase py-3">In-Detail Overview</a>
-								</div>
-							</div>
-						</div>
-					</div> --}}
-
-					{{-- <div class="row">
-						<div class="col-xl-8 col-12 p-b-15">
-							<!-- World Chart -->
-							<div class="card card-default" id="analytics-country">
-								<div class="card-header justify-content-between">
-									<h2>Purchased by Country</h2>
-									<div class="date-range-report ">
-										<span></span>
-									</div>
-								</div>
-								<div class="card-body vector-map-world-2">
-									<div id="regions_purchase" style="height: 100%; width: 100%;"></div>
-								</div>
-								<div class="border-top mt-3">
-									<div class="row no-gutters">
-										<div class="col-lg-6">
-											<div class="world-data-chart border-bottom pt-15px pb-15px">
-												<canvas id="hbar1" class="chartjs"></canvas>
-											</div>
-										</div>
-										<div class="col-lg-6">
-											<div class="world-data-chart pt-15px pb-15px">
-												<canvas id="hbar2" class="chartjs"></canvas>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="card-footer d-flex flex-wrap bg-white">
-									<a href="#" class="text-uppercase py-3">In-Detail Overview</a>
-								</div>
-							</div>
-						</div>
-						<div class="col-xl-4 col-12 p-b-15">
-							<!-- Top Sell Table -->
-							<div class="card card-default Sold-card-table">
-								<div class="card-header justify-content-between">
-									<h2>Sold by Items</h2>
-									<div class="tools">
-										<button class="text-black-50 mr-2 font-size-20"><i
-												class="mdi mdi-cached"></i></button>
-										<div class="dropdown show d-inline-block widget-dropdown">
-											<a class="dropdown-toggle icon-burger-mini" href="#" role="button"
-												id="dropdown-units" data-bs-toggle="dropdown" aria-haspopup="true"
-												aria-expanded="false" data-display="static"></a>
-											<ul class="dropdown-menu dropdown-menu-right">
-												<li class="dropdown-item"><a href="#">Action</a></li>
-												<li class="dropdown-item"><a href="#">Another action</a></li>
-												<li class="dropdown-item"><a href="#">Something else here</a></li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div class="card-body py-0 compact-units" data-simplebar style="height: 534px;">
-									<table class="table ">
-										<tbody>
-											<tr>
-												<td class="text-dark">Backpack</td>
-												<td class="text-center">9</td>
-												<td class="text-right">33% <i
-														class="mdi mdi-arrow-up-bold text-success pl-1 font-size-12"></i>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-dark">T-Shirt</td>
-												<td class="text-center">6</td>
-												<td class="text-right">150% <i
-														class="mdi mdi-arrow-up-bold text-success pl-1 font-size-12"></i>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-dark">Coat</td>
-												<td class="text-center">3</td>
-												<td class="text-right">50% <i
-														class="mdi mdi-arrow-up-bold text-success pl-1 font-size-12"></i>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-dark">Necklace</td>
-												<td class="text-center">7</td>
-												<td class="text-right">150% <i
-														class="mdi mdi-arrow-up-bold text-success pl-1 font-size-12"></i>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-dark">Jeans Pant</td>
-												<td class="text-center">10</td>
-												<td class="text-right">300% <i
-														class="mdi mdi-arrow-down-bold text-danger pl-1 font-size-12"></i>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-dark">Shoes</td>
-												<td class="text-center">5</td>
-												<td class="text-right">100% <i
-														class="mdi mdi-arrow-up-bold text-success pl-1 font-size-12"></i>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-dark">T-Shirt</td>
-												<td class="text-center">6</td>
-												<td class="text-right">150% <i
-														class="mdi mdi-arrow-up-bold text-success pl-1 font-size-12"></i>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-dark">Watches</td>
-												<td class="text-center">18</td>
-												<td class="text-right">160% <i
-														class="mdi mdi-arrow-up-bold text-success pl-1 font-size-12"></i>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-dark">Inner</td>
-												<td class="text-center">156</td>
-												<td class="text-right">120% <i
-														class="mdi mdi-arrow-up-bold text-success pl-1 font-size-12"></i>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-dark">T-Shirt</td>
-												<td class="text-center">6</td>
-												<td class="text-right">150% <i
-														class="mdi mdi-arrow-up-bold text-success pl-1 font-size-12"></i>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-
-								</div>
-								<div class="card-footer d-flex flex-wrap bg-white">
-									<a href="#" class="text-uppercase py-3">View Report</a>
-								</div>
-							</div>
-						</div>
-					</div> --}}
-
-						<div class="row">
-    <div class="col-12 p-b-15">
-        <!-- Recent Order Table -->
-        <div class="card card-table-border-none card-default recent-orders" id="recent-orders">
-            <div class="card-header justify-content-between">
-                <h2>Recent Food Orders</h2>
-                <div class="">
-                    <span><a href="{{ route('admin.orders') }}">View All Orders</a></span>
-                </div>
-            </div>
-            <div class="card-body pt-0 pb-5">
-                <table class="table card-table table-responsive table-responsive-large" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Food Item</th>
-                            <th class="d-none d-lg-table-cell">Quantity</th>
-                            <th class="d-none d-lg-table-cell">Order Date</th>
-                            <th class="d-none d-lg-table-cell">Order Cost</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-    @forelse($recent_orders as $order)
-        <tr>
-            <!-- Order Number -->
-            <td>{{ $order->order_number }}</td>
-
-            <!-- Food Items (decode JSON) -->
-            <td>
-                @php
-                    $items = $order->items;
-                @endphp
-                @if(is_array($items))
-                    @foreach($items as $item)
-                        <span class="d-block">{{ $item['name'] ?? 'Item' }} (x{{ $item['qty'] ?? 1 }})</span>
-                    @endforeach
-                @else
-                    <span>-</span>
-                @endif
-            </td>
-
-            <!-- Quantity (sum all items) -->
-            <td class="d-none d-lg-table-cell">
-                @if(is_array($items))
-                    {{ collect($items)->sum('qty') }}
-                @else
-                    -
-                @endif
-            </td>
-
-            <!-- Order Date -->
-            <td class="d-none d-lg-table-cell">{{ $order->created_at->format('M d, Y') }}</td>
-
-            <!-- Total Amount -->
-            <td class="d-none d-lg-table-cell">₦{{ number_format($order->total_amount, 2) }}</td>
-
-            <!-- Status -->
-            <td>
-                @php
-                    $statusClass = [
-                        'completed' => 'success',
-                        'pending'   => 'warning',
-                        'cancelled' => 'danger',
-                        'confirmed' => 'primary',
-                    ][$order->status] ?? 'secondary';
-                @endphp
-                <span class="badge badge-{{ $statusClass }}">{{ ucfirst($order->status) }}</span>
-            </td>
-
-            <!-- Actions -->
-            <td class="text-right">
-    <a href="{{ route('admin.order.show', $order->order_number) }}" 
-       class="btn btn-sm btn-primary">
-        <i class="fas fa-eye"></i> View
-    </a>
-</td>
-
-        </tr>
-    @empty
-        <tr>
-            <td colspan="7" class="text-center">No recent orders</td>
-        </tr>
-    @endforelse
-</tbody>
-
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-					{{-- <div class="row">
-						<div class="col-xl-5">
-							<!-- New Customers -->
-							<div class="card ec-cust-card card-table-border-none card-default">
-								<div class="card-header justify-content-between ">
-									<h2>New Customers</h2>
-									<div>
-										<button class="text-black-50 mr-2 font-size-20">
-											<i class="mdi mdi-cached"></i>
-										</button>
-										<div class="dropdown show d-inline-block widget-dropdown">
-											<a class="dropdown-toggle icon-burger-mini" href="#" role="button"
-												id="dropdown-customar" data-bs-toggle="dropdown" aria-haspopup="true"
-												aria-expanded="false" data-display="static">
-											</a>
-											<ul class="dropdown-menu dropdown-menu-right">
-												<li class="dropdown-item"><a href="#">Action</a></li>
-												<li class="dropdown-item"><a href="#">Another action</a></li>
-												<li class="dropdown-item"><a href="#">Something else here</a></li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div class="card-body pt-0 pb-15px">
-									<table class="table ">
-										<tbody>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="media-image mr-3 rounded-circle">
-															<a href="profile.html"><img
-																	class="profile-img rounded-circle w-45"
-																	src="assets/img/user/u1.jpg"
-																	alt="customer image"></a>
-														</div>
-														<div class="media-body align-self-center">
-															<a href="profile.html">
-																<h6 class="mt-0 text-dark font-weight-medium">Selena
-																	Wagner</h6>
-															</a>
-															<small>@selena.oi</small>
-														</div>
-													</div>
-												</td>
-												<td>2 Orders</td>
-												<td class="text-dark d-none d-md-block">$150</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="media-image mr-3 rounded-circle">
-															<a href="profile.html"><img
-																	class="profile-img rounded-circle w-45"
-																	src="assets/img/user/u2.jpg"
-																	alt="customer image"></a>
-														</div>
-														<div class="media-body align-self-center">
-															<a href="profile.html">
-																<h6 class="mt-0 text-dark font-weight-medium">Walter
-																	Reuter</h6>
-															</a>
-															<small>@walter.me</small>
-														</div>
-													</div>
-												</td>
-												<td>5 Orders</td>
-												<td class="text-dark d-none d-md-block">$200</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="media-image mr-3 rounded-circle">
-															<a href="profile.html"><img
-																	class="profile-img rounded-circle w-45"
-																	src="assets/img/user/u3.jpg"
-																	alt="customer image"></a>
-														</div>
-														<div class="media-body align-self-center">
-															<a href="profile.html">
-																<h6 class="mt-0 text-dark font-weight-medium">Larissa
-																	Gebhardt</h6>
-															</a>
-															<small>@larissa.gb</small>
-														</div>
-													</div>
-												</td>
-												<td>1 Order</td>
-												<td class="text-dark d-none d-md-block">$50</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="media-image mr-3 rounded-circle">
-															<a href="profile.html"><img
-																	class="profile-img rounded-circle w-45"
-																	src="assets/img/user/u4.jpg"
-																	alt="customer image"></a>
-														</div>
-														<div class="media-body align-self-center">
-															<a href="profile.html">
-																<h6 class="mt-0 text-dark font-weight-medium">Albrecht
-																	Straub</h6>
-															</a>
-															<small>@albrech.as</small>
-														</div>
-													</div>
-												</td>
-												<td>2 Orders</td>
-												<td class="text-dark d-none d-md-block">$100</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="media-image mr-3 rounded-circle">
-															<a href="profile.html"><img
-																	class="profile-img rounded-circle w-45"
-																	src="assets/img/user/u5.jpg"
-																	alt="customer image"></a>
-														</div>
-														<div class="media-body align-self-center">
-															<a href="profile.html">
-																<h6 class="mt-0 text-dark font-weight-medium">Leopold
-																	Ebert</h6>
-															</a>
-															<small>@leopold.et</small>
-														</div>
-													</div>
-												</td>
-												<td>1 Order</td>
-												<td class="text-dark d-none d-md-block">$60</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="media-image mr-3 rounded-circle">
-															<a href="profile.html"><img
-																	class="profile-img rounded-circle w-45"
-																	src="assets/img/user/u3.jpg"
-																	alt="customer image"></a>
-														</div>
-														<div class="media-body align-self-center">
-															<a href="profile.html">
-																<h6 class="mt-0 text-dark font-weight-medium">Larissa
-																	Gebhardt</h6>
-															</a>
-															<small>@larissa.gb</small>
-														</div>
-													</div>
-												</td>
-												<td>1 Order</td>
-												<td class="text-dark d-none d-md-block">$50</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-xl-7">
-							<!-- Top Products -->
-							<div class="card card-default ec-card-top-prod">
-								<div class="card-header justify-content-between">
-									<h2>Top Products</h2>
-									<div>
-										<button class="text-black-50 mr-2 font-size-20"><i
-												class="mdi mdi-cached"></i></button>
-										<div class="dropdown show d-inline-block widget-dropdown">
-											<a class="dropdown-toggle icon-burger-mini" href="#" role="button"
-												id="dropdown-product" data-bs-toggle="dropdown" aria-haspopup="true"
-												aria-expanded="false" data-display="static">
-											</a>
-											<ul class="dropdown-menu dropdown-menu-right">
-												<li class="dropdown-item"><a href="#">Update Data</a></li>
-												<li class="dropdown-item"><a href="#">Detailed Log</a></li>
-												<li class="dropdown-item"><a href="#">Statistics</a></li>
-												<li class="dropdown-item"><a href="#">Clear Data</a></li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div class="card-body mt-10px mb-10px py-0">
-									<div class="row media d-flex pt-15px pb-15px">
-										<div
-											class="col-lg-3 col-md-3 col-2 media-image align-self-center rounded">
-											<a href="#"><img src="assets/img/products/p1.jpg" alt="customer image"></a>
-										</div>
-										<div class="col-lg-9 col-md-9 col-10 media-body align-self-center ec-pos">
-											<a href="#">
-												<h6 class="mb-10px text-dark font-weight-medium">Baby cotton shoes</h6>
-											</a>
-											<p class="float-md-right sale"><span class="mr-2">58</span>Sales</p>
-											<p class="d-none d-md-block">Statement belting with double-turnlock hardware
-												adds “swagger” to a simple.</p>
-											<p class="mb-0 ec-price">
-												<span class="text-dark">$520</span>
-												<del>$580</del>
-											</p>
-										</div>
-									</div>
-									<div class="row media d-flex pt-15px pb-15px">
-										<div
-											class="col-lg-3 col-md-3 col-2 media-image align-self-center rounded">
-											<a href="#"><img src="assets/img/products/p2.jpg" alt="customer image"></a>
-										</div>
-										<div class="col-lg-9 col-md-9 col-10 media-body align-self-center ec-pos">
-											<a href="#">
-												<h6 class="mb-10px text-dark font-weight-medium">Hoodies for men</h6>
-											</a>
-											<p class="float-md-right sale"><span class="mr-2">20</span>Sales</p>
-											<p class="d-none d-md-block">Statement belting with double-turnlock hardware
-												adds “swagger” to a simple.</p>
-											<p class="mb-0 ec-price">
-												<span class="text-dark">$250</span>
-												<del>$300</del>
-											</p>
-										</div>
-									</div>
-									<div class="row media d-flex pt-15px pb-15px">
-										<div
-											class="col-lg-3 col-md-3 col-2 media-image align-self-center rounded">
-											<a href="#"><img src="assets/img/products/p3.jpg" alt="customer image"></a>
-										</div>
-										<div class="col-lg-9 col-md-9 col-10 media-body align-self-center ec-pos">
-											<a href="#">
-												<h6 class="mb-10px text-dark font-weight-medium">Long slive t-shirt</h6>
-											</a>
-											<p class="float-md-right sale"><span class="mr-2">10</span>Sales</p>
-											<p class="d-none d-md-block">Statement belting with double-turnlock hardware
-												adds “swagger” to a simple.</p>
-											<p class="mb-0 ec-price">
-												<span class="text-dark">$480</span>
-												<del>$654</del>
-											</p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div> --}}
-				</div> <!-- End Content -->
-			</div> <!-- End Content Wrapper -->
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div
+                                                    class="p-2 border border-success border-opacity-10 bg-success-subtle rounded-2 me-2">
+                                                    <div class="bg-success rounded-circle widget-size text-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                            viewBox="0 0 24 24">
+                                                            <g fill="none" stroke="#ffffff" stroke-linecap="round"
+                                                                stroke-linejoin="round" stroke-width="2">
+                                                                <path d="M5 19L19 5" />
+                                                                <circle cx="7" cy="7" r="3" />
+                                                                <circle cx="17" cy="17" r="3" />
+                                                            </g>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <p class="mb-0 text-dark fs-15">Conversion Rate</p>
+                                            </div>
 
 
-{{-- ✅ Custom Styles --}}
-<style>
-    .kyc-level-btn {
-        background:linear-gradient(135deg,#ff7e00,#ff5500);
-        color:white; font-weight:bold; border:none;
-        border-radius:25px; padding:12px 20px; width:45%;
-        box-shadow:0 4px 10px rgba(255,85,0,0.3);
-        transition:transform .2s, box-shadow .3s;
-    }
-    .kyc-level-btn:hover {
-        transform:scale(1.05);
-        box-shadow:0 6px 15px rgba(255,85,0,0.5);
-    }
-</style>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h3 class="mb-0 fs-22 text-dark me-3">14.57%</h3>
 
+                                                <div class="text-muted">
+                                                    <span class="text-primary fs-14 me-2"><i
+                                                            class="mdi mdi-trending-up fs-14"></i> 5.8%</span>
+                                                    <p class="text-dark fs-13 mb-0">Last 7 days</p>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- End Main Widgets -->
+
+                       
+                       
+                        <div class="row">
+                            
+                            <div class="col-xl-12">
+                                <div class="card overflow-hidden">
+
+                                    <div class="card-header">
+                                        <div class="d-flex align-items-center">
+                                            <h5 class="card-title mb-0">Leads Report</h5>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body mt-0">
+                                        <div class="table-responsive table-card mt-0">
+                                            <table
+                                                class="table table-borderless table-centered align-middle table-nowrap mb-0">
+                                                <thead class="text-muted table-light">
+                                                    <tr>
+                                                        <th scope="col" class="cursor-pointer">Lead</th>
+                                                        <th scope="col" class="cursor-pointer">Email</th>
+                                                        <th scope="col" class="cursor-pointer">Phone No</th>
+                                                        <th scope="col" class="cursor-pointer">Campany</th>
+                                                        <th scope="col" class="cursor-pointer">Status</th>
+                                                        <th scope="col" class="cursor-pointer">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <img src="assets/images/users/user-22.jpg"
+                                                                class="avatar avatar-sm rounded-circle me-3">
+                                                            John Hamilton
+                                                        </td>
+                                                        <td>johnehamilton@gmail.com</td>
+                                                        <td>+48, 65610085</td>
+                                                        <td>Mufti</td>
+                                                        <td>
+                                                            <span
+                                                                class="badge bg-primary-subtle text-primary fw-semibold">New
+                                                                Lead</span>
+                                                        </td>
+                                                        <td>
+                                                            <a aria-label="anchor"
+                                                                class="btn btn-icon btn-sm bg-primary-subtle me-1"
+                                                                data-bs-toggle="tooltip" data-bs-original-title="Edit">
+                                                                <i class="mdi mdi-pencil-outline fs-14 text-primary"></i>
+                                                            </a>
+                                                            <a aria-label="anchor"
+                                                                class="btn btn-icon btn-sm bg-danger-subtle"
+                                                                data-bs-toggle="tooltip" data-bs-original-title="Delete">
+                                                                <i class="mdi mdi-delete fs-14 text-danger"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <img src="assets/images/users/user-23.jpg"
+                                                                class="avatar avatar-sm rounded-circle me-3">
+                                                            Janice Reese
+                                                        </td>
+                                                        <td>janicecreese@gmail.com</td>
+                                                        <td>+45, 32678972</td>
+                                                        <td>Gucci</td>
+                                                        <td>
+                                                            <span
+                                                                class="badge bg-secondary-subtle text-secondary fw-semibold">In
+                                                                Progress</span>
+                                                        </td>
+                                                        <td>
+                                                            <a aria-label="anchor"
+                                                                class="btn btn-icon btn-sm bg-primary-subtle me-1"
+                                                                data-bs-toggle="tooltip" data-bs-original-title="Edit">
+                                                                <i class="mdi mdi-pencil-outline fs-14 text-primary"></i>
+                                                            </a>
+                                                            <a aria-label="anchor"
+                                                                class="btn btn-icon btn-sm bg-danger-subtle"
+                                                                data-bs-toggle="tooltip" data-bs-original-title="Delete">
+                                                                <i class="mdi mdi-delete fs-14 text-danger"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <img src="assets/images/users/user-19.jpg"
+                                                                class="avatar avatar-sm rounded-circle me-3">
+                                                            Andrew Kim
+                                                        </td>
+                                                        <td>andrewekim@gmail.com</td>
+                                                        <td>+30, 84787124</td>
+                                                        <td>Vans</td>
+                                                        <td>
+                                                            <span
+                                                                class="badge bg-danger-subtle text-danger fw-semibold">Loss</span>
+                                                        </td>
+                                                        <td>
+                                                            <a aria-label="anchor"
+                                                                class="btn btn-icon btn-sm bg-primary-subtle me-1"
+                                                                data-bs-toggle="tooltip" data-bs-original-title="Edit">
+                                                                <i class="mdi mdi-pencil-outline fs-14 text-primary"></i>
+                                                            </a>
+                                                            <a aria-label="anchor"
+                                                                class="btn btn-icon btn-sm bg-danger-subtle"
+                                                                data-bs-toggle="tooltip" data-bs-original-title="Delete">
+                                                                <i class="mdi mdi-delete fs-14 text-danger"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <img src="assets/images/users/user-20.jpg"
+                                                                class="avatar avatar-sm rounded-circle me-3">
+                                                            Kathryn Sanchez
+                                                        </td>
+                                                        <td>kathryntsanchez@gmail.com</td>
+                                                        <td>+30, 23794209</td>
+                                                        <td>Myntra</td>
+                                                        <td>
+                                                            <span
+                                                                class="badge bg-success-subtle text-success fw-semibold">Won</span>
+                                                        </td>
+                                                        <td>
+                                                            <a aria-label="anchor"
+                                                                class="btn btn-icon btn-sm bg-primary-subtle me-1"
+                                                                data-bs-toggle="tooltip" data-bs-original-title="Edit">
+                                                                <i class="mdi mdi-pencil-outline fs-14 text-primary"></i>
+                                                            </a>
+                                                            <a aria-label="anchor"
+                                                                class="btn btn-icon btn-sm bg-danger-subtle"
+                                                                data-bs-toggle="tooltip" data-bs-original-title="Delete">
+                                                                <i class="mdi mdi-delete fs-14 text-danger"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <img src="assets/images/users/user-21.jpg"
+                                                                class="avatar avatar-sm rounded-circle me-3">
+                                                            Diane Richards
+                                                        </td>
+                                                        <td>dianetrichards@gmail.com</td>
+                                                        <td>+78, 37569176</td>
+                                                        <td>HCLTech</td>
+                                                        <td>
+                                                            <span
+                                                                class="badge bg-warning-subtle text-warning fw-semibold">Converted</span>
+                                                        </td>
+                                                        <td>
+                                                            <a aria-label="anchor"
+                                                                class="btn btn-icon btn-sm bg-primary-subtle me-1"
+                                                                data-bs-toggle="tooltip" data-bs-original-title="Edit">
+                                                                <i class="mdi mdi-pencil-outline fs-14 text-primary"></i>
+                                                            </a>
+                                                            <a aria-label="anchor"
+                                                                class="btn btn-icon btn-sm bg-danger-subtle"
+                                                                data-bs-toggle="tooltip" data-bs-original-title="Delete">
+                                                                <i class="mdi mdi-delete fs-14 text-danger"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody><!-- end tbody -->
+                                            </table><!-- end table -->
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
 @endsection

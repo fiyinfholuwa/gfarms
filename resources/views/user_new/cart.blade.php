@@ -218,12 +218,32 @@
             <div class="" id="walletInfo_d">
                 <!-- Wallet balance info will be populated here -->
             </div>
+<div class="mb-3" id="deliveryAddressField">
+    <label class="form-label fw-semibold">Delivery Address *</label>
 
-            <div class="mb-3" id="deliveryAddressField">
-              <label class="form-label">Delivery Address *</label>
-              <input type="text" id="deliveryAddress" class="form-control"
-                     value="{{ Auth::user()->home_address ?? '' }}" placeholder="Enter your delivery address">
-            </div>
+    @php
+        $addresses = json_decode(Auth::user()->home_address, true) ?? [];
+    @endphp
+
+    @if(empty($addresses))
+        <!-- No saved addresses -->
+        <div class="alert alert-warning d-flex align-items-center p-2 rounded-3">
+            <i class="fas fa-map-marker-alt me-2 text-danger"></i>
+            <span>You don’t have a saved delivery address.</span>
+        </div>
+        <a href="{{ route('profile') }}" class="btn btn-outline-primary btn-sm rounded-pill">
+            <i class="fas fa-plus me-1"></i> Add Delivery Address
+        </a>
+    @else
+        <!-- Dropdown for saved addresses -->
+        <select id="deliveryAddress" name="delivery_address" class="form-select rounded-3">
+            @foreach($addresses as $address)
+                <option value="{{ $address }}">{{ $address }}</option>
+            @endforeach
+        </select>
+    @endif
+</div>
+
         </div>
 
         <!-- Loan Fields -->

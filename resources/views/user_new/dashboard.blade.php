@@ -379,8 +379,8 @@ $ambassadors = [
   margin: 15px auto;
   border-radius: 12px;
   overflow: hidden;
-  border: 1px dashed rgba(0,0,0,0.4);
   position: relative;
+  text-align: center;
 }
 
 /* Image as banner */
@@ -391,26 +391,27 @@ $ambassadors = [
   display: block;
 }
 
-/* Controls (tiny and stylish) */
-.carousel-control-prev,
-.carousel-control-next {
-  width: 25px;
-  height: 25px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.3);
-  border-radius: 50%;
+/* Indicators (dots) */
+.carousel-indicators {
+  position: static;  /* remove absolute positioning */
+  margin-top: 8px;   /* space between image and dots */
 }
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  width: 14px;
-  height: 14px;
+.carousel-indicators [data-bs-target] {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(0,0,0,0.4);
+}
+.carousel-indicators .active {
+  background-color: #ff6600; /* active dot color */
 }
 </style>
 
 <!-- Ambassador Slider -->
 <div class="ambassador-section">
   <div id="ambassadorCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+
+    <!-- Slides -->
     <div class="carousel-inner">
       <?php foreach ($ambassadors as $index => $amb): ?>
         <div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>">
@@ -419,15 +420,13 @@ $ambassadors = [
       <?php endforeach; ?>
     </div>
 
-    <!-- Controls -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#ambassadorCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#ambassadorCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
+    <!-- Dots (Indicators below) -->
+    <div class="carousel-indicators">
+      <?php foreach ($ambassadors as $index => $amb): ?>
+        <button type="button" data-bs-target="#ambassadorCarousel" data-bs-slide-to="<?= $index ?>" 
+          class="<?= $index === 0 ? 'active' : '' ?>" aria-current="<?= $index === 0 ? 'true' : 'false' ?>" aria-label="Slide <?= $index+1 ?>"></button>
+      <?php endforeach; ?>
+    </div>
   </div>
 </div>
 
@@ -438,7 +437,7 @@ $ambassadors = [
     <div class="custom-container">
         <div class="title d-flex justify-content-between align-items-center">
             <h2>Most Popular Foods</h2>
-            <a href="{{ url('/foods') }}">View All</a>
+            <a href="{{ route('user.packages') }}">View All</a>
         </div>
 
         <div class="row g-4">

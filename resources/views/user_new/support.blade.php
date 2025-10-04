@@ -100,6 +100,16 @@
                         <div class="table-responsive">
                             @if(isset($tickets) && count($tickets) > 0)
                                 <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>S/N</th>
+                                            <th>Subject</th>
+                                            <th>Message</th>
+                                            <th>Status</th>
+                                            <th>Response</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
                                     <tbody>
                                         @foreach($tickets as $index => $ticket)
                                             <tr>
@@ -114,6 +124,15 @@
                                                         @endif">
                                                         {{ ucfirst($ticket->status) }}
                                                     </span>
+                                                </td>
+                                                <td data-label="Response">
+                                                    @if(is_null($ticket->response))
+                                                                                                            <span class="text-info">Awaiting Feedback</span>
+
+                                                    @else
+                                                                                                            <span class="text-success">{{ $ticket->response }}</span>
+
+                                                    @endif
                                                 </td>
                                                 <td data-label="Action" class="text-center">
                                                     @if($ticket->status === 'pending')

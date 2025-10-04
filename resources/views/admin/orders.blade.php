@@ -1,189 +1,142 @@
-```blade
-@extends('admin.app')
+@extends('user_new.app')
 
 @section('content')
-<style>
-    .orders-header {
-        margin-bottom: 2rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-
-    .orders-title {
-        font-size: 2rem;
-        font-weight: 700;
-        color: var(--text-primary);
-        margin: 0;
-    }
-
-    .back-btn {
-        background: var(--primary-color);
-        color: white;
-        border: none;
-        border-radius: var(--radius-lg);
-        padding: 0.75rem 1.25rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        text-decoration: none;
-    }
-    .back-btn:hover { background: var(--primary-dark); }
-
-    .table th, .table td {
-        vertical-align: middle;
-    }
-
-    .order-status {
-        padding: 0.4rem 0.8rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        font-size: 0.875rem;
-        text-transform: capitalize;
-    }
-
-    .status-pending { background: #fef3c7; color: #92400e; }
-    .status-confirmed { background: #dbeafe; color: #1e40af; }
-    .status-preparing { background: #e0e7ff; color: #3730a3; }
-    .status-ready { background: #dcfce7; color: #166534; }
-    .status-delivered { background: #dcfce7; color: #166534; }
-    .status-cancelled { background: #fee2e2; color: #991b1b; }
-
-    /* Modal */
-    .modal { display: none; }
-    .modal.show { display: block; background: rgba(0,0,0,0.7); }
-</style>
-
-<div style="margin-top:50px;" class="container">
-    <div class="orders-header">
-        <h1 class="orders-title">My Orders</h1>
-        <input type="text" id="searchInput" class="form-control" 
-               placeholder="Search orders..." 
-               style="max-width: 250px;">
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold fs-4">My Orders</h2>
+        <a href="{{ route('user.packages') }}" class="text-decoration-none small fw-semibold text-primary">
+            <i class="fas fa-arrow-left me-1"></i> Back
+        </a>
     </div>
 
-    @if(session('success')) <div class="alert alert-success">{{ session('success') }}</div> @endif
-    @if(session('error')) <div class="alert alert-danger">{{ session('error') }}</div> @endif
-
     @if($orders->count() > 0)
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead class="">
-                    <tr>
-                        <th>#</th>
-                        <th>Order Number</th>
-                        <th>Date</th>
-                        <th>Items</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                        <th width="180">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($orders as $index => $order)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $order->order_number }}</td>
-                            <td>{{ $order->created_at->format('M j, Y g:i A') }}</td>
-                            <td>{{ count($order->items) }} item(s)</td>
-                            <td>₦{{ number_format($order->total_amount, 2) }}</td>
-                            <td>
-                                <span class="order-status status-{{ $order->status }}">
-                                    {{ ucfirst($order->status) }}
-                                </span>
-                            </td>
-                            <td>
-                                <a href="{{ route('admin.order.show', $order->order_number) }}" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-eye"></i> View
-                                </a>
-                                <button 
-                                    class="btn btn-sm btn-warning change-status-btn"
-                                    data-order="{{ $order->id }}"
-                                    data-status="{{ $order->status }}">
-                                    <i class="fas fa-edit"></i> Change Status
-                                </button>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <div class="orders-list">
+            @foreach($orders as $order)
+                <div class="order-card p-3 rounded shadow-sm bg-white">
+                    <!-- Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0 fw-bold text-dark">#{{ $order->order_number }}</h6>
+                        <span class="badge rounded-pill px-3 py-1 
+                            @switch($order->status)
+                                @case('pending') bg-warning text-dark @break
+                                @case('Approved') bg-success text-white @break
+                                @case('preparing') bg-danger text-white @break
+                                @case('ready') bg-info text-white @break
+                                @case('delivered') bg-success text-white @break
+                                @case('cancelled') bg-secondary text-white @break
+                                @default bg-light text-dark
+                            @endswitch">
+                            @switch($order->status)
+                                @case('pending') <i class="fas fa-clock me-1"></i> Under Review @break
+                                @case('Approved') <i class="fas fa-check-circle me-1"></i> Approved @break
+                                @case('preparing') <i class="fas fa-fire me-1"></i> Preparing @break
+                                @case('ready') <i class="fas fa-truck me-1"></i> Dispatched @break
+                                @case('delivered') <i class="fas fa-box-open me-1"></i> Delivered @break
+                                @case('cancelled') <i class="fas fa-times-circle me-1"></i> Denied @break
+                                @default Unknown
+                            @endswitch
+                        </span>
+                    </div>
+
+                    <!-- Meta Info -->
+                    <div class="small text-muted mb-2">
+                        <div><i class="fas fa-calendar me-1"></i> {{ $order->created_at->format('M j, Y g:i A') }}</div>
+                        <div><i class="fas fa-naira-sign me-1"></i> ₦{{ number_format($order->total_amount, 2) }}</div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="d-flex gap-2">
+                        <a href="{{ route('user.orders.show', $order->order_number) }}" 
+                           class="btn btn-sm btn-outline-primary flex-fill">
+                            <i class="fas fa-eye me-1"></i> View Details
+                        </a>
+
+                        @if($order->status === 'pending')
+                            <button class="btn btn-sm btn-outline-danger flex-fill" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#deleteOrderModal_{{ $order->id }}">
+                                <i class="fas fa-trash me-1"></i> Delete
+                            </button>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Delete Modal -->
+                <div class="modal fade" id="deleteOrderModal_{{ $order->id }}" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content border-0 shadow">
+                            <div class="modal-header bg-danger text-white">
+                                <h5 class="modal-title">Delete Order</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body text-center">
+                                <p class="mb-0">Are you sure you want to delete order <strong>#{{ $order->order_number }}</strong>?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <form action="{{ route('user.orders.delete', $order->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-trash"></i> Confirm Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        <div class="mt-4">
+            {{ $orders->links() }}
         </div>
     @else
+        <!-- Empty State -->
         <div class="empty-state text-center p-5">
-            <h3 class="fw-bold text-secondary mb-2">No Orders Yet</h3>
+            <h5 class="fw-bold text-secondary mb-2">No Orders Yet</h5>
+            <p class="text-muted small mb-3">Your delicious journey starts here. Place your first order and it will show up below.</p>
+            <a href="{{ route('user.packages') }}" 
+               class="btn btn-primary px-3 py-2 rounded-pill shadow-sm btn-sm">
+                <i class="fas fa-shopping-cart me-1"></i> Start Shopping
+            </a>
         </div>
     @endif
 </div>
 
-
-<!-- Modal -->
-<div class="modal fade" id="statusModal" tabindex="-1">
-  <div class="modal-dialog">
-    <form method="POST" action="{{ route('admin.update.order') }}">
-        @csrf
-        <input type="hidden" name="order_id" id="modal_order_id">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Change Order Status</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <label for="status" class="form-label">Select Status</label>
-                <select class="form-select" name="status" id="modal_status">
-                    <option value="pending">Under Review</option>
-                    <option value="Approved">Approved</option>
-                    <option value="preparing">Preparing</option>
-                    <option value="ready">Dispatched</option>
-                    <option value="delivered">Delivered</option>
-                    <option value="cancelled">Denied</option>
-                </select>
-
-                <label for="reason" class="form-label mt-3">Reason</label>
-                <textarea class="form-control" name="reason" id="modal_reason" rows="3" placeholder="Enter reason..."></textarea>
-            </div>
-
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-success">Update</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </form>
-  </div>
-</div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Modal status change
-        const modal = new bootstrap.Modal(document.getElementById('statusModal'));
-        document.querySelectorAll('.change-status-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                let orderId = this.dataset.order;
-                let currentStatus = this.dataset.status;
-
-                document.getElementById('modal_order_id').value = orderId;
-                document.getElementById('modal_status').value = currentStatus;
-
-                modal.show();
-            });
-        });
-
-        // Real-time search
-        const searchInput = document.getElementById("searchInput");
-        const rows = document.querySelectorAll("table tbody tr");
-
-        searchInput.addEventListener("keyup", function () {
-            const searchText = this.value.toLowerCase();
-            rows.forEach(row => {
-                const rowText = row.innerText.toLowerCase();
-                row.style.display = rowText.includes(searchText) ? "" : "none";
-            });
-        });
-    });
-</script>
+<style>
+    .order-card {
+        border: 1px solid #f0f0f0;
+        transition: all 0.2s ease-in-out;
+    }
+    .order-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    }
+    .orders-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .empty-state {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 1rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        max-width: 420px;
+        margin: 3rem auto;
+    }
+    @media (max-width: 576px) {
+        .order-card h6 {
+            font-size: 1rem;
+        }
+        .order-card .small {
+            font-size: 0.85rem;
+        }
+        .btn-sm {
+            font-size: 0.9rem;
+        }
+    }
+</style>
 @endsection
-```

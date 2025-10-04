@@ -44,7 +44,7 @@
     <!-- side bar start -->
     <div class="offcanvas sidebar-offcanvas offcanvas-start" tabindex="-1" id="offcanvasLeft">
       <div class="offcanvas-header">
-        <img class=" profile-pic" style="width:100px; height:70px" src="https://fingo.smartrobtech.co.uk/wp-content/uploads/2025/07/Fingo-Aurelius-LTD-Logo.png" alt="profile" />
+        <img class=" profile-pic" style="width:100px; height:70px" src="{{ asset('logo.png') }}" alt="profile" />
         <h4>Hello, {{ Auth::user()->first_name }}</h4>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
@@ -89,6 +89,12 @@
 <li>
   <a href="{{ route('terms') }}" class="pages {{ request()->routeIs('terms') ? 'active' : '' }}">
     <h4>Terms & Condition</h4>
+    <i class="ri-arrow-drop-right-line"></i>
+  </a>
+</li>
+<li>
+  <a href="{{ route('profile') }}" class="pages {{ request()->routeIs('profile') ? 'active' : '' }}">
+    <h4>Profile</h4>
     <i class="ri-arrow-drop-right-line"></i>
   </a>
 </li>

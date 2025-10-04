@@ -32,7 +32,7 @@ class OrderController extends Controller
             'items.*.qty' => 'required|integer|min:1',
             'items.*.price' => 'required|numeric|min:0',
             'items.*.total' => 'required|numeric|min:0',
-            'total_amount' => 'required|numeric|min:0|max:50000',
+            'total_amount' => 'required|numeric|min:0|max:500000',
             'payment_method' => 'required|string|in:wallet,loan',
         ]);
     
@@ -217,4 +217,21 @@ class OrderController extends Controller
 
         return back()->with('success', 'Order cancelled successfully.');
     }
+
+
+    public function delete_user_order($orderNumber)
+{
+    $order = Order::where('id', $orderNumber)
+                ->where('user_id', auth()->id())
+                ->firstOrFail();
+
+    if ($order->status !== 'pending') {
+        return GeneralController::sendNotification('', 'error', '', 'Only pending orders can be deleted.');
+    }
+
+    $order->delete();
+
+    return GeneralController::sendNotification('', 'success', '', 'Order deleted successfully.');
+}
+
 }

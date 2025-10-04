@@ -9,6 +9,9 @@ use App\Models\KycLevel;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
+
 
 class UserDashboardController extends Controller
 {
@@ -69,4 +72,94 @@ class UserDashboardController extends Controller
     return view('user_new.shop_search', compact('foods', 'query'));
 }
 
+public function user_profile(){
+    return view('user_new.profile');
+}
+
+
+public function addAddress(Request $request)
+    {
+        $request->validate([
+            'address' => 'required|string|max:255',
+        ]);
+
+        $user = Auth::user();
+
+        $addresses = json_decode($user->home_address ?? '[]', true);
+        $addresses[] = $request->address;
+
+        $user->home_address = json_encode($addresses);
+        $user->save();
+
+        return GeneralController::sendNotification('', 'success', '', 'Address added successfully.');
+    }
+
+    /**
+     * Delete an address by its index.
+     */
+    public function deleteAddress($index)
+    {
+        $user = Auth::user();
+        $addresses = json_decode($user->home_address ?? '[]', true);
+
+        if (isset($addresses[$index])) {
+            unset($addresses[$index]);
+            $user->home_address = json_encode(array_values($addresses));
+            $user->save();
+
+            return GeneralController::sendNotification('', 'success', '', 'Address deleted successfully.');
+        }
+
+        return GeneralController::sendNotification('', 'error', '', 'Address not found.');
+    }
+
+    /**
+     * Change the user password.
+     */
+    public function changePassword(Request $request)
+{
+    try {
+        $request->validate([
+            'old_password' => 'required|string',
+            'new_password' => 'required|string|min:6|confirmed',
+        ]);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        // Grab the first validation error
+        $errorMessage = collect($e->errors())->flatten()->first();
+
+        return GeneralController::sendNotification('', 'error', '', $errorMessage);
+    }
+
+    $user = Auth::user();
+
+    if (!\Hash::check($request->old_password, $user->password)) {
+        return GeneralController::sendNotification('', 'error', '', 'Old password is incorrect.');
+    }
+
+    $user->password = \Hash::make($request->new_password);
+    $user->save();
+
+    return GeneralController::sendNotification('', 'success', '', 'Password changed successfully.');
+}
+
+    /**
+     * Delete the user account.
+     */
+    public function deleteAccount(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string',
+        ]);
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->password, $user->password)) {
+            return GeneralController::sendNotification('', 'error', '', 'Password is incorrect.');
+        }
+
+        Auth::logout();
+        $user->delete();
+
+        return GeneralController::sendNotification('', 'success', '', 'Your account has been deleted.');
+    }
 }

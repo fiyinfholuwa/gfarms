@@ -116,6 +116,86 @@ class SupportTicketController extends Controller
     return GeneralController::sendNotification('', 'success', '', 'Ticket status updated successfully!');
 }
 
+
+
+public function addAddress(Request $request)
+{
+    $request->validate([
+        'address' => 'required|string|max:255',
+    ]);
+
+    $user = Auth::user();
+
+    $addresses = json_decode($user->addresses ?? '[]', true);
+    $addresses[] = $request->address;
+
+    $user->addresses = json_encode($addresses);
+    $user->save();
+
+    return GeneralController::sendNotification('', 'success', '', 'Address added successfully.');
+}
+
+/**
+ * Delete an address by its index.
+ */
+public function deleteAddress($index)
+{
+    $user = Auth::user();
+    $addresses = json_decode($user->addresses ?? '[]', true);
+
+    if (isset($addresses[$index])) {
+        unset($addresses[$index]);
+        $user->addresses = json_encode(array_values($addresses));
+        $user->save();
+
+        return GeneralController::sendNotification('', 'success', '', 'Address deleted successfully.');
+    }
+
+    return GeneralController::sendNotification('', 'error', '', 'Address not found.');
+}
+
+/**
+ * Change the user password.
+ */
+public function changePassword(Request $request)
+{
+    $request->validate([
+        'old_password' => 'required|string',
+        'new_password' => 'required|string|min:6|confirmed',
+    ]);
+
+    $user = Auth::user();
+
+    if (!Hash::check($request->old_password, $user->password)) {
+        return GeneralController::sendNotification('', 'error', '', 'Old password is incorrect.');
+    }
+
+    $user->password = Hash::make($request->new_password);
+    $user->save();
+
+    return GeneralController::sendNotification('', 'success', '', 'Password changed successfully.');
+}
+
+/**
+ * Delete the user account.
+ */
+public function deleteAccount(Request $request)
+{
+    $request->validate([
+        'password' => 'required|string',
+    ]);
+
+    $user = Auth::user();
+
+    if (!Hash::check($request->password, $user->password)) {
+        return GeneralController::sendNotification('', 'error', '', 'Password is incorrect.');
+    }
+
+    Auth::logout();
+    $user->delete();
+
+    return GeneralController::sendNotification('', 'success', '', 'Your account has been deleted.');
+}
 }
 
 ?>

@@ -41,7 +41,7 @@
     }
 
     .order-title {
-        font-size: 2rem;
+        {{-- font-size: 2rem; --}}
         font-weight: 700;
         color: var(--text-primary);
         margin: 0;
@@ -80,13 +80,7 @@
         box-shadow: var(--shadow-lg);
     }
 
-    .order-content {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 2rem;
-        align-items: start;
-    }
-
+   
     .order-details {
         background: var(--bg-primary);
         border-radius: var(--radius-xl);
@@ -137,7 +131,7 @@
 
     /* Order Info Grid */
     .info-grid {
-        display: grid;
+        {{-- display: grid; --}}
         gap: 1rem;
         margin-bottom: 2rem;
     }
@@ -496,7 +490,11 @@
     <!-- Order Header -->
     <div class="order-header">
         <div>
-            <h1 class="order-title">
+        <div class="mb-2">
+        <a href="{{ route('user.orders') }}" class="back-btn">
+    <i class="fas fa-arrow-left"></i> Back to Orders
+</a></div>
+            <h3 class="order-title">
                 Order Management
                 <span class="order-number">{{ $order->order_number }}</span>
             </h1>
@@ -511,10 +509,9 @@
                 @endswitch
                 {{ ucfirst($order->status) }}
             </div>
+             
         </div>
-        <a href="{{ route('user.orders') }}" class="back-btn">
-    <i class="fas fa-arrow-left"></i> Back to Orders
-</a>
+       
 
     </div>
 
@@ -553,35 +550,7 @@
                     </span>
                 </div>
 
-                {{-- @if($order->utility_bill_file)
-    <div class="info-item">
-        <span class="info-label">Utility Bill</span>
-        <span class="info-value">
-            <a href="{{ asset($order->utility_bill_file) }}" target="_blank" class="btn btn-sm btn-primary">
-                View File
-            </a>
-        </span>
-    </div>
-    @endif
-
-    @if($order->bank_statement)
-    <div class="info-item">
-        <span class="info-label">Bank Statement</span>
-        <span class="info-value">
-            <a href="{{ asset($order->bank_statement) }}" target="_blank" class="btn btn-sm btn-primary">
-                View File
-            </a>
-        </span>
-    </div>
-    @endif --}}
-
-    {{-- @if($order->bvn)
-    <div class="info-item">
-        <span class="info-label">BVN</span>
-        <span class="info-value">{{ $order->bvn }}</span>
-    </div>
-    @endif --}}
-
+                
     
     @if($order->repayment_amount)
     <div class="info-item">
