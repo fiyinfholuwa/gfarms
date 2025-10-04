@@ -668,7 +668,7 @@ background: linear-gradient(
         
         <!-- Pagination -->
         <div class="pagination-container">
-            {{ $payments->appends(request()->query())->links() }}
+        {{ $payments->links('admin.paginate') }}
         </div>
     @else
         <div class="payments-container">
