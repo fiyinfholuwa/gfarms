@@ -482,7 +482,7 @@ public function updateStatus(Request $request)
     }
     
 
-    public function admin_user_destroy($id)
+    public function admin_user_destory($id)
     {
         $user = User::findOrFail($id);
     
