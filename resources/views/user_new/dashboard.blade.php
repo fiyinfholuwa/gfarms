@@ -365,7 +365,7 @@ function generateAccount() {
     
     <?php
 // Demo ambassador data
-$ambassadors = $settings->slider_images;
+$ambassadors = $settings->slider_images ?? NULL;
 
 if(is_null($ambassadors)){
   $ambassadors = [];
