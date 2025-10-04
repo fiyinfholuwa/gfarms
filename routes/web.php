@@ -193,7 +193,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/kyc-levels', [AdminController::class, 'kyc_level'])->name('manage.account.level');
     Route::get('/manage/user/', [AdminController::class, 'manage_user'])->name('manage.user');
     Route::post('/kyc-levels/{key}/update', [AdminController::class, 'update_kyc_level'])->name('admin.kyc.update');
-    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('user.orders.show');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('admin.orders.show');
 
 });
 
