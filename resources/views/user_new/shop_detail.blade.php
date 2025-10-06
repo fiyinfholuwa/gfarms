@@ -46,7 +46,7 @@
             </div>
 
             <!-- Short Description -->
-            <p class="mt-3 text-muted">{{ $food->short_description }}</p>
+            <p class="mt-3 text-muted">{!! $food->short_description !!}</p>
 
             <!-- Quantity Selector + Add to Cart -->
             <div class="mt-4 d-flex align-items-center gap-2">
