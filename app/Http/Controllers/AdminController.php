@@ -525,7 +525,7 @@ public function view_platform()
         // Handle new uploads
         if ($request->hasFile('slider_images')) {
             foreach ($request->file('slider_images') as $image) {
-                if(count($sliderImages) >= 4) break;
+                if(count($sliderImages) >= 5) break;
     
                 $dir = public_path('uploads/sliders');
                 if (!file_exists($dir)) {
@@ -540,7 +540,7 @@ public function view_platform()
         }
     
         // Make sure we never exceed 4
-        $sliderImages = array_slice($sliderImages, 0, 4);
+        $sliderImages = array_slice($sliderImages, 0, 5);
     
         $data = [
             'slider_images' => json_encode($sliderImages),

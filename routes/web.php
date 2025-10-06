@@ -148,6 +148,10 @@ Route::delete('/orders/delete/{order}', [OrderController::class, 'delete_user_or
     ->name('user.orders.delete')
     ->middleware('auth');
 
+    Route::post('/profile/send-otp', [UserDashboardController::class, 'sendOtp'])->name('profile.sendOtp');
+    Route::post('/profile/verify-otp', [UserDashboardController::class, 'verifyOtp'])->name('profile.verifyOtp');
+    Route::post('/profile/update-alt-phone', [UserDashboardController::class, 'updateAltPhone'])->name('profile.updateAltPhone');
+    Route::post('/profile/upload-image', [UserDashboardController::class, 'uploadImage'])->name('profile.uploadImage');
 
 });
 

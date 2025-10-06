@@ -93,7 +93,7 @@
     <form action="{{ route('platform.update') }}" method="POST" enctype="multipart/form-data" id="platform-form">
         @csrf
 
-        <h3>Slider Images (Max 4)</h3>
+        <h3>Slider Images (Max 5)</h3>
         <div id="slider-wrapper">
             {{-- Existing Images --}}
             @php
@@ -121,7 +121,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const sliderWrapper = document.getElementById('slider-wrapper');
     const addBtn = document.getElementById('add-slider-btn');
-    const MAX_SLIDERS = 4;
+    const MAX_SLIDERS = 5;
 
     // Update button disabled state
     function updateAddButtonState() {

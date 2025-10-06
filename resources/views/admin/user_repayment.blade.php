@@ -579,7 +579,7 @@ background: linear-gradient(
             <a href="{{ url()->previous() }}" class="filter-btn btn-reset" style="padding:0.5rem 1rem; font-size:0.9rem;">
                 <i class="fas fa-arrow-left"></i> Go Back
             </a>
-            <h1 style="margin:0; font-size:2rem;">Repayment History ( {{ $full_name }} )</h1>
+            <h3 style="margin:0; font-size:1rem;">Repayment History ( {{ $full_name }} )</h3>
         </div>
     </div>
 </div>

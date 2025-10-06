@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Food;
+use Illuminate\Support\Facades\Mail;
+
 use App\Models\KycLevel;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 
 
 
@@ -162,4 +165,80 @@ public function addAddress(Request $request)
 
         return GeneralController::sendNotification('', 'success', '', 'Your account has been deleted.');
     }
+
+
+    public function sendOtp(Request $request)
+    {
+        $email = $request->email;
+        $otp = rand(100000, 999999);
+
+        Cache::put('otp_' . $email, $otp, now()->addMinutes(10));
+
+        // Send OTP to the email
+        Mail::raw("Your verification code is: $otp", function ($message) use ($email) {
+            $message->to($email)->subject('Email Verification OTP');
+        });
+
+        return response()->json(['status' => 'ok', 'message' => 'OTP sent successfully']);
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        $email = $request->email;
+        $otp = $request->otp;
+
+        $cachedOtp = Cache::get('otp_' . $email);
+
+        if (!$cachedOtp) {
+            return response()->json(['status' => 'error', 'message' => 'OTP expired or not found']);
+        }
+
+        if ($cachedOtp != $otp) {
+            return response()->json(['status' => 'error', 'message' => 'Invalid OTP']);
+        }
+
+        Auth::user()->update(['alt_email' => $email]);
+        Cache::forget('otp_' . $email);
+
+        return response()->json(['status' => 'ok', 'message' => 'Alternative email verified and saved']);
+    }
+
+    public function updateAltPhone(Request $request)
+    {
+        $request->validate(['phone' => 'required|string|max:20']);
+        Auth::user()->update(['alt_phone' => $request->phone]);
+        return response()->json(['status' => 'ok', 'message' => 'Alternative Phone  Updated']);
+
+    }
+
+    public function uploadImage(Request $request)
+{
+    $request->validate([
+        'profile_image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
+
+    $user = Auth::user();
+
+    // Define upload directory
+    $uploadDir = public_path('uploads/profile/');
+    if (!file_exists($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+
+    // Generate unique filename
+    $file = $request->file('profile_image');
+    $filename = time() . '.' . $file->getClientOriginalExtension();
+
+    // Move file
+    $file->move($uploadDir, $filename);
+
+    // Store full relative path (not just filename)
+    $fullPath = '/uploads/profile/' . $filename;
+
+    // Update user record
+    $user->update(['image' => $fullPath]);
+
+    return GeneralController::sendNotification('', 'success', '', 'Profile Image Updated successfully.');
+}
+
 }

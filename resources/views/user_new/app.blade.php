@@ -52,12 +52,13 @@
         <div class="sidebar-content">
           <ul class="link-section">
             
-            <li>
-  <a href="{{ route('dashboard') }}" class="pages {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-    <h4>Dashboard</h4>
+      <li>
+  <a href="{{ route('profile') }}" class="pages {{ request()->routeIs('profile') ? 'active' : '' }}">
+    <h4>My Profile</h4>
     <i class="ri-arrow-drop-right-line"></i>
   </a>
 </li>
+      
 
 <li>
   <a href="{{ route('user.packages') }}" class="pages {{ request()->routeIs('user.packages') ? 'active' : '' }}">
@@ -89,12 +90,6 @@
 <li>
   <a href="{{ route('terms') }}" class="pages {{ request()->routeIs('terms') ? 'active' : '' }}">
     <h4>Terms & Condition</h4>
-    <i class="ri-arrow-drop-right-line"></i>
-  </a>
-</li>
-<li>
-  <a href="{{ route('profile') }}" class="pages {{ request()->routeIs('profile') ? 'active' : '' }}">
-    <h4>Profile</h4>
     <i class="ri-arrow-drop-right-line"></i>
   </a>
 </li>
