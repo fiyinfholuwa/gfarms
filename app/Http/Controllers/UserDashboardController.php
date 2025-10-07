@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Cache;
 class UserDashboardController extends Controller
 {
     public function browse(){
-        $foods = Food::all();
+        $foods = Food::paginate(8);
         return view('user_new.shop', compact('foods'));
     }
     public function category(){

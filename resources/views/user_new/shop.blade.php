@@ -57,6 +57,10 @@
                     </div>
 
                 @endforeach
+
+                 <div style="margin-top:1rem;display:flex;justify-content:center;">
+        {{ $foods->links('admin.paginate') }}
+        </div>
             @else
                 <div class="col-12 d-flex justify-content-center align-items-center" style="min-height: 50vh;">
                     <div class="text-center p-5 border rounded-4 shadow-sm bg-light" style="max-width: 500px;">

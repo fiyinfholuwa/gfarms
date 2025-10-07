@@ -33,7 +33,7 @@
     <!-- Table -->
     @if($payments && $payments->count() > 0)
         <div style="overflow-x:auto;background:#fff;border-radius:14px;border:1px solid #e2e8f0;">
-            <table style="width:100%;border-collapse:collapse;font-size:.85rem;">
+            <table style="font-size:.85rem;">
                 <thead style="background:#f9fafb;">
                     <tr>
                         <th style="padding:1rem;text-align:left;">Reference</th>
@@ -53,26 +53,22 @@
                             <td style="padding:1rem;"><span style="padding:.2rem .6rem;border-radius:6px;background:#e0f2fe;color:#2563eb;font-weight:600;">{{ ucfirst($payment->gateway) }}</span></td>
                             <td style="padding:1rem;font-weight:600;">₦{{ number_format($payment->amount,2) }}</td>
                             <td style="padding:1rem;">
-                                <span style="padding:.3rem .7rem;border-radius:9999px;font-size:.75rem;font-weight:600;
+                                <span style="border-radius:9999px;font-size:.75rem;font-weight:600;
                                     @if(strtolower($payment->status)=='success') background:#d1fae5;color:#047857; 
                                     @elseif(strtolower($payment->status)=='pending') background:#fef3c7;color:#b45309;
                                     @else background:#fee2e2;color:#b91c1c; @endif ">
                                     {{ ucfirst($payment->status) }}
                                 </span>
                             </td>
-                            <td style="padding:1rem;">{{ $payment->created_at->format('M j, Y g:i A') }}</td>
-                            {{-- <td style="padding:1rem;">
-                                <button style="padding:.4rem;border:none;border-radius:6px;background:#e0f2fe;color:#2563eb;cursor:pointer;">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </td> --}}
+                            <td style="">{{ $payment->created_at->format('M j, Y g:i A') }}</td>
+                            
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
         <div style="margin-top:1rem;display:flex;justify-content:center;">
-            {{ $payments->appends(request()->query())->links() }}
+        {{ $payments->links('admin.paginate') }}
         </div>
     @else
         <div style="text-align:center;padding:3rem;background:#fff;border-radius:14px;">

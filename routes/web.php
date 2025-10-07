@@ -34,8 +34,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    $recent_orders = Order::where('user_id', Auth::id())->paginate(5);
-    $foods = Food::paginate(5);
+    // $recent_orders = Order::where('user_id', Auth::id())->paginate(5);
+    $foods = Food::paginate(4);
     $settings = PlatformSetting::first();
 
     return view('user_new.dashboard', compact('foods', 'settings'));
