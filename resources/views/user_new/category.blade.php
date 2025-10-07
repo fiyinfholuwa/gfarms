@@ -20,9 +20,11 @@
             </div>
 
             <div class="categories-img">
-              <img class="img-fluid img" 
-                   src="{{ $category->image ? asset($category->image) : asset('https://cdn3.editmysite.com/app/website/static/images/category-placeholder.png?width=2400&optimize=medium') }}" 
-                   alt="{{ $category->name }}" />
+              <img class="img-fluid img"
+     src="{{ $category->image ? asset($category->image) : asset('https://cdn3.editmysite.com/app/website/static/images/category-placeholder.png?width=2400&optimize=medium') }}"
+     alt="{{ $category->name }}"
+     style="width:100px; height:100px; object-fit:cover; border-radius:8px;" />
+
             </div>
           </a>
         </li>

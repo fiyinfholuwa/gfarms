@@ -100,7 +100,7 @@ class OrderController extends Controller
                     $file = $request->file('bill_image');
                     $utilityBillFileName = time() . '_utility.' . $file->getClientOriginalExtension();
                 
-                    $utilityBillPath = public_path('uploads/utility_bills');
+                    $utilityBillPath = 'uploads/utility_bills';
                     if (!file_exists($utilityBillPath)) {
                         mkdir($utilityBillPath, 0755, true);
                     }
@@ -115,7 +115,7 @@ class OrderController extends Controller
                     $file = $request->file('bankStatement');
                     $bankStatementFileName = time() . '_bank.' . $file->getClientOriginalExtension();
                 
-                    $bankStatementPath = public_path('uploads/bank_statements');
+                    $bankStatementPath = 'uploads/bank_statements';
                     if (!file_exists($bankStatementPath)) {
                         mkdir($bankStatementPath, 0755, true);
                     }
@@ -136,6 +136,7 @@ class OrderController extends Controller
                 'items' => $request->items,
                 'notes' => $request->notes,
                 'status' => 'pending',
+                'phone_number' => $request->phone_number,
                 'delivery_address' => $request->address,
                 'payment_method' => $request->payment_method,
                 'repayment_plan' => $request->repayment_plan ?? null,

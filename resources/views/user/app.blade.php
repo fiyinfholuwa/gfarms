@@ -51,15 +51,7 @@
 					<!-- sidebar menu -->
 					<ul class="nav sidebar-inner" id="sidebar-menu">
 						<!-- Dashboard -->
-    <!-- Dashboard -->
-<li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-    <a class="sidenav-item-link" href="{{ route('dashboard') }}">
-        <i class="mdi mdi-view-dashboard-outline"></i>
-        <span class="nav-text">Dashboard</span>
-    </a>
-    <hr>
-</li>
-
+  
 <!-- Food Markets -->
 <li class="{{ request()->routeIs('user.packages') ? 'active' : '' }}">
     <a class="sidenav-item-link" href="{{ route('user.packages') }}">

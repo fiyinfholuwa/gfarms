@@ -613,6 +613,10 @@
                     <span class="info-label">Phone</span>
                     <span class="info-value">{{ $order->user->phone }} </span>
                 </div>
+                <div class="info-item">
+                    <span class="info-label">Alt Phone</span>
+                    <span class="info-value">{{ $order->phone_number }} </span>
+                </div>
 
                 <div class="info-item">
                     <span class="info-label">Order Date</span>

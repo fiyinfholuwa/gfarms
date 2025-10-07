@@ -80,6 +80,61 @@
                                     <i class="fas fa-file-invoice-dollar"></i>
                                 </a>
 
+<!-- Button to open modal -->
+<a href="#" 
+   class="btn-action btn-repayment"
+   data-bs-toggle="modal"
+   data-bs-target="#editAltModal_{{ $user->id }}"
+   title="Edit Alternate Contact">
+    <i class="fas fa-edit"></i>
+</a>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editAltModal_{{ $user->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ route('admin.users.updateAltContact', $user->id) }}" 
+                  method="POST" 
+                  enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header bg-warning text-white">
+                    <h5 class="modal-title">Edit Alternate Contact</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label for="alt_email_{{ $user->id }}">Alternate Email</label>
+                        <input type="email"
+                               class="form-control"
+                               id="alt_email_{{ $user->id }}"
+                               name="alt_email"
+                               value="{{ old('alt_email', $user->alt_email) }}"
+                               placeholder="Enter alternate email">
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="alt_phone_{{ $user->id }}">Alternate Phone</label>
+                        <input type="text"
+                               class="form-control"
+                               id="alt_phone_{{ $user->id }}"
+                               name="alt_phone"
+                               value="{{ old('alt_phone', $user->alt_phone) }}"
+                               placeholder="Enter alternate phone">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-1"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
                                 <!-- Delete -->
                                 <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline;">
                                     @csrf

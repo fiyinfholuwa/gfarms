@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Food;
-use Illuminate\Support\Facades\Mail;
-
 use App\Models\KycLevel;
+
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 
 
@@ -78,6 +79,24 @@ class UserDashboardController extends Controller
 public function user_profile(){
     return view('user_new.profile');
 }
+
+public function updateAltContact(Request $request, $id)
+{
+    $request->validate([
+        'alt_email' => 'nullable|email|max:255',
+        'alt_phone' => 'nullable|string|max:20',
+    ]);
+
+    $user = User::findOrFail($id);
+    $user->alt_email = $request->alt_email;
+    $user->alt_phone = $request->alt_phone;
+    $user->save();
+
+
+    return GeneralController::sendNotification('', 'success', '', 'Alternate contact details updated successfully!');
+
+}
+
 
 
 public function addAddress(Request $request)

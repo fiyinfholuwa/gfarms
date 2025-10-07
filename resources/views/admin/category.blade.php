@@ -21,6 +21,7 @@
                                     <tr>
                                         <th>S/N</th>
                                         <th>Name</th>
+                                        <th>Image</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                     </thead>
@@ -29,6 +30,11 @@
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
                                             <td>{{ $category->name }}</td>
+                                            <td>@if($category->image)
+            <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" width="60" height="60" style="object-fit:cover;border-radius:8px;">
+        @else
+            <span class="text-muted">No image</span>
+        @endif</td>
                                             <td class="text-center">
                                                 <button class="btn btn-sm btn-outline-primary"
                                                         data-bs-toggle="modal"
@@ -51,7 +57,7 @@
                                         <div class="modal fade" id="editCategoryModal_{{ $category->id }}" tabindex="-1" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
-                                                    <form action="{{ route('category.update', $category->id) }}" method="POST">
+                                                    <form action="{{ route('category.update', $category->id) }}" method="POST" enctype="multipart/form-data">
                                                         @csrf
                                                         <div class="modal-header">
                                                             <h5 class="modal-title">Edit  Category</h5>
@@ -64,7 +70,20 @@
                                                                 <input type="text" name="name" class="form-control"
                                                                        value="{{ old('name', $category->name) }}" required>
                                                             </div>
+
+                                                            <div class="form-group mt-3">
+    <label for="categoryImage_{{ $category->id }}">Category Image (optional)</label>
+    <input type="file" class="form-control" id="categoryImage_{{ $category->id }}" name="image" accept="image/*">
+
+    @if($category->image)
+        <div class="mt-2">
+            <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" width="80" height="80" style="object-fit:cover;border-radius:8px;">
+        </div>
+    @endif
+</div>
+
                                                         </div>
+                                                        
 
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -115,7 +134,7 @@
     <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="{{ route('category.add') }}" method="POST">
+                <form action="{{ route('category.add') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-header bg-warning text-white">
                         <h5 class="modal-title">Add  Category</h5>
@@ -137,7 +156,13 @@
                             </div>
                             @enderror
                         </div>
+                        <div class="form-group mt-3">
+    <label for="categoryImage">Category Image (optional)</label>
+    <input type="file" class="form-control" id="categoryImage" name="image" accept="image/*">
+</div>
+
                     </div>
+
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

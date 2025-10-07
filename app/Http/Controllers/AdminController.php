@@ -16,6 +16,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
+use Carbon\Carbon;
+use App\Models\LoanRepayment;
+
 
 
 class AdminController extends Controller
@@ -204,14 +207,27 @@ class AdminController extends Controller
     public function category_add(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+    
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $dir = public_path('uploads/categories/');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move($dir, $filename);
+            $imagePath = 'uploads/categories/' . $filename;
+        }
+    
         $url_slug = strtolower($request->name);
         $label_slug = preg_replace('/\s+/', '-', $url_slug);
 
         $category = new Category;
         $category->name = $request->name;
         $category->category_url = $label_slug;
+        $category->image = $imagePath;
         $category->save();
         $notification = array(
             'message' => 'Category Sucessfully saved',
@@ -250,12 +266,31 @@ class AdminController extends Controller
 
     public function category_update(Request $request, $id)
     {
+
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+    
         $category_update = Category::findOrFail($id);
+    
+        $imagePath = $category_update->image;
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $dir = public_path('uploads/categories/');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move($dir, $filename);
+            $imagePath = 'uploads/categories/' . $filename;
+        }
+
         $url_slug = strtolower($request->name);
         $label_slug = preg_replace('/\s+/', '-', $url_slug);
 
         $category_update->name = $request->name;
         $category_update->category_url = $label_slug;
+        $category_update->image = $imagePath;
         $category_update->save();
 
         $notification = array(
@@ -323,7 +358,7 @@ class AdminController extends Controller
 }
 
 
-public function updateStatus(Request $request)
+public function updateStatus_olds(Request $request)
 {
     $request->validate([
         'order_id' => 'required|integer|exists:orders,id',
@@ -377,6 +412,108 @@ public function updateStatus(Request $request)
             'message'    => 'Order status updated and email sent!',
             'alert-type' => 'success'
         ]);
+    } catch (\Exception $e) {
+        return redirect()->back()->with([
+            'message'    => 'Failed to update status. ' . $e->getMessage(),
+            'alert-type' => 'error'
+        ]);
+    }
+}
+
+
+
+public function updateStatus(Request $request)
+{
+    $request->validate([
+        'order_id' => 'required|integer|exists:orders,id',
+        'status'   => 'required|string',
+        'reason'   => 'nullable|string|max:1000',
+    ]);
+
+    try {
+        $order = Order::findOrFail($request->order_id);
+        $order->status = $request->status;
+        $order->reason = $request->reason;
+
+        // ✅ When status is delivered, mark timestamp
+        if (strtolower($request->status) === 'delivered') {
+            $order->delivered_at = now();
+
+            // If order is paid by loan, create repayment plan
+            if (strtolower($order->payment_method) === 'loan') {
+                $user = $order->user;
+                $repaymentPlan = strtolower($order->repayment_plan ?? 'weekly');
+                $totalAmount = $order->total_amount + ($order->total_amount * 0.10); // 10% interest
+                $installments = 0;
+                $intervalDays = 0;
+
+                switch ($repaymentPlan) {
+                    case 'semi-weekly':
+                        $installments = 8;
+                        $intervalDays = 3; // Every 3 days
+                        break;
+                    case 'weekly':
+                        $installments = 4;
+                        $intervalDays = 7; // Every 7 days
+                        break;
+                    case 'bi-weekly':
+                        $installments = 2;
+                        $intervalDays = 14; // Every 14 days
+                        break;
+                    default:
+                        $installments = 4;
+                        $intervalDays = 7;
+                        break;
+                }
+
+                $perPayment = round($totalAmount / $installments, 2);
+                $startDate = Carbon::parse($order->delivered_at);
+
+                for ($i = 1; $i <= $installments; $i++) {
+                    LoanRepayment::create([
+                        'user_id' => $user->id,
+                        'order_id' => $order->id,
+                        'repayment_amount' => $perPayment,
+                        'due_date' => $startDate->copy()->addDays($intervalDays * $i),
+                        'status' => 'pending',
+                    ]);
+                }
+            }
+        }
+
+        // ✅ Extra check for loan adjustment
+        if (strtolower($request->status) === 'approved' && strtolower($order->payment_method) === 'loan') {
+            $user = $order->user;
+            $user->increment('loan_balance', $order->total_amount + ($order->total_amount * 0.10));
+        }
+
+        $order->save();
+
+        // ✅ Send notification email
+        $html = "
+            <h2>Hello {$order->user->name},</h2>
+            <p>Your order <strong>#{$order->order_number}</strong> has been updated.</p>
+            <p><strong>Status:</strong> " . ucfirst($order->status) . "</p>";
+
+        if (!empty($order->reason)) {
+            $html .= "<p><strong>Reason:</strong> {$order->reason}</p>";
+        }
+
+        $html .= "<p>Thank you for shopping with us!</p><p><strong>" . config('app.name') . "</strong></p>";
+
+        try {
+            Mail::send([], [], function ($message) use ($order, $html) {
+                $message->to($order->user->email)
+                        ->subject('Order #' . $order->id . ' Status Update')
+                        ->html($html);
+            });
+        } catch (\Exception $e) {}
+
+        return redirect()->back()->with([
+            'message'    => 'Order status updated successfully!',
+            'alert-type' => 'success'
+        ]);
+
     } catch (\Exception $e) {
         return redirect()->back()->with([
             'message'    => 'Failed to update status. ' . $e->getMessage(),
@@ -557,5 +694,29 @@ public function view_platform()
         return GeneralController::sendNotification('', 'success', '', 'Platform settings updated successfully!');
     }
     
+
+    public function manage_loan()
+    {
+        $users = User::where('loan_balance', '>', 0)
+                     ->orderByDesc('loan_balance')
+                     ->paginate(10); // show 10 per page
+    
+        return view('admin.loan', compact('users'));
+    }
+    
+
+public function view_loan_history($user_id)
+{
+    $user = User::findOrFail($user_id);
+
+    // Get all repayment records for this user
+    $repayments = LoanRepayment::where('user_id', $user_id)
+                    ->orderBy('due_date', 'asc')
+                    ->get();
+
+
+    // Or return a Blade view
+    return view('admin.loan_history', compact('user', 'repayments'));
+}
 
 }

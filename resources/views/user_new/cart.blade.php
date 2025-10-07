@@ -159,10 +159,10 @@
                         <span class="summary-value" id="items-total">₦{{ number_format($totalAmount) }}</span>
                     </div>
 
-                    <div class="summary-row">
+                    {{-- <div class="summary-row">
                         <span class="summary-label">Delivery</span>
                         <span class="summary-value">₦1,000</span>
-                    </div>
+                    </div> --}}
 
                     <div class="summary-row">
                         <span>Total</span>
@@ -243,11 +243,29 @@
         </select>
     @endif
 </div>
+        <div class="form-group" style="text-align: left; margin-top:10px; margin-bottom:10px;">
+    <label>Phone Number</label>
+    <input type="number" 
+           value="{{ Auth::user()->alt_phone }}" 
+           class="form-control" 
+           id="phone_number" 
+           placeholder="Phone Number" />
+</div>
 
         </div>
 
         <!-- Loan Fields -->
         <div id="loanFields" style="display:none;">
+
+        <div class="form-group" style="text-align: left; margin-top:10px; margin-bottom:10px;">
+    <label>Phone Number</label>
+    <input type="number" 
+           value="{{ Auth::user()->alt_phone }}" 
+           class="form-control" 
+           id="phone_number" 
+           placeholder="Phone Number" />
+</div>
+
           <!-- Bill Image Upload -->
           <div class="mb-3">
             <label class="form-label">Upload Utility Bill (contains home address) *</label>
@@ -658,6 +676,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (confirmCheckoutBtn) {
         confirmCheckoutBtn.addEventListener('click', async () => {
             const address = document.getElementById('deliveryAddress')?.value?.trim() || '';
+            const phone_number = document.getElementById('phone_number')?.value?.trim() || '';
             const payment = document.querySelector("input[name='paymentMethod']:checked")?.value;
             const cartItems = [];
             
@@ -705,6 +724,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('items', JSON.stringify(cartItems));
             formData.append('total_amount', totalAmount);
             formData.append('address', address);
+            formData.append('phone_number', phone_number);
             formData.append('payment_method', payment);
              const { periods, perPayment, duration, total } = computeRepaymentSplit();
 

@@ -153,6 +153,9 @@ Route::delete('/orders/delete/{order}', [OrderController::class, 'delete_user_or
     Route::post('/profile/update-alt-phone', [UserDashboardController::class, 'updateAltPhone'])->name('profile.updateAltPhone');
     Route::post('/profile/upload-image', [UserDashboardController::class, 'uploadImage'])->name('profile.uploadImage');
 
+    Route::post('/admin/users/{id}/update-alt-contact', [UserDashboardController::class, 'updateAltContact'])
+     ->name('admin.users.updateAltContact');
+
 });
 
 
@@ -206,6 +209,9 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/user/view/{id}', [AdminController::class, 'admin_user_view'])->name('admin.users.view');
     Route::get('/platform', [AdminController::class, 'view_platform'])->name('platform');
     Route::post('/platform', [AdminController::class, 'save_platform'])->name('platform.update');
+    Route::get('/loan/management', [AdminController::class, 'manage_loan'])->name('manage.loan');
+    Route::get('/admin/loan-history/{user_id}', [AdminController::class, 'view_loan_history'])->name('admin.loan_history');
+
 });
 
 

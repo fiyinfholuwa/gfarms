@@ -355,6 +355,13 @@
             <span> Manage Users </span>
         </a>
     </li>
+    <!-- Manage Users -->
+    <li class="{{ request()->routeIs('manage.loan') ? 'active' : '' }}">
+        <a href="{{ route('manage.loan') }}">
+<i class="fas fa-money-bill-wave"></i>
+            <span> Manage Loans </span>
+        </a>
+    </li>
     <li class="{{ request()->routeIs('platform') ? 'active' : '' }}">
         <a href="{{ route('platform') }}">
 <i class="fas fa-cog"></i>        <!-- simple gear -->
