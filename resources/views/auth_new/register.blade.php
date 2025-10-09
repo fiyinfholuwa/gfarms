@@ -146,24 +146,56 @@
 <!-- Terms Modal -->
 <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true"
      data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="termsModalLabel">Terms of Use</h5>
-        {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
       </div>
 
-      <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+      <div class="modal-body terms-content" style="max-height: 400px; overflow-y: auto; line-height: 1.6;">
         {!! $settings->login_terms ?? "Not Set" !!}
       </div>
 
-      <div class="modal-footer d-flex justify-content-between">
+      <div class="modal-footer d-flex justify-content-between terms-footer" style="display: none; opacity: 0; transition: opacity 0.3s ease;">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Decline</button>
         <button type="button" class="btn btn-success" id="acceptTermsBtn">Accept</button>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('termsModal');
+
+    modal.addEventListener('shown.bs.modal', function() {
+        const termsBody = modal.querySelector('.terms-content');
+        const footer = modal.querySelector('.terms-footer');
+
+        // Always hide the buttons first when modal opens
+        footer.style.display = 'none';
+        footer.style.opacity = '0';
+
+        if (termsBody && footer) {
+            // When user scrolls
+            termsBody.addEventListener('scroll', function onScroll() {
+                const scrollPosition = termsBody.scrollTop + termsBody.clientHeight;
+                const scrollHeight = termsBody.scrollHeight;
+
+                // If user reaches bottom of scrollable area
+                if (scrollPosition >= scrollHeight - 5) {
+                    footer.style.display = 'flex';
+                    setTimeout(() => footer.style.opacity = '1', 50);
+                } else {
+                    // Hide again if user scrolls back up
+                    footer.style.opacity = '0';
+                    setTimeout(() => footer.style.display = 'none', 300);
+                }
+            });
+        }
+    });
+});
+</script>
 
 {{-- Scripts --}}
 <script>
