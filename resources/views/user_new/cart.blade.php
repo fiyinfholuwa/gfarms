@@ -122,7 +122,7 @@
                     @foreach($cartItems as $id => $item)
                         <div class="cart-item" id="cart-item-{{ $id }}">
                             <div class="item-image">
-                                <!-- optional image -->
+<img src="{{ get_product_image($id) }}" width="80" height="80" alt="Product Image" />
                             </div>
 
                             <div class="item-details">
@@ -707,6 +707,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     showAlert('Please enter a delivery address', 'error');
                     return;
                 }
+                if (!phone_number) {
+                    showAlert('Please enter a valid phone number', 'error');
+                    return;
+                }
             } else {
                 if (!checkBillFileSelected()) {
                     showAlert('Please upload a utility bill containing your address', 'error');
@@ -715,6 +719,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 if (!isValidBVN(bvnInput?.value || '')) {
                     showAlert('BVN must be exactly 11 digits', 'error');
+                    return;
+                }
+                if (!phone_number) {
+                    showAlert('Please enter a valid phone number', 'error');
                     return;
                 }
             }

@@ -1,7 +1,9 @@
 <?php 
 
+use App\Models\Food;
 use App\Models\KycLevel;
 use App\Models\User;
+
 
 
 
@@ -44,6 +46,18 @@ if (!function_exists('kyc_levels')) {
                 ]
             ];
         })->toArray();
+    }
+}
+
+
+if (!function_exists('get_product_image')) {
+    function get_product_image($id) {
+        $food_info=Food::findOrfail($id);
+        if(!is_null($food_info->image)){
+            return $food_info->image;
+        }else{
+            return 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuCZtWNJjBjxoVw9OCxZXKQE-biHdtZ7c5Ig&s';
+        }
     }
 }
 

@@ -318,10 +318,10 @@
                         </div>
 
                         <div class="action-buttons">
-                            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#altEmailModal">
+                            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#altEmailModal" data-bs-backdrop="static" data-bs-keyboard="false">
                                 <i class="fa fa-envelope me-1"></i> Update Alternative Email
                             </button>
-                            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#altPhoneModal">
+                            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#altPhoneModal" data-bs-backdrop="static" data-bs-keyboard="false">
                                 <i class="fa fa-phone me-1"></i> Update  Phone  Contact
                             </button>
                         </div>
@@ -402,21 +402,41 @@
 
             <!-- DELETE ACCOUNT -->
             <div class="custom-accordion">
-                <div class="accordion-header-custom danger" data-target="delete">
-                    <span><i class="fa fa-exclamation-triangle me-2"></i> Delete Account</span>
-                    <i class="fa fa-chevron-down accordion-icon"></i>
-                </div>
-                <div class="accordion-content-custom" id="delete">
-                    <div class="accordion-body-custom">
-                        <p class="text-danger fw-semibold">
-                            <i class="fa fa-warning me-2"></i> Warning: Deleting your account is permanent and cannot be undone.
-                        </p>
-                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
-                            <i class="fa fa-trash me-1"></i> Delete My Account
-                        </button>
-                    </div>
-                </div>
-            </div>
+    <div class="accordion-header-custom danger" data-target="delete">
+        <span><i class="fa fa-exclamation-triangle me-2"></i> Delete Account</span>
+        <i class="fa fa-chevron-down accordion-icon"></i>
+    </div>
+    <div class="accordion-content-custom" id="delete">
+        <div class="accordion-body-custom">
+            <p class="text-danger fw-semibold">
+                <i class="fa fa-warning me-2"></i> Warning: Deleting your account is permanent and cannot be undone.
+            </p>
+
+            <button 
+                class="btn btn-danger @if(Auth::user()->loan_balance > 0) disabled-btn @endif"
+                data-bs-toggle="modal" 
+                data-bs-target="#deleteAccountModal"
+                @if(Auth::user()->loan_balance > 0) disabled @endif
+            >
+                <i class="fa fa-trash me-1"></i> Delete My Account
+            </button>
+
+            @if(Auth::user()->loan_balance > 0)
+                <small class="text-warning d-block mt-2">
+                    You cannot delete your account while you have an outstanding loan balance.
+                </small>
+            @endif
+        </div>
+    </div>
+</div>
+
+<style>
+.disabled-btn {
+    opacity: 0.6;
+    cursor: not-allowed !important;
+    pointer-events: none; /* ensures it can’t be clicked */
+}
+</style>
 
         </div>
     </div>
@@ -430,7 +450,6 @@
                 <form id="emailForm">
                     <div class="modal-header bg-warning">
                         <h5 class="modal-title"><i class="fa fa-envelope me-2"></i> Update Alternative Email</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
@@ -463,7 +482,6 @@
                 <form id="phoneForm">
                     <div class="modal-header bg-warning">
                         <h5 class="modal-title"><i class="fa fa-phone me-2"></i> Update  Phone</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
 
                     <div class="modal-body">
@@ -492,13 +510,12 @@
 
     {{-- Add Address Modal --}}
     <div class="modal fade" id="addAddressModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <form action="{{ route('profile.addAddress') }}" method="POST">
                     @csrf
                     <div class="modal-header bg-warning">
                         <h5 class="modal-title"><i class="fa fa-map-marker me-2"></i> Add Address</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <label class="fw-semibold mb-2">Address</label>
@@ -523,7 +540,6 @@
                     @csrf
                     <div class="modal-header bg-danger text-white">
                         <h5 class="modal-title"><i class="fa fa-exclamation-triangle me-2"></i> Confirm Account Deletion</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <p class="mb-3">Enter your password to confirm deletion:</p>

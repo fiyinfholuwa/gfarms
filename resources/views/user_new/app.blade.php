@@ -40,6 +40,33 @@
     <link rel="stylesheet" id="change-link" type="text/css" href="{{ asset('assets/css/style.css') }}" />
   </head>
 
+<style>
+.bg-warning{
+  background-color:darkorange !important;
+}
+
+
+
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.setAttribute('data-bs-backdrop', 'static');
+        modal.setAttribute('data-bs-keyboard', 'false');
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('button.btn-close[data-bs-dismiss="modal"]').forEach(btn => {
+        btn.style.display = 'none';
+    });
+});
+</script>
+
+
   <body>
     <!-- side bar start -->
     <div class="offcanvas sidebar-offcanvas offcanvas-start" tabindex="-1" id="offcanvasLeft">
@@ -119,7 +146,7 @@
     </div>
     <!-- side bar end -->
 
-      @if (!Route::is('profile'))
+      @if (!Route::is('profile') && !Route::is('support.index'))
 
     <!-- header start -->
     <header class="section-t-space">

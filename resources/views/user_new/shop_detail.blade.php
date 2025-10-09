@@ -84,7 +84,7 @@
                     </h2>
                     <div id="panelsStayOpen-p3" class="accordion-collapse collapse" aria-labelledby="headingThree">
                         <div class="accordion-body">
-                            <p class="text-muted">{!! nl2br(e($food->full_description)) !!}</p>
+                            <p class="text-muted">{!! $food->full_description !!}</p>
                         </div>
                     </div>
                 </div>

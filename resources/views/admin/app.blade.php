@@ -37,6 +37,33 @@
 
 
 </style>
+
+<style>
+.bg-warning{
+  background-color:darkorange !important;
+}
+
+
+
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.setAttribute('data-bs-backdrop', 'static');
+        modal.setAttribute('data-bs-keyboard', 'false');
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('button.btn-close[data-bs-dismiss="modal"]').forEach(btn => {
+        btn.style.display = 'none';
+    });
+});
+</script>
+
     </head>
 
     <!-- body start -->
