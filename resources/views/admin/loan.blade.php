@@ -10,6 +10,48 @@
         margin-top: 2rem;
     }
 
+    .loan-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .loan-header h2 {
+        color: darkorange;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .search-box {
+        position: relative;
+        width: 250px;
+    }
+
+    .search-box input {
+        width: 100%;
+        border: 2px solid darkorange;
+        border-radius: 30px;
+        padding: 8px 35px 8px 15px;
+        font-size: 14px;
+        outline: none;
+        transition: 0.3s ease;
+    }
+
+    .search-box input:focus {
+        box-shadow: 0 0 0 3px rgba(255,140,0,0.2);
+    }
+
+    .search-box i {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: darkorange;
+    }
+
     .loan-table {
         width: 100%;
         border-collapse: collapse;
@@ -33,7 +75,7 @@
     }
 
     .loan-table tbody tr:hover {
-        background-color: #eef6ff;
+        background-color: #fff3e0;
         transition: 0.3s ease;
     }
 
@@ -49,7 +91,7 @@
     }
 
     .btn-view:hover {
-        background: #004fc5;
+        background: darkorange;
         color: #fff;
     }
 
@@ -79,15 +121,22 @@
 
 <div class="container">
     <div class="loan-container">
-        <h2 class="mb-4 text-warning fw-bold">Manage User Loans</h2>
+        <div class="loan-header">
+            <h2>Manage User Loans</h2>
+            <div class="search-box">
+                <input type="text" id="loanSearch" placeholder="Search user..." />
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
 
         @if($users->count())
             <div class="table-responsive">
-                <table class="loan-table">
+                <table class="loan-table" id="loanTable">
                     <thead>
                         <tr>
                             <th>Full Name</th>
                             <th>Email</th>
+                            <th>Phone Contact</th>
                             <th>Loan Balance</th>
                             <th>Action</th>
                         </tr>
@@ -97,6 +146,7 @@
                             <tr>
                                 <td>{{ $user->first_name }} {{ $user->last_name }}</td>
                                 <td>{{ $user->email }}</td>
+                                <td>{{ $user->phone }} <br/> {{ $user->alt_phone }}</td>
                                 <td>₦{{ number_format($user->loan_balance, 2) }}</td>
                                 <td>
                                     <a href="{{ route('admin.loan_history', $user->id) }}" class="btn-view">
@@ -110,7 +160,6 @@
             </div>
 
             <div class="mt-3">
-        {{ $users->links('admin.paginate') }}
             </div>
         @else
             <div class="no-data">
@@ -120,4 +169,19 @@
         @endif
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("loanSearch");
+    const tableRows = document.querySelectorAll("#loanTable tbody tr");
+
+    searchInput.addEventListener("keyup", function () {
+        const filter = this.value.toLowerCase();
+        tableRows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+        });
+    });
+});
+</script>
 @endsection

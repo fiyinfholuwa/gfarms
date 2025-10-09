@@ -123,6 +123,7 @@ Route::middleware(['auth', 'onboard_kyc'])->group(function () {
     // Assuming you have a food market route
     Route::get('/food-market', 'YourFoodMarketController@index')->name('food-market');
     Route::get('/orders', [OrderController::class, 'index'])->name('user.orders');
+    Route::get('/loan/history', [UserDashboardController::class, 'user_loan_history'])->name('user.loan');
 
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('user.orders.show');
     Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('user.orders.cancel');

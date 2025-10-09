@@ -698,8 +698,7 @@ public function view_platform()
     public function manage_loan()
     {
         $users = User::where('loan_balance', '>', 0)
-                     ->orderByDesc('loan_balance')
-                     ->paginate(10); // show 10 per page
+                     ->orderByDesc('loan_balance')->get();
     
         return view('admin.loan', compact('users'));
     }

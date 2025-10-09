@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Food;
 use App\Models\KycLevel;
 
+use App\Models\LoanRepayment;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Mail;
 class UserDashboardController extends Controller
 {
     public function browse(){
-        $foods = Food::paginate(8);
+        $foods = Food::all();
         return view('user_new.shop', compact('foods'));
     }
     public function category(){
@@ -85,15 +86,17 @@ public function updateAltContact(Request $request, $id)
     $request->validate([
         'alt_email' => 'nullable|email|max:255',
         'alt_phone' => 'nullable|string|max:20',
+        'phone' => 'nullable|string|max:20',
     ]);
 
     $user = User::findOrFail($id);
     $user->alt_email = $request->alt_email;
     $user->alt_phone = $request->alt_phone;
+    $user->phone = $request->phone;
     $user->save();
 
 
-    return GeneralController::sendNotification('', 'success', '', 'Alternate contact details updated successfully!');
+    return GeneralController::sendNotification('', 'success', '', 'contact details updated successfully!');
 
 }
 
@@ -224,8 +227,8 @@ public function addAddress(Request $request)
 
     public function updateAltPhone(Request $request)
     {
-        $request->validate(['phone' => 'required|string|max:20']);
-        Auth::user()->update(['alt_phone' => $request->phone]);
+        $request->validate(['phone_alt' => 'required|string|max:20', 'phone' => 'required|string|max:20']);
+        Auth::user()->update(['alt_phone' => $request->phone_alt, 'phone' => $request->phone]);
         return response()->json(['status' => 'ok', 'message' => 'Alternative Phone  Updated']);
 
     }
@@ -258,6 +261,20 @@ public function addAddress(Request $request)
     $user->update(['image' => $fullPath]);
 
     return GeneralController::sendNotification('', 'success', '', 'Profile Image Updated successfully.');
+}
+
+
+public function user_loan_history()
+{
+
+    // Get all repayment records for this user
+    $repayments = LoanRepayment::where('user_id', Auth::user()->id)
+                    ->orderBy('due_date', 'asc')
+                    ->get();
+
+
+    // Or return a Blade view
+    return view('user_new.loan', compact('repayments'));
 }
 
 }

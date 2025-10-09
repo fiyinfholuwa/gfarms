@@ -113,6 +113,16 @@
                                placeholder="Enter alternate email">
                     </div>
 
+<div class="form-group mb-3">
+                        <label for="alt_phone_{{ $user->id }}">Main Phone</label>
+                        <input type="text"
+                               class="form-control"
+                               id="alt_phone_{{ $user->id }}"
+                               name="phone"
+                               value="{{ old('alt_phone', $user->phone) }}"
+                               placeholder="Enter main contact phone">
+                    </div>
+
                     <div class="form-group mb-3">
                         <label for="alt_phone_{{ $user->id }}">Alternate Phone</label>
                         <input type="text"

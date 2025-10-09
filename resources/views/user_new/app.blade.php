@@ -75,6 +75,14 @@
 </li>
 
 <li>
+  <a href="{{ route('user.loan') }}" class="pages {{ request()->routeIs('user.loan') ? 'active' : '' }}">
+    <h4>Loan History</h4>
+    <i class="ri-arrow-drop-right-line"></i>
+  </a>
+</li>
+
+
+<li>
   <a href="{{ route('user.payment') }}" class="pages {{ request()->routeIs('user.payment') ? 'active' : '' }}">
     <h4>Payment History</h4>
     <i class="ri-arrow-drop-right-line"></i>
@@ -111,6 +119,8 @@
     </div>
     <!-- side bar end -->
 
+      @if (!Route::is('profile'))
+
     <!-- header start -->
     <header class="section-t-space">
   <div class="custom-container">
@@ -138,6 +148,7 @@
     </div>
   </div>
 </header>
+@endif
 
 <style>
 
@@ -186,21 +197,29 @@
     <section>
       <div class="custom-container">
 
-      
+      @if (Route::is('dashboard') || Route::is('user.packages'))
+<form class="theme-form search-head" method="GET" action="{{ route('food.search') }}">
+    <div class="form-group">
+        <div class="form-input">
+            <input 
+                type="text" 
+                class="form-control search" 
+                name="query" 
+                id="inputusername" 
+                value="{{ request('query') }}" 
+                placeholder="Search here..." 
+            />
+        </div>
 
-        <form class="theme-form search-head" method="GET" action="{{ route('food.search') }}" >
-          <div class="form-group">
-            <div class="form-input">
-              <input type="text" class="form-control search" name="query" id="inputusername" value="{{ request('query') }}" placeholder="Search here..." />
-            </div>
-
-<button  type="submit" class="btn filter-btn mt-0">
-  <i class="fa fa-search"></i>
+        <button type="submit" class="btn filter-btn mt-0">
+            <i class="fa fa-search"></i>
         </button>
+    </div>
+</form>
+@endif
 
 
-          </div>
-        </form>
+       
       </div>
     </section>
     <!-- search section end -->
