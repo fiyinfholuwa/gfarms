@@ -102,8 +102,17 @@
     }
 </style>
 
+<style>
+  #dashboard_food_display{
+      background: #fff7f4; /* light orange */
+      padding:20px;
+
+}
+</style>
+  
+
 <div class="container">
-    <div class="loan-history-container">
+    <div id="dashboard_food_display" class="loan-history-container">
         <div class="loan-header">
             <div>
                 <p><strong>Current Loan Balance:</strong> ₦{{ number_format(Auth::user()->loan_balance, 2) }}</p>

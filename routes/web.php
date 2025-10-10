@@ -66,7 +66,7 @@ Route::middleware(['auth', 'onboard_kyc'])->group(function () {
     Route::get('/cart/count', function () {
         $userId = Auth::id();
         $cart = Cart::where('user_id', $userId)->first();
-        $items = $cart->items;
+        $items = $cart->items ?? [];
 
         $count = count($items);
         return response()->json(['count' => $count]);

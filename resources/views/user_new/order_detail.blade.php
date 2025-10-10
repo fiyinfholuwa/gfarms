@@ -568,7 +568,10 @@
                 
                 @foreach($order->items as $item)
                     <div class="order-item">
-                        <div class="item-icon"></div>
+                        <div class="item-icon">
+                        <img src="{{ get_product_image($item['id']) }}" width="80" height="80" alt="Product Image" />
+
+                        </div>
                         
                         <div class="item-details">
                             <h4 class="item-name">{{ $item['name'] }}</h4>
@@ -604,7 +607,7 @@
 
 <div class="modal fade" id="processingFeeModal" tabindex="-1" aria-hidden="true" 
      data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog">
     <div class="modal-content rounded-3 shadow">
       <div class="modal-header bg-dark text-white">
         <h5 class="modal-title">Processing Fee Required</h5>
@@ -621,9 +624,13 @@
           <input class="form-check-input" type="radio" name="gateway" id="fincraOption" value="fincra">
           <label class="form-check-label" for="fincraOption">Pay with Fincra</label>
         </div>
+        <div class="form-check text-start">
+          <input class="form-check-input" type="radio" name="gateway" id="walletOption" value="wallet">
+          <label class="form-check-label" for="fincraOption">Pay with Aurelius Wallet</label>
+        </div>
       </div>
       <div class="modal-footer">
-        <button id="proceedPaymentBtn" class="btn btn-warning w-100">Proceed to Payment</button>
+        <button id="proceedPaymentBtn" style="background:darkorange; color:white;" class="btn btn-warning w-100">Proceed to Payment</button>
       </div>
     </div>
   </div>
@@ -660,11 +667,21 @@
                 })
                 .then(res => res.json())
                 .then(data => {
+
                     if (data.status === "success") {
-                        window.location.href = data.url; // redirect to Paystack/Fincra
-                    } else {
-                        alert(data.message || "Something went wrong. Try again later.");
-                    }
+    if (data.url) {
+        window.location.href = data.url;
+    } else {
+            showAlert(data.message, 'success');
+
+setTimeout(() => {
+            window.location.href = "{{ route('user.orders') }}";
+        }, 5000);    }
+} else {
+    showAlert(data.message || "Something went wrong. Try again later.", 'error');
+}
+
+
                 })
                 .catch(err => {
                     console.error(err);
@@ -673,6 +690,119 @@
             });
         }
     });
+
+
+    /**
+ * Robust showAlert that tries multiple fallbacks if a modal/backdrop covers it.
+ * usage: showAlert('Message', 'error'|'success'|'warning', { duration: 3000 })
+ */
+function showAlert(message, type = 'error', opts = {}) {
+  const duration = typeof opts.duration === 'number' ? opts.duration : 5000;
+  const portalId = 'global-alert-portal';
+  let portal = document.getElementById(portalId);
+
+  // create portal if missing
+  if (!portal) {
+    portal = document.createElement('div');
+    portal.id = portalId;
+    Object.assign(portal.style, {
+      position: 'fixed',
+      top: '0',
+      left: '0',
+      right: '0',
+      pointerEvents: 'none',      // doesn't block clicks
+      zIndex: '2147483647',       // very high by default
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-end',
+      gap: '10px',
+      padding: '20px',
+      boxSizing: 'border-box'
+    });
+
+    // Try append to body; if that fails use documentElement as fallback
+    try {
+      document.body.appendChild(portal);
+    } catch (e) {
+      document.documentElement.appendChild(portal);
+    }
+  }
+
+  // create alert node
+  const alert = document.createElement('div');
+  alert.className = `custom-alert ${type}`;
+  alert.textContent = message;
+
+  // base styles for the alert
+  Object.assign(alert.style, {
+    pointerEvents: 'auto',              // allow dismiss buttons in future
+    background: type === 'success' ? '#2ecc71' : type === 'warning' ? '#f1c40f' : '#e74c3c',
+    color: '#fff',
+    padding: '10px 14px',
+    borderRadius: '8px',
+    boxShadow: '0 6px 18px rgba(0,0,0,0.18)',
+    transform: 'translateY(-10px)',
+    opacity: '0',
+    transition: 'opacity 0.25s ease, transform 0.25s ease',
+    maxWidth: '420px',
+    wordBreak: 'break-word',
+    zIndex: '2147483648' // ensure alert itself tries to be above portal
+  });
+
+  portal.appendChild(alert);
+
+  // animate in
+  requestAnimationFrame(() => {
+    alert.style.opacity = '1';
+    alert.style.transform = 'translateY(0)';
+  });
+
+  // After a short delay, verify visibility. If covered, apply stronger fallback.
+  setTimeout(() => {
+    try {
+      const r = alert.getBoundingClientRect();
+      // pick a point inside the alert
+      const x = Math.min(Math.max(r.left + r.width / 2, 0), window.innerWidth - 1);
+      const y = Math.min(Math.max(r.top + 10, 0), window.innerHeight - 1);
+      const topEl = document.elementFromPoint(x, y);
+
+      const isCovered = topEl && !alert.contains(topEl) && topEl !== alert;
+
+      if (isCovered) {
+        // Fallback: force a super-high z-index and position on the alert itself,
+        // and promote to its own layer with translateZ.
+        portal.style.zIndex = '999999999999999';
+        alert.style.zIndex = '999999999999999';
+        alert.style.position = 'fixed';
+        // lock the current screen position for the alert
+        alert.style.left = `${r.left}px`;
+        alert.style.top = `${r.top}px`;
+        alert.style.right = 'auto';
+        alert.style.transform = 'translateZ(999999px) translateY(0)';
+        // add a subtle border to ensure visibility
+        alert.style.border = '1px solid rgba(0,0,0,0.05)';
+        console.warn('showAlert: fallback applied (alert was covered).');
+      }
+    } catch (err) {
+      // ignore failures of elementFromPoint on some environments
+      console.warn('showAlert: visibility check failed', err);
+    }
+  }, 120);
+
+  // Animate out and remove
+  setTimeout(() => {
+    alert.style.opacity = '0';
+    alert.style.transform = 'translateY(-10px)';
+    setTimeout(() => {
+      if (alert && alert.parentNode) alert.parentNode.removeChild(alert);
+      // if portal becomes empty remove it
+      if (portal && portal.childElementCount === 0 && portal.parentNode) {
+        portal.parentNode.removeChild(portal);
+      }
+    }, 260);
+  }, duration);
+}
+
 </script>
 <!-- CSRF Token -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -681,18 +811,7 @@
 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 const orderId = {{ $order->id }};
 
-function showAlert(message, type = 'error') {
-    const alert = document.createElement('div');
-    alert.className = `alert ${type}`;
-    alert.textContent = message;
-    document.body.appendChild(alert);
-    
-    setTimeout(() => alert.classList.add('show'), 100);
-    setTimeout(() => {
-        alert.classList.remove('show');
-        setTimeout(() => document.body.removeChild(alert), 300);
-    }, 3000);
-}
+
 
 function setLoading(element, isLoading) {
     if (isLoading) {

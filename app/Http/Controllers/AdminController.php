@@ -26,14 +26,14 @@ class AdminController extends Controller
     public function admin_dashboard()
     {
         $recent_orders = Order::latest()->paginate(10);
-    
+
         $total_orders   = Order::count();
         $pending_orders   = Order::where('status', 'pending')->count();
         $total_users    = User::count();
         $total_revenues = Payment::where('status', 'success')->sum('amount');
         $total_products = Food::count();
         $total_loan_amount = User::sum('loan_balance');
-    
+
         return view('admin.dashboard', [
             'recent_orders'  => $recent_orders,
             'total_orders'   => $total_orders,
@@ -44,7 +44,7 @@ class AdminController extends Controller
             'total_loan_amount' => $total_loan_amount,
         ]);
     }
-    
+
 
     public function product_view()
     {
@@ -210,7 +210,7 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-    
+
         $imagePath = null;
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -220,7 +220,7 @@ class AdminController extends Controller
             $file->move($dir, $filename);
             $imagePath = 'uploads/categories/' . $filename;
         }
-    
+
         $url_slug = strtolower($request->name);
         $label_slug = preg_replace('/\s+/', '-', $url_slug);
 
@@ -238,30 +238,30 @@ class AdminController extends Controller
     }
 
     public function category_delete($id)
-{
-    $category = Category::findOrFail($id);
+    {
+        $category = Category::findOrFail($id);
 
-    // Check if any Food is linked to this category
-    $foodExists = Food::where('category', $id)->exists();
+        // Check if any Food is linked to this category
+        $foodExists = Food::where('category', $id)->exists();
 
-    if ($foodExists) {
-        // Prevent deletion and show error notification
+        if ($foodExists) {
+            // Prevent deletion and show error notification
+            $notification = [
+                'message' => 'This category cannot be deleted because it is linked to food items.',
+                'alert-type' => 'error'
+            ];
+            return redirect()->back()->with($notification);
+        }
+
+        // Safe to delete
+        $category->delete();
+
         $notification = [
-            'message' => 'This category cannot be deleted because it is linked to food items.',
-            'alert-type' => 'error'
+            'message' => 'Category Successfully Deleted',
+            'alert-type' => 'success'
         ];
         return redirect()->back()->with($notification);
     }
-
-    // Safe to delete
-    $category->delete();
-
-    $notification = [
-        'message' => 'Category Successfully Deleted',
-        'alert-type' => 'success'
-    ];
-    return redirect()->back()->with($notification);
-}
 
 
     public function category_update(Request $request, $id)
@@ -272,9 +272,9 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-    
+
         $category_update = Category::findOrFail($id);
-    
+
         $imagePath = $category_update->image;
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -310,217 +310,215 @@ class AdminController extends Controller
 
 
     public function updateStatus_old(Request $request)
-{
-    $request->validate([
-        'order_id' => 'required|integer|exists:orders,id',
-        'status'   => 'required|string',
-        'reason'   => 'nullable|string|max:1000',
-    ]);
-
-    try {
-        $order = Order::findOrFail($request->order_id);
-        $order->status = $request->status;
-        $order->reason = $request->reason;
-        $order->save();
-
-        // Build HTML inline
-        $html = "
-            <h2>Hello {$order->user->name},</h2>
-            <p>Your order <strong>#{$order->order_number}</strong> has been updated.</p>
-            <p><strong>Status:</strong> " . ucfirst($order->status) . "</p>";
-
-        if (!empty($order->reason)) {
-            $html .= "<p><strong>Reason:</strong> {$order->reason}</p>";
-        }
-
-        $html .= "
-            <p>Thank you for shopping with us!</p>
-            <p><strong>" . config('app.name') . "</strong></p>
-        ";
-
-        // Send mail immediately
-        Mail::send([], [], function ($message) use ($order, $html) {
-            $message->to($order->user->email)
-                    ->subject('Order #' . $order->id . ' Status Update')
-                    ->html($html);
-        });
-
-        return redirect()->back()->with([
-            'message'    => 'Order status updated and email sent!',
-            'alert-type' => 'success'
+    {
+        $request->validate([
+            'order_id' => 'required|integer|exists:orders,id',
+            'status'   => 'required|string',
+            'reason'   => 'nullable|string|max:1000',
         ]);
-    } catch (\Exception $e) {
-        return redirect()->back()->with([
-            'message'    => 'Failed to update status. ' . $e->getMessage(),
-            'alert-type' => 'error'
-        ]);
-    }
-}
-
-
-public function updateStatus_olds(Request $request)
-{
-    $request->validate([
-        'order_id' => 'required|integer|exists:orders,id',
-        'status'   => 'required|string',
-        'reason'   => 'nullable|string|max:1000',
-    ]);
-
-    try {
-        $order = Order::findOrFail($request->order_id);
-        $order->status = $request->status;
-        $order->reason = $request->reason;
-
-        // ✅ Extra check for loan adjustment
-        if (strtolower($request->status) === 'approved' && strtolower($order->payment_method) === 'loan') {
-            $user = User::findOrFail($order->user_id);
-        
-            $user->increment('loan_balance', $order->total_amount + ($order->total_amount * 0.10));
-        }
-        
-
-        $order->save();
-
-        // Build HTML inline
-        $html = "
-            <h2>Hello {$order->user->name},</h2>
-            <p>Your order <strong>#{$order->order_number}</strong> has been updated.</p>
-            <p><strong>Status:</strong> " . ucfirst($order->status) . "</p>";
-
-        if (!empty($order->reason)) {
-            $html .= "<p><strong>Reason:</strong> {$order->reason}</p>";
-        }
-
-        $html .= "
-            <p>Thank you for shopping with us!</p>
-            <p><strong>" . config('app.name') . "</strong></p>
-        ";
-
-        try{
-            Mail::send([], [], function ($message) use ($order, $html) {
-                $message->to($order->user->email)
-                        ->subject('Order #' . $order->id . ' Status Update')
-                        ->html($html);
-            });
-    
-        }catch(\Exception $e){
-
-        }
-        // Send mail immediately
-       
-        return redirect()->back()->with([
-            'message'    => 'Order status updated and email sent!',
-            'alert-type' => 'success'
-        ]);
-    } catch (\Exception $e) {
-        return redirect()->back()->with([
-            'message'    => 'Failed to update status. ' . $e->getMessage(),
-            'alert-type' => 'error'
-        ]);
-    }
-}
-
-
-
-public function updateStatus(Request $request)
-{
-    $request->validate([
-        'order_id' => 'required|integer|exists:orders,id',
-        'status'   => 'required|string',
-        'reason'   => 'nullable|string|max:1000',
-    ]);
-
-    try {
-        $order = Order::findOrFail($request->order_id);
-        $order->status = $request->status;
-        $order->reason = $request->reason;
-
-        // ✅ When status is delivered, mark timestamp
-        if (strtolower($request->status) === 'delivered') {
-            $order->delivered_at = now();
-
-            // If order is paid by loan, create repayment plan
-            if (strtolower($order->payment_method) === 'loan') {
-                $user = $order->user;
-                $repaymentPlan = strtolower($order->repayment_plan ?? 'weekly');
-                $totalAmount = $order->total_amount + ($order->total_amount * 0.10); // 10% interest
-                $installments = 0;
-                $intervalDays = 0;
-
-                switch ($repaymentPlan) {
-                    case 'semi-weekly':
-                        $installments = 8;
-                        $intervalDays = 3; // Every 3 days
-                        break;
-                    case 'weekly':
-                        $installments = 4;
-                        $intervalDays = 7; // Every 7 days
-                        break;
-                    case 'bi-weekly':
-                        $installments = 2;
-                        $intervalDays = 14; // Every 14 days
-                        break;
-                    default:
-                        $installments = 4;
-                        $intervalDays = 7;
-                        break;
-                }
-
-                $perPayment = round($totalAmount / $installments, 2);
-                $startDate = Carbon::parse($order->delivered_at);
-
-                for ($i = 1; $i <= $installments; $i++) {
-                    LoanRepayment::create([
-                        'user_id' => $user->id,
-                        'order_id' => $order->id,
-                        'repayment_amount' => $perPayment,
-                        'due_date' => $startDate->copy()->addDays($intervalDays * $i),
-                        'status' => 'pending',
-                    ]);
-                }
-            }
-        }
-
-        // ✅ Extra check for loan adjustment
-        if (strtolower($request->status) === 'approved' && strtolower($order->payment_method) === 'loan') {
-            $user = $order->user;
-            $user->increment('loan_balance', $order->total_amount + ($order->total_amount * 0.10));
-        }
-
-        $order->save();
-
-        // ✅ Send notification email
-        $html = "
-            <h2>Hello {$order->user->name},</h2>
-            <p>Your order <strong>#{$order->order_number}</strong> has been updated.</p>
-            <p><strong>Status:</strong> " . ucfirst($order->status) . "</p>";
-
-        if (!empty($order->reason)) {
-            $html .= "<p><strong>Reason:</strong> {$order->reason}</p>";
-        }
-
-        $html .= "<p>Thank you for shopping with us!</p><p><strong>" . config('app.name') . "</strong></p>";
 
         try {
+            $order = Order::findOrFail($request->order_id);
+            $order->status = $request->status;
+            $order->reason = $request->reason;
+            $order->save();
+
+            // Build HTML inline
+            $html = "
+            <h2>Hello {$order->user->name},</h2>
+            <p>Your order <strong>#{$order->order_number}</strong> has been updated.</p>
+            <p><strong>Status:</strong> " . ucfirst($order->status) . "</p>";
+
+            if (!empty($order->reason)) {
+                $html .= "<p><strong>Reason:</strong> {$order->reason}</p>";
+            }
+
+            $html .= "
+            <p>Thank you for shopping with us!</p>
+            <p><strong>" . config('app.name') . "</strong></p>
+        ";
+
+            // Send mail immediately
             Mail::send([], [], function ($message) use ($order, $html) {
                 $message->to($order->user->email)
+                    ->subject('Order #' . $order->id . ' Status Update')
+                    ->html($html);
+            });
+
+            return redirect()->back()->with([
+                'message'    => 'Order status updated and email sent!',
+                'alert-type' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with([
+                'message'    => 'Failed to update status. ' . $e->getMessage(),
+                'alert-type' => 'error'
+            ]);
+        }
+    }
+
+
+    public function updateStatus_olds(Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|integer|exists:orders,id',
+            'status'   => 'required|string',
+            'reason'   => 'nullable|string|max:1000',
+        ]);
+
+        try {
+            $order = Order::findOrFail($request->order_id);
+            $order->status = $request->status;
+            $order->reason = $request->reason;
+
+            // ✅ Extra check for loan adjustment
+            if (strtolower($request->status) === 'approved' && strtolower($order->payment_method) === 'loan') {
+                $user = User::findOrFail($order->user_id);
+
+                $user->increment('loan_balance', $order->total_amount + ($order->total_amount * 0.10));
+            }
+
+
+            $order->save();
+
+            // Build HTML inline
+            $html = "
+            <h2>Hello {$order->user->name},</h2>
+            <p>Your order <strong>#{$order->order_number}</strong> has been updated.</p>
+            <p><strong>Status:</strong> " . ucfirst($order->status) . "</p>";
+
+            if (!empty($order->reason)) {
+                $html .= "<p><strong>Reason:</strong> {$order->reason}</p>";
+            }
+
+            $html .= "
+            <p>Thank you for shopping with us!</p>
+            <p><strong>" . config('app.name') . "</strong></p>
+        ";
+
+            try {
+                Mail::send([], [], function ($message) use ($order, $html) {
+                    $message->to($order->user->email)
                         ->subject('Order #' . $order->id . ' Status Update')
                         ->html($html);
-            });
-        } catch (\Exception $e) {}
+                });
+            } catch (\Exception $e) {
+            }
+            // Send mail immediately
 
-        return redirect()->back()->with([
-            'message'    => 'Order status updated successfully!',
-            'alert-type' => 'success'
-        ]);
-
-    } catch (\Exception $e) {
-        return redirect()->back()->with([
-            'message'    => 'Failed to update status. ' . $e->getMessage(),
-            'alert-type' => 'error'
-        ]);
+            return redirect()->back()->with([
+                'message'    => 'Order status updated and email sent!',
+                'alert-type' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with([
+                'message'    => 'Failed to update status. ' . $e->getMessage(),
+                'alert-type' => 'error'
+            ]);
+        }
     }
-}
+
+
+
+    public function updateStatus(Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|integer|exists:orders,id',
+            'status'   => 'required|string',
+            'reason'   => 'nullable|string|max:1000',
+        ]);
+
+        try {
+            $order = Order::findOrFail($request->order_id);
+            $order->status = $request->status;
+            $order->reason = $request->reason;
+
+            // ✅ When status is delivered, mark timestamp
+            if (strtolower($request->status) === 'delivered') {
+                $order->delivered_at = now();
+
+                // If order is paid by loan, create repayment plan
+                if (strtolower($order->payment_method) === 'loan') {
+                    $user = $order->user;
+                    $repaymentPlan = strtolower($order->repayment_plan ?? 'weekly');
+                    $totalAmount = $order->total_amount + ($order->total_amount * 0.10); // 10% interest
+                    $installments = 0;
+                    $intervalDays = 0;
+
+                    switch ($repaymentPlan) {
+                        case 'semi-weekly':
+                            $installments = 8;
+                            $intervalDays = 3; // Every 3 days
+                            break;
+                        case 'weekly':
+                            $installments = 4;
+                            $intervalDays = 7; // Every 7 days
+                            break;
+                        case 'bi-weekly':
+                            $installments = 2;
+                            $intervalDays = 14; // Every 14 days
+                            break;
+                        default:
+                            $installments = 4;
+                            $intervalDays = 7;
+                            break;
+                    }
+
+                    $perPayment = round($totalAmount / $installments, 2);
+                    $startDate = Carbon::parse($order->delivered_at);
+
+                    for ($i = 0; $i < $installments; $i++) {
+                        LoanRepayment::create([
+                            'user_id' => $user->id,
+                            'order_id' => $order->id,
+                            'repayment_amount' => $perPayment,
+                            'due_date' => $startDate->copy()->addDays($intervalDays * $i), // first installment = now
+                            'status' => 'pending',
+                        ]);
+                    }
+                }
+            }
+
+            // ✅ Extra check for loan adjustment
+            if (strtolower($request->status) === 'approved' && strtolower($order->payment_method) === 'loan') {
+                $user = $order->user;
+                $user->increment('loan_balance', $order->total_amount + ($order->total_amount * 0.10));
+            }
+
+            $order->save();
+
+            // ✅ Send notification email
+            $html = "
+            <h2>Hello {$order->user->name},</h2>
+            <p>Your order <strong>#{$order->order_number}</strong> has been updated.</p>
+            <p><strong>Status:</strong> " . ucfirst($order->status) . "</p>";
+
+            if (!empty($order->reason)) {
+                $html .= "<p><strong>Reason:</strong> {$order->reason}</p>";
+            }
+
+            $html .= "<p>Thank you for shopping with us!</p><p><strong>" . config('app.name') . "</strong></p>";
+
+            try {
+                Mail::send([], [], function ($message) use ($order, $html) {
+                    $message->to($order->user->email)
+                        ->subject('Order #' . $order->id . ' Status Update')
+                        ->html($html);
+                });
+            } catch (\Exception $e) {
+            }
+
+            return redirect()->back()->with([
+                'message'    => 'Order status updated successfully!',
+                'alert-type' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with([
+                'message'    => 'Failed to update status. ' . $e->getMessage(),
+                'alert-type' => 'error'
+            ]);
+        }
+    }
 
 
 
@@ -535,44 +533,44 @@ public function updateStatus(Request $request)
     {
         // Start with query builder
         $query = Payment::query();
-    
+
         // Apply filters dynamically
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-    
+
         if ($request->filled('gateway')) {
             $query->where('gateway', $request->gateway);
         }
-    
+
         if ($request->filled('package')) {
             $query->where('package', $request->package);
         }
-    
+
         if ($request->filled('date_from')) {
             $query->whereDate('created_at', '>=', $request->date_from);
         }
-    
+
         if ($request->filled('date_to')) {
             $query->whereDate('created_at', '<=', $request->date_to);
         }
-    
+
         if ($request->filled('amount_min')) {
             $query->where('amount', '>=', $request->amount_min);
         }
-    
+
         if ($request->filled('amount_max')) {
             $query->where('amount', '<=', $request->amount_max);
         }
-    
+
         // Get payments with pagination
         $payments = $query->orderBy('created_at', 'desc')->paginate(15);
-    
+
         // Calculate statistics
         $totalAmount = Payment::where('status', 'success')->sum('amount');
         $totalPayments = Payment::count();
         $successfulPayments = Payment::where('status', 'success')->count();
-    
+
         return view('admin.payment', compact(
             'payments',
             'totalAmount',
@@ -617,30 +615,30 @@ public function updateStatus(Request $request)
 
         return GeneralController::sendNotification('', 'success', '', 'KYC Level updated successfully!');
     }
-    
+
 
     public function admin_user_destory($id)
     {
         $user = User::findOrFail($id);
-    
+
         // Prevent deleting the currently logged-in user
         if ($user->id === auth()->id()) {
             return GeneralController::sendNotification('', 'error', '', 'You cannot delete your own account!');
         }
-    
+
         $user->delete();
-    
+
         return GeneralController::sendNotification('', 'success', '', 'User deleted successfully!');
     }
-    
+
     public function admin_user_view($id)
-{
-    $user = User::findOrFail($id);
-    return view('admin.user_view', compact('user'));
-}
+    {
+        $user = User::findOrFail($id);
+        return view('admin.user_view', compact('user'));
+    }
 
 
-public function view_platform()
+    public function view_platform()
     {
         $settings = DB::table('platform_settings')->first();
         return view('admin.platform', compact('settings'));
@@ -648,74 +646,94 @@ public function view_platform()
 
     public function save_platform(Request $request)
     {
+        // Validate inputs
         $request->validate([
             'slider_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'existing_slider_images.*' => 'nullable|string',
             'login_terms' => 'nullable|string',
+            'support_phone' => 'nullable|string|max:20',
+            'support_email' => 'nullable|email|max:100',
+            'support_location' => 'nullable|string|max:255',
+            'social_facebook' => 'nullable|string|max:255',
+            'social_x_tiktok' => 'nullable|string|max:255',
+            'social_instagram' => 'nullable|string|max:255',
         ]);
-    
+
         $settings = DB::table('platform_settings')->first();
-    
+
         // Start with existing images that are still in the form
         $sliderImages = $request->input('existing_slider_images', []);
-    
+
         // Handle new uploads
         if ($request->hasFile('slider_images')) {
+            $maxUploads = 5 - count($sliderImages);
+
             foreach ($request->file('slider_images') as $image) {
-                if(count($sliderImages) >= 5) break;
-    
+                if ($maxUploads <= 0) break;
+
                 $dir = public_path('uploads/sliders');
-                if (!file_exists($dir)) {
+                if (!is_dir($dir)) {
                     mkdir($dir, 0755, true);
                 }
-    
-                $filename = time().'_'.$image->getClientOriginalName();
+
+                // Sanitize and create unique filename
+                $filename = time() . '_' . Str::slug(pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME))
+                    . '.' . $image->getClientOriginalExtension();
+
                 $image->move($dir, $filename);
-    
+
                 $sliderImages[] = 'uploads/sliders/' . $filename;
+                $maxUploads--;
             }
         }
-    
-        // Make sure we never exceed 4
+
+        // Ensure no more than 5 images
         $sliderImages = array_slice($sliderImages, 0, 5);
-    
+
+        // Prepare all data from the form
         $data = [
             'slider_images' => json_encode($sliderImages),
             'login_terms' => $request->login_terms ?? '',
-            'updated_at' => now()
+            'support_phone' => $request->support_phone ?? '',
+            'support_email' => $request->support_email ?? '',
+            'support_location' => $request->support_location ?? '',
+            'social_facebook' => $request->social_facebook ?? '',
+            'social_x_tiktok' => $request->social_x_tiktok ?? '',
+            'social_instagram' => $request->social_instagram ?? '',
+            'updated_at' => now(),
         ];
-    
-        if($settings){
+
+        // Insert or update
+        if ($settings) {
             DB::table('platform_settings')->update($data);
         } else {
             $data['created_at'] = now();
             DB::table('platform_settings')->insert($data);
         }
+
         return GeneralController::sendNotification('', 'success', '', 'Platform settings updated successfully!');
     }
-    
 
     public function manage_loan()
     {
         $users = User::where('loan_balance', '>', 0)
-                     ->orderByDesc('loan_balance')->get();
-    
+            ->orderByDesc('loan_balance')->get();
+
         return view('admin.loan', compact('users'));
     }
-    
-
-public function view_loan_history($user_id)
-{
-    $user = User::findOrFail($user_id);
-
-    // Get all repayment records for this user
-    $repayments = LoanRepayment::where('user_id', $user_id)
-                    ->orderBy('due_date', 'asc')
-                    ->get();
 
 
-    // Or return a Blade view
-    return view('admin.loan_history', compact('user', 'repayments'));
-}
+    public function view_loan_history($user_id)
+    {
+        $user = User::findOrFail($user_id);
 
+        // Get all repayment records for this user
+        $repayments = LoanRepayment::where('user_id', $user_id)
+            ->orderBy('due_date', 'asc')
+            ->get();
+
+
+        // Or return a Blade view
+        return view('admin.loan_history', compact('user', 'repayments'));
+    }
 }

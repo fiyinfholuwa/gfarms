@@ -271,6 +271,11 @@ document.addEventListener("DOMContentLoaded", function() {
 .bg-darkorange {
   background: darkorange !important;
 }
+#dashboard_food_display{
+      background: #fff7f4; /* light orange */
+      padding:20px;
+
+}
 </style>
 
 <script>
@@ -437,7 +442,7 @@ if(is_null($ambassadors)){
 
     
     <!-- Foods Section Start -->
-<section class="section-t-space">
+<section id="dashboard_food_display" class="section-t-space">
     <div class="custom-container">
         <div class="title d-flex justify-content-between align-items-center">
             <h2>Most Popular Foods</h2>

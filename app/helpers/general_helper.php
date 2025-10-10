@@ -3,6 +3,7 @@
 use App\Models\Food;
 use App\Models\KycLevel;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -61,4 +62,25 @@ if (!function_exists('get_product_image')) {
     }
 }
 
+if (!function_exists('platform_settings')) {
+    function platform_settings($key = null)
+    {
+        // Cache the settings to avoid multiple DB calls
+        static $settings = null;
+
+        if ($settings === null) {
+            $settings = DB::table('platform_settings')->first();
+        }
+
+        if (!$settings) {
+            return null;
+        }
+
+        if ($key) {
+            return $settings->$key ?? null;
+        }
+
+        return $settings; // Return full object if no key provided
+    }
+}
 ?>

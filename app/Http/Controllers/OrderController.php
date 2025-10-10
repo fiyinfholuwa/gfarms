@@ -155,7 +155,6 @@ class OrderController extends Controller
     
             User::where('id', Auth::id())->update([
                 'last_payment_method' => $request->payment_method,
-                'home_address' => $request->address
             ]);
     
             // if ($update_loan_amount > 0) {

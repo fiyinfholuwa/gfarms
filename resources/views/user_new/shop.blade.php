@@ -2,11 +2,18 @@
 
 @section('content')
 <!-- banner section start -->
+  <style>
+  #dashboard_food_display{
+      background: #fff7f4; /* light orange */
+      padding:20px;
+
+}
+</style>
   
     
     <!-- Foods Section Start -->
 <section class="section-t-space">
-    <div class="custom-container">
+    <div id="dashboard_food_display" class="custom-container">
         <div class="title d-flex justify-content-between align-items-center">
             <h2 class="text-center">Shop</h2>
         </div>

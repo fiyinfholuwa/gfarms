@@ -345,17 +345,52 @@ public function pay_processing_fee_onspot(Request $request)
     $amount = 1000;
     $reference = strtoupper($gateway) . '_' . Str::uuid();
 
-    DB::table('payments')->insert([
-        'user_id'    => $user->id,
-        'package'    => 'processing_fee|' . $id,
-        'reference'  => $reference,
-        'amount'     => $amount,
-        'status'     => 'pending',
-        'gateway'    => $gateway,
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
+    if($gateway ==='wallet'){
+        if (Auth::user()->wallet_balance <= 1000) {
+            $availableBalance = number_format(Auth::user()->wallet_balance, 2);
+            
+            return response()->json([
+                'status'  => 'error',
+                'title'   => 'Processing Fee Payment',
+                'message' => "Insufficient balance in your Aurelius Wallet. Your current balance is ₦{$availableBalance}. Kindly fund your wallet or try another payment option. Thank you.",
+            ], 500);
+        }
+        $user->decrement('wallet_balance', 1000);
 
+        DB::table('payments')->insert([
+            'user_id'    => $user->id,
+            'package'    => 'processing_fee|' . $id,
+            'reference'  => $reference,
+            'amount'     => $amount,
+            'status'     => 'success',
+            'gateway'    => $gateway,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        Order::where('id', $id)
+                ->update(['has_paid_delivery_fee' => 'yes']);
+                return response()->json([
+                    'status'  => 'success',
+                    'title'   => 'Processing Fee Deducted',
+                    'message' => "A processing fee of ₦1,000 has been successfully deducted from your Aurelius Wallet. 
+                                  Your new wallet balance is ₦" . number_format($user->fresh()->wallet_balance, 2) . ".",
+                ]);
+                
+    }else{
+        DB::table('payments')->insert([
+            'user_id'    => $user->id,
+            'package'    => 'processing_fee|' . $id,
+            'reference'  => $reference,
+            'amount'     => $amount,
+            'status'     => 'pending',
+            'gateway'    => $gateway,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    
+    }
+    
     $paymentResponse = ($gateway === 'paystack') 
         ? $this->createPaystackPayment($user, $amount, $reference) 
         : $this->createFincraPayment($user, $amount, $reference);

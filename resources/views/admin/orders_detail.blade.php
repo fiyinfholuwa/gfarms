@@ -602,21 +602,26 @@
             <div class="info-grid">
                 
                 <div class="info-item">
-                    <span class="info-label">Full Name</span>
-                    <span class="info-value">{{ $order->user->first_name }} {{ $order->user->last_name }} </span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Email</span>
-                    <span class="info-value">{{ $order->user->email }} </span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Phone</span>
-                    <span class="info-value">{{ $order->user->phone }} </span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Alt Phone</span>
-                    <span class="info-value">{{ $order->phone_number }} </span>
-                </div>
+    <span class="info-label">Full Name</span>
+    <span class="info-value">
+        {{ optional($order->user)->first_name ?? '' }} {{ optional($order->user)->last_name ?? '' }}
+    </span>
+</div>
+
+<div class="info-item">
+    <span class="info-label">Email</span>
+    <span class="info-value">{{ optional($order->user)->email ?? 'N/A' }}</span>
+</div>
+
+<div class="info-item">
+    <span class="info-label">Phone</span>
+    <span class="info-value">{{ optional($order->user)->phone ?? 'N/A' }}</span>
+</div>
+
+<div class="info-item">
+    <span class="info-label">Alt Phone</span>
+    <span class="info-value">{{ $order->phone_number ?? 'N/A' }}</span>
+</div>
 
                 <div class="info-item">
                     <span class="info-label">Order Date</span>

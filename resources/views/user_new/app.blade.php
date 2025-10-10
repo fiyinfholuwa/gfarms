@@ -53,7 +53,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.modal').forEach(modal => {
         modal.setAttribute('data-bs-backdrop', 'static');
-        modal.setAttribute('data-bs-keyboard', 'false');
     });
 });
 </script>
@@ -141,6 +140,121 @@ document.addEventListener('DOMContentLoaded', function() {
 </li>
 
           </ul>
+<!-- ✅ Make sure this is in your <head> -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  integrity="sha512-M9Kc3eVQtrHz9s4yUlPc8aSZoMGU4L7wVkZ7HkS7Zbl5dM+VLQHP1vDfw+PQHMeK0g5Ut0HDI4mK3jLzt7ib2A=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
+
+<div class="support-line">
+    <a href="tel:{{ platform_settings('support_phone') ?? '08001234567' }}" class="support-btn">
+        <i class="fa-solid fa-phone me-2"></i> Toll-Free
+    </a>
+
+    <a href="mailto:{{ platform_settings('support_email') ?? 'support@aurelius.com' }}" class="support-btn">
+        <i class="fa-solid fa-headset me-2"></i> Direct Support
+    </a>
+
+    <span class="support-location">
+        <i class="fa-solid fa-location-dot text-orange me-2"></i> 
+        {{ platform_settings('support_location') ?? 'Ikeja, Lagos' }}
+    </span>
+</div>
+
+<div class="social-icons">
+    <a href="{{ platform_settings('social_facebook') ?? '#' }}"><i class="fa-brands fa-facebook-f"></i></a>
+    <a href="{{ platform_settings('social_x_tiktok') ?? '#' }}"><i class="fa-brands fa-x-twitter"></i></a>
+    <a href="{{ platform_settings('social_instagram') ?? '#' }}"><i class="fa-brands fa-instagram"></i></a>
+</div>
+
+<style>
+.support-line {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 25px;
+    background: #fff;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    color: #333;
+    font-weight: 500;
+    flex-wrap: wrap;
+}
+
+.support-btn {
+    background: #ff6600;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s ease;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.support-btn:hover {
+    background: #e65c00;
+    transform: translateY(-2px);
+}
+
+.support-location {
+    display: flex;
+    align-items: center;
+    color: #333;
+}
+
+.text-orange {
+    color: #ff6600;
+}
+
+/* Social icons styling */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 15px;
+}
+
+.social-icons a {
+    color: #ff6600;
+    background: #fff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    transition: 0.3s ease;
+    text-decoration: none;
+}
+
+.social-icons a:hover {
+    background: #ff6600;
+    color: #fff;
+    transform: translateY(-3px);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .support-line {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+}
+</style>
+
+          
         </div>
       </div>
     </div>
@@ -358,7 +472,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             })
             .catch(err => {
-                console.error("Error fetching cart count:", err);
                 const cartCountEl = document.getElementById("cart-count");
                 if (cartCountEl) {
                     cartCountEl.innerText = 0; // ✅ show 0 if error
@@ -370,7 +483,7 @@ document.addEventListener("DOMContentLoaded", function () {
     updateCartCount();
 
     // Refresh every 10 seconds
-    setInterval(updateCartCount, 10000);
+    setInterval(updateCartCount, 1000);
 });
 </script>
 

@@ -157,8 +157,8 @@
       </div>
 
       <div class="modal-footer d-flex justify-content-between terms-footer" style="display: none; opacity: 0; transition: opacity 0.3s ease;">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Decline</button>
-        <button type="button" class="btn btn-success" id="acceptTermsBtn">Accept</button>
+        <button  type="button" class="btn btn-dark" data-bs-dismiss="modal">Decline</button>
+        <button style="background:darkorange; color:white;" type="button" class="btn btn-warning" id="acceptTermsBtn">Accept</button>
       </div>
     </div>
   </div>

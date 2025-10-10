@@ -159,10 +159,10 @@
                         <span class="summary-value" id="items-total">₦{{ number_format($totalAmount) }}</span>
                     </div>
 
-                    {{-- <div class="summary-row">
+                    <div class="summary-row">
                         <span class="summary-label">Delivery</span>
-                        <span class="summary-value">₦1,000</span>
-                    </div> --}}
+                        <span class="summary-value">₦0.00</span>
+                    </div>
 
                     <div class="summary-row">
                         <span>Total</span>
@@ -246,7 +246,6 @@
         <div class="form-group" style="text-align: left; margin-top:10px; margin-bottom:10px;">
     <label>Phone Number</label>
     <input type="number" 
-           value="{{ Auth::user()->alt_phone }}" 
            class="form-control" 
            id="phone_number" 
            placeholder="Phone Number" />
@@ -260,9 +259,8 @@
         <div class="form-group" style="text-align: left; margin-top:10px; margin-bottom:10px;">
     <label>Phone Number</label>
     <input type="number" 
-           value="{{ Auth::user()->alt_phone }}" 
            class="form-control" 
-           id="phone_number" 
+           id="phone_number2" 
            placeholder="Phone Number" />
 </div>
 
@@ -291,6 +289,7 @@
           <div class="mb-3">
             <label class="form-label">Select Repayment Plan *</label>
             <select id="loanRepaymentPlan" class="form-select">
+  <option value="" selected>Select Repayment Plan</option>
   <option value="semi-weekly">Semi-weekly (twice per week)</option>
   <option value="weekly">Weekly</option>
   <option value="bi-weekly">Bi-weekly (every 2 weeks)</option>
@@ -329,13 +328,43 @@ console.log('User balance:', userBalance); // Debug log
 
 function showAlert(message, type = 'error') {
     const alert = document.createElement('div');
-    alert.className = `alert ${type}`;
+    alert.className = `custom-alert ${type}`;
     alert.textContent = message;
+
+    Object.assign(alert.style, {
+        position: 'fixed',
+        top: '20px',
+        right: '20px',
+        zIndex: '99999', // ensures it's always above modals
+        padding: '12px 20px',
+        borderRadius: '8px',
+        color: '#fff',
+        fontWeight: '500',
+        fontSize: '15px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        opacity: '0',
+        transition: 'opacity 0.3s ease, transform 0.3s ease',
+        transform: 'translateY(-10px)',
+        pointerEvents: 'none'
+    });
+
+    // Background color depending on type
+    if (type === 'success') alert.style.background = '#2ecc71';
+    else if (type === 'warning') alert.style.background = '#f1c40f';
+    else alert.style.background = '#e74c3c'; // error (default)
+
     document.body.appendChild(alert);
 
-    setTimeout(() => alert.classList.add('show'), 100);
+    // Animate in
     setTimeout(() => {
-        alert.classList.remove('show');
+        alert.style.opacity = '1';
+        alert.style.transform = 'translateY(0)';
+    }, 100);
+
+    // Animate out after 3s
+    setTimeout(() => {
+        alert.style.opacity = '0';
+        alert.style.transform = 'translateY(-10px)';
         setTimeout(() => {
             if (document.body.contains(alert)) document.body.removeChild(alert);
         }, 300);
@@ -516,7 +545,7 @@ function checkbankStatementFileSelected() {
 function computeRepaymentSplit() {
     user_type = "user";
     const total = calculateCartTotalFromDOM();
-    const plan = document.getElementById('loanRepaymentPlan')?.value || 'weekly';
+    const plan = document.getElementById('loanRepaymentPlan')?.value || '';
 
     // Apply 10% interest
     const totalWithInterest = total + (total * 0.10);
@@ -554,8 +583,9 @@ function updateLoanValidation() {
     const bvnValue = bvnInput?.value || '';
     const bvnValid = isValidBVN(bvnValue);
     const billSelected = checkBillFileSelected();
-    
-    // Check BVN
+    const repaymentPlanValue = repaymentPlan?.value || ''; // ✅ FIXED
+
+    // Check BVN validity
     if (!bvnValid) {
         if (creditScoreMessage) {
             if (bvnValue.length > 0) {
@@ -569,11 +599,11 @@ function updateLoanValidation() {
         return false;
     } else {
         if (creditScoreMessage) {
-creditScoreMessage.innerHTML = `<span style="color:green"><i style="padding:2px; background:green; color:white; border-radius:5px;" class="fa fa-check"></i> BVN format is valid</span>`;
+            creditScoreMessage.innerHTML = `<span style="color:green"><i style="padding:2px; background:green; color:white; border-radius:5px;" class="fa fa-check"></i> BVN format is valid</span>`;
         }
     }
     
-    // Check bill
+    // Handle bill validation
     if (!billSelected) {
         if (billError) {
             billError.style.display = 'block';
@@ -585,28 +615,38 @@ creditScoreMessage.innerHTML = `<span style="color:green"><i style="padding:2px;
     } else {
         if (billError) billError.style.display = 'none';
     }
-    
-    // Both valid - show payment split
-    const { periods, perPayment, duration, total ,totalWithInterest} = computeRepaymentSplit();
-    
-   if (paymentSplit) {
-    paymentSplit.style.display = 'block';
-    paymentSplit.className = 'mt-3';
-    paymentSplit.innerHTML = `
-        <div><strong>Principal Amount:</strong> ₦${numberWithCommas(total)}</div>
-        <div><strong>Interest (10%):</strong> ₦${numberWithCommas(totalWithInterest - total)}</div>
-        <div><strong>Total Amount (with Interest):</strong> ₦${numberWithCommas(totalWithInterest)}</div>
-        <div><strong>Payment Split:</strong> ${periods} payments of ₦${numberWithCommas(perPayment)} each</div>
-        <div><strong>Duration:</strong> ${duration}</div>
-        <div class="text-danger"><em>Note:</em> ₦1,000 processing fee applies and is non-refundable.</div>
-    `;
-}
 
+    // Handle repayment plan validation
+    if (!repaymentPlanValue || repaymentPlanValue === '') {
+        if (paymentSplit) paymentSplit.style.display = 'none';
+        if (confirmCheckoutBtn) confirmCheckoutBtn.disabled = true;
+        if (creditScoreMessage) {
+            creditScoreMessage.innerHTML += `<br><span style="color:red">❌ Please select a repayment plan before proceeding</span>`;
+        }
+        console.log('❌ Repayment plan not selected');
+        return false;
+    }
 
-    
+    // ✅ All checks passed — show payment split
+    const { periods, perPayment, duration, total, totalWithInterest } = computeRepaymentSplit();
+
+    if (paymentSplit) {
+        paymentSplit.style.display = 'block';
+        paymentSplit.className = 'mt-3';
+        paymentSplit.innerHTML = `
+            <div><strong>Principal Amount:</strong> ₦${numberWithCommas(total)}</div>
+            <div><strong>Interest (10%):</strong> ₦${numberWithCommas(totalWithInterest - total)}</div>
+            <div><strong>Total Amount (with Interest):</strong> ₦${numberWithCommas(totalWithInterest)}</div>
+            <div><strong>Payment Split:</strong> ${periods} payments of ₦${numberWithCommas(perPayment)} each</div>
+            <div><strong>Duration:</strong> ${duration}</div>
+            <div class="text-danger"><em>Note:</em> ₦1,000 processing fee applies and is non-refundable.</div>
+        `;
+    }
+
     if (confirmCheckoutBtn) confirmCheckoutBtn.disabled = false;
     return true;
 }
+
 
 /* ---------- Event Listeners ---------- */
 document.addEventListener('DOMContentLoaded', function() {
@@ -677,6 +717,7 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmCheckoutBtn.addEventListener('click', async () => {
             const address = document.getElementById('deliveryAddress')?.value?.trim() || '';
             const phone_number = document.getElementById('phone_number')?.value?.trim() || '';
+            const phone_number2 = document.getElementById('phone_number2')?.value?.trim() || '';
             const payment = document.querySelector("input[name='paymentMethod']:checked")?.value;
             const cartItems = [];
             
@@ -707,10 +748,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     showAlert('Please enter a delivery address', 'error');
                     return;
                 }
-                if (!phone_number) {
-                    showAlert('Please enter a valid phone number', 'error');
-                    return;
-                }
+                if (!phone_number || !/^\+?\d{10,15}$/.test(phone_number.trim())) {
+    showAlert('Please enter a valid phone number', 'error');
+    return;
+}
+
             } else {
                 if (!checkBillFileSelected()) {
                     showAlert('Please upload a utility bill containing your address', 'error');
@@ -721,10 +763,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     showAlert('BVN must be exactly 11 digits', 'error');
                     return;
                 }
-                if (!phone_number) {
-                    showAlert('Please enter a valid phone number', 'error');
-                    return;
-                }
+
+
+                if (!phone_number2 || !/^\+?\d{10,15}$/.test(phone_number2.trim())) {
+    showAlert('Please enter a valid phone number', 'error');
+    return;
+}
+
             }
 
             // Prepare FormData
@@ -732,13 +777,18 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('items', JSON.stringify(cartItems));
             formData.append('total_amount', totalAmount);
             formData.append('address', address);
-            formData.append('phone_number', phone_number);
+            if (phone_number) {
+    formData.append('phone_number', phone_number);
+} else if (phone_number2) {
+    formData.append('phone_number', phone_number2);
+}
+
             formData.append('payment_method', payment);
              const { periods, perPayment, duration, total } = computeRepaymentSplit();
 
             if (payment === 'loan') {
                 formData.append('bvn', bvnInput?.value || '');
-                formData.append('repayment_plan', repaymentPlan?.value || 'weekly');
+                formData.append('repayment_plan', repaymentPlan?.value || '');
                 formData.append('repayment_amount', perPayment);
                 if (billImage && billImage.files.length > 0) {
                     formData.append('bill_image', billImage.files[0]);

@@ -68,24 +68,15 @@
                 </button>
             </div>
 
-            <!-- Accordion for Full Details -->
-            <div class="accordion details-accordion mt-4" id="accordionPanelsStayOpenExample">
-                <div class="accordion-item border-0">
-                    <h2 class="accordion-header" id="headingThree">
-                        <button 
-                            class="accordion-button collapsed fw-bold" 
-                            type="button" 
-                            data-bs-toggle="collapse" 
-                            data-bs-target="#panelsStayOpen-p3"
-                            aria-expanded="false" 
-                            aria-controls="panelsStayOpen-p3">
-                            More Details
-                        </button>
-                    </h2>
-                    <div id="panelsStayOpen-p3" class="accordion-collapse collapse" aria-labelledby="headingThree">
-                        <div class="accordion-body">
-                            <p class="text-muted">{!! $food->full_description !!}</p>
-                        </div>
+            <!-- Custom Accordion -->
+            <div class="custom-accordion mt-4">
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        More Details
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <p class="text-muted">{!! $food->full_description !!}</p>
                     </div>
                 </div>
             </div>
@@ -95,6 +86,54 @@
 </section>
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
+
+<style>
+.custom-accordion {
+    border-radius: 10px;
+    overflow: hidden;
+}
+.accordion-item {
+    border: 1px solid #f0f0f0;
+    border-radius: 10px;
+}
+.accordion-header {
+    width: 100%;
+    background: #fff7f0;
+    border: none;
+    outline: none;
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-weight: bold;
+    color: #e67e22;
+    font-size: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+.accordion-header:hover {
+    background: #ffe9d6;
+}
+.accordion-icon {
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+}
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    background: #fff;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding: 0 1.5rem;
+}
+.accordion-item.active .accordion-content {
+    max-height: 500px;
+    padding: 1rem 1.5rem;
+}
+.accordion-item.active .accordion-icon {
+    transform: rotate(45deg);
+}
+</style>
 
 <script>
 function updateQty(id, delta) {
@@ -143,6 +182,17 @@ async function addToCart(id, name, price) {
 
     // reset to 1 after adding
     document.getElementById(`qty-${id}`).value = 1;
+}
+
+function toggleAccordion(button) {
+    const item = button.parentElement;
+    const isActive = item.classList.contains('active');
+    
+    // collapse all
+    document.querySelectorAll('.accordion-item').forEach(el => el.classList.remove('active'));
+    
+    // toggle clicked
+    if (!isActive) item.classList.add('active');
 }
 </script>
 
