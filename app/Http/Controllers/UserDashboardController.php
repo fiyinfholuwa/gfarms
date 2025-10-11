@@ -40,23 +40,6 @@ class UserDashboardController extends Controller
     }
     public function shop_detail($name){
 
-        $get_pending_orders = Order::where('status', 'pending')->where('user_id', Auth::user()->id)->count();
-        if($get_pending_orders > 0){
-            return GeneralController::sendNotification(
-                '', 
-                'error', 
-                '', 
-                'You have an outstanding order, you cannot make a new order.'
-            );
-        }
-        if (Auth::check() && Auth::user()->loan_balance > 0) {
-            return GeneralController::sendNotification(
-                '', 
-                'error', 
-                '', 
-                'You have an outstanding loan, you cannot make a new order.'
-            );
-        }
         
         $food = Food::where('slug', $name)->first(); 
         return view('user_new.shop_detail', compact('food'));

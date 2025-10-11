@@ -116,12 +116,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </li>
 
 <li>
-  <a href="{{ route('support.index') }}" class="pages {{ request()->routeIs('support.index') ? 'active' : '' }}">
-    <h4>Support</h4>
-    <i class="ri-arrow-drop-right-line"></i>
-  </a>
-</li>
-<li>
   <a href="{{ route('terms') }}" class="pages {{ request()->routeIs('terms') ? 'active' : '' }}">
     <h4>Terms & Condition</h4>
     <i class="ri-arrow-drop-right-line"></i>
@@ -149,110 +143,167 @@ document.addEventListener('DOMContentLoaded', function() {
   referrerpolicy="no-referrer"
 />
 
-<div class="support-line">
-    <a href="tel:{{ platform_settings('support_phone') ?? '08001234567' }}" class="support-btn">
-        <i class="fa-solid fa-phone me-2"></i> Toll-Free
+<div class="support-section">
+  <div class="support-line">
+    <a href="tel:{{ platform_settings('support_phone') ?? '08001234567' }}" class="support-btn call">
+      <i class="fa-solid fa-phone me-2"></i> Toll-Free
     </a>
 
-    <a href="mailto:{{ platform_settings('support_email') ?? 'support@aurelius.com' }}" class="support-btn">
-        <i class="fa-solid fa-headset me-2"></i> Direct Support
+    <a href="{{ route('support.index') }}" class="support-page {{ request()->routeIs('support.index') ? 'active' : '' }}">
+      <h4>Support</h4>
+      <i class="ri-arrow-drop-right-line"></i>
+    </a>
+
+    <a href="mailto:{{ platform_settings('support_email') ?? 'support@aurelius.com' }}" class="support-btn email">
+      <i class="fa-solid fa-headset me-2"></i> Direct Support
     </a>
 
     <span class="support-location">
-        <i class="fa-solid fa-location-dot text-orange me-2"></i> 
-        {{ platform_settings('support_location') ?? 'Ikeja, Lagos' }}
+      <i class="fa-solid fa-location-dot text-orange me-2"></i>
+      {{ platform_settings('support_location') ?? 'Ikeja, Lagos' }}
     </span>
-</div>
+  </div>
 
-<div class="social-icons">
+  <div class="social-icons">
     <a href="{{ platform_settings('social_facebook') ?? '#' }}"><i class="fa-brands fa-facebook-f"></i></a>
     <a href="{{ platform_settings('social_x_tiktok') ?? '#' }}"><i class="fa-brands fa-x-twitter"></i></a>
     <a href="{{ platform_settings('social_instagram') ?? '#' }}"><i class="fa-brands fa-instagram"></i></a>
+  </div>
 </div>
 
 <style>
+/* Main Section */
+.support-section {
+  background: #fff7f4; /* Light orange tone */
+  border-radius: 16px;
+  padding: 2rem 1rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+  margin: 2rem auto;
+  max-width: 900px;
+}
+
+/* Support Line */
 .support-line {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5rem;
-    margin-top: 25px;
-    background: #fff;
-    padding: 1rem 2rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    color: #333;
-    font-weight: 500;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  background: #fff;
+  padding: 1.25rem 2rem;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
 }
 
+/* Buttons */
 .support-btn {
-    background: #ff6600;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 0.6rem 1.2rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: 0.3s ease;
-    display: flex;
-    align-items: center;
-    text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.3rem;
+  border-radius: 10px;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
 }
 
-.support-btn:hover {
-    background: #e65c00;
-    transform: translateY(-2px);
+.support-btn.call {
+  background: linear-gradient(135deg, #00C851, #007E33); /* Green */
 }
 
+.support-btn.call:hover {
+  background: linear-gradient(135deg, #009f42, #006629);
+}
+
+.support-btn.email {
+  background: linear-gradient(135deg, #0072FF, #00C6FF); /* Blue */
+}
+
+.support-btn.email:hover {
+  background: linear-gradient(135deg, #005ed4, #00a8e6);
+}
+
+/* Support Page Link */
+.support-page {
+  background: #ff6600;
+  color: #fff;
+  border-radius: 10px;
+  padding: 0.7rem 1.5rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.support-page:hover,
+.support-page.active {
+  background: #e65c00;
+  transform: translateY(-2px);
+}
+
+/* Location */
 .support-location {
-    display: flex;
-    align-items: center;
-    color: #333;
+  color: #333;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #fef1ec;
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
 }
 
 .text-orange {
-    color: #ff6600;
+  color: #ff6600;
 }
 
-/* Social icons styling */
+/* Social Icons */
 .social-icons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
 .social-icons a {
-    color: #ff6600;
-    background: #fff;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    transition: 0.3s ease;
-    text-decoration: none;
+  color: #ff6600;
+  background: #fff;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
 }
 
 .social-icons a:hover {
-    background: #ff6600;
-    color: #fff;
-    transform: translateY(-3px);
+  background: #ff6600;
+  color: #fff;
+  transform: translateY(-3px);
 }
 
 /* Responsive */
 @media (max-width: 600px) {
-    .support-line {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-    }
+  .support-line {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .support-btn, .support-page, .support-location {
+    width: 100%;
+    justify-content: center;
+  }
 }
 </style>
+
 
           
         </div>
