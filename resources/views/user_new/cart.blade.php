@@ -175,11 +175,38 @@
                         Remaining: ₦{{ number_format($limit - $totalAmount) }}
                     </div>
 
-                    <button class="checkout-btn"
+@php
+    $user = Auth::user();
+    $get_pending_orders = \App\Models\Order::where('status', 'pending')
+        ->where('user_id', $user->id)
+        ->count();
+
+    $has_issue = false;
+    $error_message = '';
+
+    if ($get_pending_orders > 0) {
+        $has_issue = true;
+        $error_message = 'You have an outstanding order, you cannot make a new order.';
+    } elseif ($user->loan_balance > 0) {
+        $has_issue = true;
+        $error_message = 'You have an outstanding loan, you cannot make a new order.';
+    }
+@endphp
+
+
+@if ($has_issue)
+    <button type="button" class="checkout-btn" onclick="showSessionModal('error', '{{ $error_message }}')">
+        <span>Proceed to Checkout</span>
+    </button>
+@else
+    <button class="checkout-btn"
                      {{-- {{ $totalAmount > $limit ? 'disabled' : '' }}  --}}
                      onclick="openCheckoutModal()">
                         <span>Proceed to Checkout</span>
                     </button>
+@endif
+
+                    
                 </div>
             </div>
         @endif
