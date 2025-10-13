@@ -57,15 +57,11 @@ class OrderController extends Controller
         $get_pending_orders = Order::where('status', 'pending')->where('user_id', Auth::user()->id)->count();
         if($get_pending_orders > 0){
             return response()->json(['success' => false, 'message' => 'You have an outstanding order, you cannot make a new order.'], 400);
-
-
-            
         }
-        if (Auth::check() && Auth::user()->loan_balance > 0) {
+        if (Auth::check() && Auth::user()->loan_balance > 0 && $request->payment_method==='loan') {
             return response()->json(['success' => false, 'message' => 'You have an outstanding loan, you cannot make a new order.'], 400);
         }
         
-
         foreach ($request->items as $item) {
             $food = $foods->get($item['id']);
             if (!$food) {
