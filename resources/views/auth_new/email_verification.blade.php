@@ -42,7 +42,7 @@
                     <i class="fa fa-spin fa-spinner d-none me-2" id="resendLoader"></i>
                     Resend OTP
                 </button>
-                <a href="{{ route('check_login') }}" class="btn btn-outline-secondary">
+                <a href="{{ route('logout') }}" class="btn btn-outline-secondary">
                     <i class="fa fa-arrow-left me-1"></i>
                     Back to Login
                 </a>

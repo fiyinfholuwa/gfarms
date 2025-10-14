@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
@@ -170,6 +171,27 @@ public function addAddress(Request $request)
 
         return GeneralController::sendNotification('', 'success', '', 'Your account has been deleted.');
     }
+
+
+    public function toggleStatus($id)
+{
+    $user = DB::table('users')->where('id', $id)->first();
+
+    if (!$user) {
+        return GeneralController::sendNotification('', 'error', '', 'User not found.');
+
+    }
+
+    $newStatus = ($user->account_status === 'active') ? 'inactive' : 'active';
+
+    DB::table('users')->where('id', $id)->update([
+        'account_status' => $newStatus,
+        'updated_at' => now(),
+    ]);
+    return GeneralController::sendNotification('', 'success', '', 'User account status changed to '.$newStatus);
+
+}
+
 
 
     public function sendOtp(Request $request)

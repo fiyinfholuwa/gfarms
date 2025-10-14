@@ -111,7 +111,6 @@ Route::middleware(['auth', 'onboard_kyc'])->group(function () {
     Route::get('/cart', [UserDashboardController::class, 'my_cart'])->name('cart');
 
     // Logout
-    Route::get('/logout', [UserDashboardController::class, 'logout'])->name('logout');
     Route::get('/user/payment', [PackageController::class, 'payment_user'])->name('user.payment');
     Route::get('/select-package', [PackageController::class, 'showForm'])->name('package.form');
 
@@ -213,6 +212,9 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/loan/management', [AdminController::class, 'manage_loan'])->name('manage.loan');
     Route::get('/admin/loan-history/{user_id}', [AdminController::class, 'view_loan_history'])->name('admin.loan_history');
 
+    Route::post('/admin/users/{id}/toggle-status', [UserDashboardController::class, 'toggleStatus'])->name('admin.users.toggleStatus');
+
+
 });
 
 
@@ -250,7 +252,6 @@ Route::middleware(['auth'])->group(function () {
     // Support
 
     // Logout
-    Route::get('/logout', [UserDashboardController::class, 'logout'])->name('logout');
     Route::get('/terms', [UserDashboardController::class, 'terms'])->name('terms');
 
     

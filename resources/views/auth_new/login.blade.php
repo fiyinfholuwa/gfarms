@@ -53,7 +53,7 @@
 
         {{-- Options --}}
         <div class="option mt-3 d-flex justify-content-between">
-            <a class="forgot" href="{{ route('password.request') }}">Forgot password?</a>
+            <a style="color:darkorange;" class="forgot " href="{{ route('password.request') }}">Forgot password?</a>
         </div>
 
         {{-- Submit --}}

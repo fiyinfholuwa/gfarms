@@ -696,7 +696,9 @@
                 
                 @foreach($order->items as $item)
                     <div class="order-item">
-                        <div class="item-icon"></div>
+                        <div class="item-icon">
+                                                <img src="{{ get_product_image($item['id']) }}" width="80" height="80" alt="Product Image" />
+</div>
                         
                         <div class="item-details">
                             <h4 class="item-name">{{ $item['name'] }}</h4>

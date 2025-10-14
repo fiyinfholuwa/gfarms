@@ -122,7 +122,7 @@
                     @foreach($cartItems as $id => $item)
                         <div class="cart-item" id="cart-item-{{ $id }}">
                             <div class="item-image">
-<img src="{{ get_product_image($id) }}" width="80" height="80" alt="Product Image" />
+<img src="{{ get_product_image($item['id']) }}" width="80" height="80" alt="Product Image" />
                             </div>
 
                             <div class="item-details">

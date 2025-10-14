@@ -67,7 +67,7 @@ public function launch(Request $request)
 
 
 
-public function handleWebhook(Request $request)
+public function handleWebhook_old(Request $request)
 {
     try {
         // Parse payload safely
@@ -113,6 +113,50 @@ public function handleWebhook(Request $request)
         return response()->json(['message' => 'Server error'], 500);
     }
 }
+
+
+public function handleWebhook(Request $request)
+{
+    try {
+        $payload = $request->all();
+        if (empty($payload)) {
+            $payload = json_decode($request->getContent(), true);
+        }
+
+       
+        if (($payload['verification_status'] ?? '') !== 'Completed') {
+            return response()->json(['message' => 'Verification not completed'], 200);
+        }
+
+        $email = $payload['data']['email']['data']['email'] ?? null;
+        if (!$email) {
+            return response()->json(['message' => 'Email not found in payload'], 400);
+        }
+
+        $user = User::where('email', $email)->first();
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        $bvn       = $payload['data']['government_data']['data']['bvn']['entity']['bvn'] ?? null;
+        $firstName = $payload['data']['government_data']['data']['bvn']['entity']['first_name'] ?? null;
+        $lastName  = $payload['data']['government_data']['data']['bvn']['entity']['last_name'] ?? null;
+
+        $user->first_name   = $firstName ?? $user->first_name;
+        $user->last_name    = $lastName ?? $user->last_name;
+        $user->bvn          = $bvn ?? $user->bvn; 
+        $user->kyc_response = json_encode($payload);
+        $user->has_done_kyc = 'yes';
+        $user->save();
+
+        return response()->json(['message' => 'User updated successfully']);
+    } catch (\Exception $e) {
+
+        return response()->json(['message' => 'Server error'], 500);
+    }
+}
+
+
 
 
 public function complete()
@@ -636,19 +680,84 @@ public function payment_user(Request $request)
         return json_decode($response->getBody(), true);
     }
 
+    public function fincra($email, $firstName, $lastName, $phone, $bvn = null, $bank = "wema")
+    {
+        try {
+            $payload = [
+                "accountType" => "individual",
+                "currency" => "NGN",
+                "channel" => $bank,
+                "KYCInformation" => [
+                    "firstName" => $firstName,
+                    "lastName" => $lastName,
+                    "email" => $email,
+                ],
+            ];
+    
+            // BVN is still valid and required for NGN accounts
+            if ($bvn) {
+                $payload["KYCInformation"]["bvn"] = $bvn;
+            }
+    
+            \Log::info('Fincra Request Payload:', $payload);
+    
+            $response = Http::withHeaders([
+                'accept' => 'application/json',
+                'api-key' => env('FINCRA_SECRET_KEY'),
+                'x-business-id' => env('FINCRA_BUSINESS_ID'),
+                'x-pub-key' => env('FINCRA_PUBLIC_KEY'),
+                'content-type' => 'application/json'
+            ])->post($this->get_base_url() . '/profile/virtual-accounts/requests', $payload);
+    
+            $data = $response->json();
+    
+            \Log::info('Fincra Response:', [
+                'status_code' => $response->status(),
+                'body' => $data,
+            ]);
+    
+            if (!$response->successful() || empty($data['success'])) {
+                return [
+                    "status" => false,
+                    "message" => $data['message'] ?? "Failed to create virtual account",
+                    "response" => $data
+                ];
+            }
+    
+            $accountData = $data['data']['accountInformation'] ?? [];
+    
+            return [
+                "status" => true,
+                "data" => [
+                    "account_name"   => $accountData['accountName'] ?? null,
+                    "account_number" => $accountData['accountNumber'] ?? null,
+                    "bank"           => $accountData['bankName'] ?? null,
+                ]
+            ];
+        } catch (\Exception $e) {
+            \Log::error('Fincra Exception:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+    
+            return [
+                "status" => false,
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+    
+
+
     public function generate_virtual_account()
 {
     $email = Auth::user()->email;
     $first_name = Auth::user()->first_name;
     $last_name = Auth::user()->last_name;
     $phone = Auth::user()->phone;
+    $bvn = Auth::user()->bvn ?? '22222222222';
 
-    $account = $this->generateVirtualAccountForUser(
-        $email,
-        $first_name,
-        $last_name,
-        $phone
-    );
+     $account = $this->fincra($email, $first_name, $last_name, $phone, $bvn);
 
     if (!empty($account['status']) && $account['status'] === true) {
         $user = User::findOrFail(Auth::id());
@@ -680,6 +789,7 @@ public function onboarding_page(){
 }
 
 }
+
 
 
 

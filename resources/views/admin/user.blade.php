@@ -13,7 +13,8 @@
                         <th>Contact</th>
                         <th>Role</th>
                         <th>Location</th>
-                        <th>Status</th>
+                        <th>Email  Status</th>
+                        <th>Account Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -65,6 +66,16 @@
                                 </span>
                             @endif
                         </td>
+
+
+                        <td>
+    @if ($user->account_status === 'active')
+        <span style="color:white;" class="badge bg-success">Active</span>
+    @else
+        <span style="color:white;" class="badge bg-danger">Suspended</span>
+    @endif
+</td>
+
                         <td>
                             <div class="action-buttons">
                                 <!-- View -->
@@ -144,6 +155,20 @@
         </div>
     </div>
 </div>
+
+                                <form action="{{ route('admin.users.toggleStatus', $user->id) }}" method="POST" style="display:inline;">
+    @csrf
+    <button type="submit" class="btn-action btn-delete" 
+            onclick="return confirm('Are you sure you want to change this user status?')"
+            title="Toggle Account Status">
+        @if ($user->account_status === 'active')
+            <i class="fas fa-user-slash" style="color:red;" title="Deactivate"></i>
+        @else
+            <i class="fas fa-user-check" style="color:green;" title="Activate"></i>
+        @endif
+    </button>
+</form>
+
 
                                 <!-- Delete -->
                                 <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline;">

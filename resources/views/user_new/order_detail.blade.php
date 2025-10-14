@@ -615,11 +615,11 @@
       <div class="modal-body text-center">
         <p>You must pay a <strong>₦1,000 processing fee</strong> to continue.</p>
         
-        <div class="form-check text-start my-2">
+        {{-- <div class="form-check text-start my-2">
           <input class="form-check-input" type="radio" name="gateway" id="paystackOption" value="paystack" checked>
           <label class="form-check-label" for="paystackOption">Pay with Paystack</label>
         </div>
-        
+         --}}
         <div class="form-check text-start">
           <input class="form-check-input" type="radio" name="gateway" id="fincraOption" value="fincra">
           <label class="form-check-label" for="fincraOption">Pay with Fincra</label>

@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function() {
         </button>
       </div>
       <div class="bank-info small text-muted">
-        <strong>{{ $accountData['bank']['name'] ?? '' }}</strong> — {{ $accountData['account_name'] ?? '' }}
+        <strong>{{ $accountData['bank'] ?? '' }}</strong> — {{ $accountData['account_name'] ?? '' }}
       </div>
     @endif
   </div>

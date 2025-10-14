@@ -104,6 +104,7 @@ class AuthController extends Controller
             if (Auth::user()->user_role === 'admin') {
                 return redirect()->route('admin.dashboard');
             }
+            
             if (Auth::user()->has_verified_email == 'no') {
                 return redirect()->route('otp.verify');
             } elseif (Auth::user()->has_paid_onboarding == 'yes') {
