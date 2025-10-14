@@ -47,9 +47,8 @@ public function store(Request $request): RedirectResponse
         'lga' => ['required', 'string'],
         'country' => ['required', 'string'],
         'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        'terms' => ['accepted'],
         'employee_status' => 'required',
-        'student_id' => 'required_if:employee_status,Student|file|mimes:jpg,jpeg,png,pdf|max:2048|nullable',
+        'student_id' => 'nullable|required_if:employee_status,Student|mimes:jpg,jpeg,png,pdf|max:2048',
         'school_name' => 'required_if:employee_status,Student|string|nullable|max:255',
 
     ]);
