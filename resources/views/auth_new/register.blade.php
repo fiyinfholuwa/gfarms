@@ -326,7 +326,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 });
             } else if (data.status === "success") {
-                showSessionModal('success', data.message + 'Redirecting in 5sec')
+                showSessionModal('success', data.message + ' Redirecting in 5sec')
 setTimeout(() => {
         window.location.href = data.redirect;
     }, 5000);            } else {

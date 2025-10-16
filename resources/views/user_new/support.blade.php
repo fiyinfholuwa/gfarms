@@ -1,13 +1,13 @@
 @extends('user_new.app')
 
 @section('content')
-<h1>Support</h1>
+<h1>Live Support</h1>
 
-<div style="height:80vh; margin-top:30px;">
+<div style="height:90vh; margin-top:30px;">
     <iframe 
         src="https://tawk.to/chat/64a3f86294cf5d49dc617131/1h4g84h8o" 
         width="100%" 
-        height="600" 
+        height="800" 
         style="border:none; border-radius:12px; box-shadow:0 0 10px rgba(0,0,0,0.1);"
         allow="microphone; camera"
     ></iframe>

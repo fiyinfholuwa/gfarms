@@ -86,7 +86,7 @@
 
             <!-- Buttons -->
             <div class="pwa-buttons">
-                <a style="display:none;" href="{{ route('pay.onboarding', ['gateway' => 'paystack']) }}" class="pwa-btn pwa-btn-primary">
+                <a style="" href="{{ route('pay.onboarding', ['gateway' => 'paystack']) }}" class="pwa-btn pwa-btn-primary">
                     Pay with Paystack
                 </a>
                 <a href="{{ route('pay.onboarding', ['gateway' => 'fincra']) }}" class="pwa-btn pwa-btn-secondary">
