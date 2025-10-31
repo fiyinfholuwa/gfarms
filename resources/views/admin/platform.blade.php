@@ -136,31 +136,7 @@
     <form action="{{ route('platform.update') }}" method="POST" enctype="multipart/form-data" id="platform-form">
         @csrf
 
-        {{-- Slider Section --}}
-        <div class="card-section">
-            <h3>Slider Images (Max 5)</h3>
-            <div id="slider-wrapper">
-                @php
-                    $existingImages = $settings && $settings->slider_images ? json_decode($settings->slider_images, true) : [];
-                @endphp
-                @foreach($existingImages as $img)
-                    <div class="slider-preview">
-                        <img src="{{ asset($img) }}" alt="slider">
-                        <button type="button" class="remove-btn">&times;</button>
-                        <input type="hidden" name="existing_slider_images[]" value="{{ $img }}">
-                    </div>
-                @endforeach
-            </div>
-            <button type="button" id="add-slider-btn">Add Image</button>
-        </div>
-
-        {{-- Login Terms Section --}}
-        <div class="card-section">
-            <h3>Login Terms of Use</h3>
-            <label for="myTextarea">Terms & Conditions</label>
-            <textarea class="form-control" id="myTextarea" name="login_terms" rows="6">{{ $settings?->login_terms }}</textarea>
-        </div>
-
+       
         {{-- Support Line & Social Section --}}
         <div class="card-section">
             <h3>Support Line & Social Links</h3>
@@ -173,7 +149,7 @@
                 <div class="col-half">
                     <label>Support Email</label>
                     <input class="form-control" type="email" name="support_email"
-                           value="{{ $settings?->support_email ?? 'support@aurelious.com' }}">
+                           value="{{ $settings?->support_email ?? 'support@GINELLA.com' }}">
                 </div>
                 <div class="col-half">
                     <label>Location</label>

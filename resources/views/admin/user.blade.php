@@ -85,12 +85,7 @@
                                 </a>
 
                                 
-                                <!-- View Repayment -->
-                                <a href="{{ route('admin.users.repayments', $user->id) }}" 
-                                   class="btn-action btn-repayment" title="View Repayments">
-                                    <i class="fas fa-file-invoice-dollar"></i>
-                                </a>
-
+                                
 <!-- Button to open modal -->
 <a href="#" 
    class="btn-action btn-repayment"

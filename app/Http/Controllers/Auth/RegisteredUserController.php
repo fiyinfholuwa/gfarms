@@ -47,40 +47,16 @@ class RegisteredUserController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
             'phone' => ['required', 'string', 'max:20'],
-            'state' => ['required', 'string'],
-            'lga' => ['required', 'string'],
-            'country' => ['required', 'string'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'employee_status' => 'required',
-            'student_id' => 'nullable|required_if:employee_status,Student|mimes:jpg,jpeg,png,pdf|max:2048',
-            'school_name' => 'required_if:employee_status,Student|string|nullable|max:255',
         ]);
 
-        // File upload
-        $studentIdPath = null;
-        if ($request->hasFile('student_id')) {
-            $file = $request->file('student_id');
-            $studentIdPath = 'uploads/student_ids/';
-            if (!file_exists(public_path($studentIdPath))) {
-                mkdir(public_path($studentIdPath), 0755, true);
-            }
-            $filename = time().'_'.$file->getClientOriginalName();
-            $file->move(public_path($studentIdPath), $filename);
-            $studentIdPath .= $filename;
-        }
-
+       
         // Create user
         $user = User::create([
             'first_name' => $validated['first_name'],
             'last_name' => $validated['last_name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'],
-            'state' => $validated['state'],
-            'lga' => $validated['lga'],
-            'country' => $validated['country'],
-            'employee_status' => $validated['employee_status'],
-            'student_id' => $studentIdPath,
-            'school_name' => $request->school_name,
             'password' => Hash::make($validated['password']),
         ]);
 
@@ -89,9 +65,9 @@ class RegisteredUserController extends Controller
         $otp = rand(100000, 999999);
         Cache::put('otp_' . $user->email, $otp, now()->addMinutes(10));
 
-        Mail::raw("Your Aurelious OTP Code is: {$otp}\n\nThis code expires in 10 minutes.", function($message) use ($user) {
+        Mail::raw("Your GINELLA OTP Code is: {$otp}\n\nThis code expires in 10 minutes.", function($message) use ($user) {
             $message->to($user->email)
-                    ->subject('Your Aurelious OTP Code');
+                    ->subject('Your GINELLA OTP Code');
         });
 
         Auth::login($user);
@@ -179,9 +155,9 @@ if ($request->hasFile('student_id')) {
     Cache::put('otp_' . $user->email, $otp, now()->addMinutes(10));
 
     // ✅ Send OTP email directly here
-    Mail::raw("Your Aurelious OTP Code is: {$otp}\n\nThis code expires in 10 minutes.", function($message) use ($user) {
+    Mail::raw("Your GINELLA OTP Code is: {$otp}\n\nThis code expires in 10 minutes.", function($message) use ($user) {
         $message->to($user->email)
-                ->subject('Your Aurelious OTP Code');
+                ->subject('Your GINELLA OTP Code');
     });
 
     // ✅ Login user

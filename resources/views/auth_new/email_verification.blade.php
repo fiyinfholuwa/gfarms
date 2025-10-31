@@ -2,78 +2,78 @@
 
 @section('content')
 <div class="auth-img">
-    <img class="img-fluid auth-bg" src="https://www.agrohandlers.com/uploaded_files/blog-pix/202309180828_ORGANIC-FOOD-STORE-BUSINESS-PLAN-IN-NIGERIA.jpg" alt="auth_bg" />
-    <div class="auth-content">
-        <div>
-            <h2>Email Verification</h2>
-            <h4 class="p-0">Enter the OTP sent to your email</h4>
-        </div>
-    </div>
+    
+    
 </div>
 
-<form class="auth-form" id="verifyOtpForm" method="POST" action="{{ route('otp.verify.submit') }}">
+<form style="margin-top:100px;" class="auth-form" id="verifyOtpForm" method="POST" action="{{ route('otp.verify.submit') }}">
     @csrf
     <div class="custom-container">
 
+<div class="auth-content text-center">
+        {{-- ✅ Logo section (same as login) --}}
+        
+        <div>
+            <h2 class="text-dark">Email Verification</h2>
+            <h4  class="text-dark p-0">Enter the 6-digit OTP sent to your email</h4>
+        </div>
+    </div>
+<div class="mb-4">
+           <a href="#">
+                    <img style="width:120px; text-align:center;" src="{{ asset('logo.png') }}" alt="Logo">
+                </a>
+                
+        </div>
+
         {{-- OTP Input Fields --}}
-        <div class="form-group">
+        <div class="form-group text-center mb-4">
             <div class="otp-input-group d-flex justify-content-center gap-2 mb-2">
                 @for($i = 0; $i < 6; $i++)
-                    <input type="text" name="otp[]" maxlength="1"
-                           class="otp-input form-control text-center"
-                           required>
+                    <input type="text" name="otp[]" maxlength="1" class="otp-input form-control text-center" required>
                 @endfor
             </div>
             <div id="otpMessage" class="text-center mt-2"></div>
         </div>
 
         {{-- Verify Button --}}
-        <div class="submit-btn mt-3">
+        <div class="submit-btn mb-3">
             <button type="submit" class="btn auth-btn w-100">
                 <i class="fa fa-spin fa-spinner d-none me-2" id="verifyLoader"></i>
                 Verify OTP
             </button>
         </div>
 
-        {{-- Action Buttons Container --}}
-        <div class="action-buttons mt-3">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <button type="button" id="resendOtpBtn" class="btn btn-outline-success">
-                    <i class="fa fa-spin fa-spinner d-none me-2" id="resendLoader"></i>
-                    Resend OTP
-                </button>
-                <a href="{{ route('logout') }}" class="btn btn-outline-secondary">
-                    <i class="fa fa-arrow-left me-1"></i>
-                    Back to Login
+        {{-- Bottom Links --}}
+        <div class="text-center mt-3">
+            <button type="button" id="resendOtpBtn" class="btn btn-link text-success fw-semibold">
+                <i class="fa fa-spin fa-spinner d-none me-2" id="resendLoader"></i>
+                Resend OTP
+            </button>
+            <p class="mt-2 mb-0">
+                <a href="{{ route('logout') }}" class="text-dark">
+                    <i class="fa fa-arrow-left me-1"></i> Back to Login
                 </a>
-            </div>
+            </p>
         </div>
     </div>
 </form>
 
-{{-- Font Awesome CDN --}}
+{{-- Font Awesome --}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-{{-- OTP Auto Navigation + AJAX --}}
+{{-- OTP Scripts --}}
 <script>
 document.querySelectorAll('.otp-input').forEach((input, index, arr) => {
     input.addEventListener('input', function () {
-        if (this.value.length === 1 && index < arr.length - 1) {
-            arr[index + 1].focus();
-        }
+        this.value = this.value.replace(/[^0-9]/g, '');
+        if (this.value.length === 1 && index < arr.length - 1) arr[index + 1].focus();
     });
     input.addEventListener('keydown', function (e) {
-        if (e.key === 'Backspace' && !this.value && index > 0) {
-            arr[index - 1].focus();
-        }
-    });
-    // Allow only numeric input
-    input.addEventListener('input', function () {
-        this.value = this.value.replace(/[^0-9]/g, '');
+        if (e.key === 'Backspace' && !this.value && index > 0) arr[index - 1].focus();
     });
 });
 
-// ✅ AJAX Verify OTP
+// ✅ Verify OTP
 document.getElementById('verifyOtpForm').addEventListener('submit', function (e) {
     e.preventDefault();
     const form = this;
@@ -92,42 +92,28 @@ document.getElementById('verifyOtpForm').addEventListener('submit', function (e)
         },
         body: JSON.stringify({
             otp: Array.from(form.querySelectorAll('input[name="otp[]"]'))
-                      .map(input => input.value)
-                      .join('') // ✅ join array into string e.g. "123456"
+                .map(i => i.value)
+                .join('')
         })
     })
     .then(async res => {
-        let data;
-        try {
-            data = await res.json();
-        } catch (err) {
-            throw new Error(`Invalid JSON response. HTTP status: ${res.status}`);
-        }
-
-        if (res.ok) {
-            // ✅ Success or failed but 200 OK
-            if (data.status) {
-                messageBox.innerHTML = `<span class="text-success"><i class="fa fa-check-circle"></i> ${data.message}</span>`;
-                setTimeout(() => window.location.href = "{{ route('check_login') }}", 1200);
-            } else {
-                messageBox.innerHTML = `<span class="text-danger"><i class="fa fa-exclamation-circle"></i> ${data.message}</span>`;
-                // Clear OTP inputs for retry
-                form.querySelectorAll('input[name="otp[]"]').forEach(input => input.value = '');
-            }
+        let data = await res.json().catch(() => ({}));
+        if (res.ok && data.status) {
+            messageBox.innerHTML = `<span class="text-success"><i class="fa fa-check-circle"></i> ${data.message}</span>`;
+            setTimeout(() => window.location.href = "{{ route('user.orders') }}", 1200);
         } else {
-            // ❌ Handle 400/422/etc
-            messageBox.innerHTML = `<span class="text-danger"><i class="fa fa-exclamation-circle"></i> ${data.message || 'Something went wrong.'}</span>`;
+            messageBox.innerHTML = `<span class="text-danger"><i class="fa fa-exclamation-circle"></i> ${data.message || 'Invalid OTP. Try again.'}</span>`;
+            form.querySelectorAll('.otp-input').forEach(i => i.value = '');
+            form.querySelector('.otp-input').focus();
         }
     })
     .catch(error => {
-        console.error('Error:', error);
         messageBox.innerHTML = `<span class="text-danger"><i class="fa fa-exclamation-triangle"></i> ${error.message}</span>`;
     })
     .finally(() => loader.classList.add('d-none'));
 });
 
-
-// ✅ AJAX Resend OTP
+// ✅ Resend OTP
 document.getElementById('resendOtpBtn').addEventListener('click', function () {
     const loader = document.getElementById('resendLoader');
     const messageBox = document.getElementById('otpMessage');
@@ -143,78 +129,68 @@ document.getElementById('resendOtpBtn').addEventListener('click', function () {
             "Content-Type": "application/json"
         }
     })
-    .then(res => {
-        if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
-    })
+    .then(res => res.json())
     .then(data => {
         if (data.success) {
             messageBox.innerHTML = `<span class="text-success"><i class="fa fa-check-circle"></i> ${data.message}</span>`;
-            // Clear OTP inputs after successful resend
-            document.querySelectorAll('.otp-input').forEach(input => input.value = '');
+            document.querySelectorAll('.otp-input').forEach(i => i.value = '');
             document.querySelector('.otp-input').focus();
-        } else if (data.message) {
-            messageBox.innerHTML = `<span class="text-danger"><i class="fa fa-exclamation-circle"></i> ${data.message}</span>`;
         } else {
-            messageBox.innerHTML = `<span class="text-danger"><i class="fa fa-exclamation-circle"></i> Unexpected response format</span>`;
+            messageBox.innerHTML = `<span class="text-danger"><i class="fa fa-exclamation-circle"></i> ${data.message || 'Could not resend OTP.'}</span>`;
         }
     })
-    .catch(error => {
-        console.error('Error:', error);
-        messageBox.innerHTML = `<span class="text-danger"><i class="fa fa-exclamation-triangle"></i>ç Failed to resend OTP. Please try again.</span>`;
+    .catch(() => {
+        messageBox.innerHTML = `<span class="text-danger"><i class="fa fa-exclamation-triangle"></i> Failed to resend OTP.</span>`;
     })
     .finally(() => loader.classList.add('d-none'));
 });
 </script>
 
-{{-- OTP Styles --}}
+{{-- Styling to Match Login Page --}}
 <style>
+.auth-form {
+    background-color: #d4edda; /* ✅ very light green background */
+    border-radius: 10px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+.auth-content h2 {
+    font-weight: 700;
+    color: #fff;
+}
+.auth-content h4 {
+    font-weight: 400;
+    color: #fff;
+    margin-top: 8px;
+}
 .otp-input {
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 52px;
     font-size: 20px;
     text-align: center;
     border-radius: 8px;
-    border: 2px solid #ddd;
+    border: 2px solid #ccc;
     transition: border-color 0.3s ease;
 }
-
 .otp-input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    border-color: #28a745;
+    box-shadow: 0 0 6px rgba(40, 167, 69, 0.3);
 }
-
-.action-buttons {
-    margin-top: 1.5rem;
+.btn.auth-btn {
+    background-color: #28a745;
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    transition: 0.3s ease;
 }
-
-.action-buttons .btn {
-    min-width: 140px;
-    padding: 8px 16px;
-    font-weight: 500;
+.btn.auth-btn:hover {
+    background-color: #218838;
 }
-
-.action-buttons .btn i {
-    font-size: 0.9em;
-}
-
-@media (max-width: 576px) {
-    .action-buttons .d-flex {
-        flex-direction: column;
-        gap: 0.75rem !important;
-    }
-    
-    .action-buttons .btn {
-        width: 100%;
-        min-width: auto;
-    }
-}
-
-/* Message styling */
-#otpMessage i {
-    margin-right: 5px;
+#otpMessage {
+    font-size: 0.9rem;
 }
 </style>
 @endsection

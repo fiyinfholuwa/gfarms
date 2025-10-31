@@ -590,13 +590,6 @@ public function payment_user(Request $request)
             $query->where('status', $request->status);
         }
         
-        if ($request->filled('gateway')) {
-            $query->where('gateway', $request->gateway);
-        }
-        
-        if ($request->filled('package')) {
-            $query->where('package', $request->package);
-        }
         
         if ($request->filled('date_from')) {
             $query->whereDate('created_at', '>=', $request->date_from);
@@ -623,7 +616,7 @@ public function payment_user(Request $request)
         $totalPayments = $allUserPayments->count();
         $successfulPayments = $allUserPayments->where('status', 'success')->count();
         
-        return view('user_new.transaction', compact(
+        return view('frontend.payment', compact(
             'payments', 
             'totalAmount', 
             'totalPayments', 

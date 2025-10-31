@@ -707,31 +707,6 @@ background: linear-gradient(
                     </select>
                 </div>
                 
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-credit-card" style="margin-right: 0.5rem; color: var(--info-color);"></i>
-                        Gateway
-                    </label>
-                    <select name="gateway" class="filter-select">
-                        <option value="">All Gateways</option>
-                        <option value="paystack" {{ request('gateway') == 'paystack' ? 'selected' : '' }}>Paystack</option>
-                        <option value="fincra" {{ request('gateway') == 'fincra' ? 'selected' : '' }}>Fincra</option>
-                        <option value="flutterwave" {{ request('gateway') == 'flutterwave' ? 'selected' : '' }}>Flutterwave</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label class="filter-label">
-                        <i class="fas fa-box" style="margin-right: 0.5rem; color: var(--warning-color);"></i>
-                        Package
-                    </label>
-                    <select name="package" class="filter-select">
-                        <option value="">All Packages</option>
-                        <option value="onboarding" {{ request('package') == 'onboarding' ? 'selected' : '' }}>Onboarding</option>
-                        <option value="premium" {{ request('package') == 'premium' ? 'selected' : '' }}>Premium</option>
-                        <option value="basic" {{ request('package') == 'basic' ? 'selected' : '' }}>Basic</option>
-                    </select>
-                </div>
                 
                 <div class="filter-group">
                     <label class="filter-label">

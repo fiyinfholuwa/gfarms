@@ -72,7 +72,7 @@ class AuthController extends Controller
             // Send email
             Mail::raw("Your new OTP code is: {$otp}\n\nIt expires in 10 minutes.\n\nIf you didn't request this, please ignore this email.", function ($message) use ($email) {
                 $message->to($email)
-                    ->subject('Your New Aurelious OTP Code')
+                    ->subject('Your New GINELLA OTP Code')
                     ->from(config('mail.from.address'), config('mail.from.name'));
             });
 
@@ -104,14 +104,13 @@ class AuthController extends Controller
             if (Auth::user()->user_role === 'admin') {
                 return redirect()->route('admin.dashboard');
             }
-            
+
             if (Auth::user()->has_verified_email == 'no') {
                 return redirect()->route('otp.verify');
-            } elseif (Auth::user()->has_paid_onboarding == 'yes') {
-                return redirect()->route('dashboard');
             } else {
                 return redirect()->route('login');
             }
+        
         } else {
             return redirect()->back();
         }

@@ -16,4 +16,15 @@ class Food extends Model
     {
         return $this->hasOne(Category::class, 'id', 'category');
     }
+
+    public function categoryInfo()
+    {
+        return $this->belongsTo(Category::class, 'category', 'id');
+    }
+
+    public function reviews()
+{
+    return $this->hasMany(\App\Models\FoodReview::class);
+}
+
 }

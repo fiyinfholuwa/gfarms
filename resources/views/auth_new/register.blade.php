@@ -1,241 +1,140 @@
 @extends('auth_new.app')
 
 @section('content')
+<div class="auth-wrapper d-flex flex-column flex-md-row">
+    <!-- Form Section -->
+    <div class="auth-form-container d-flex align-items-center justify-content-center">
+        <form style="background:#c3e6cb;" class="auth-form shadow-sm p-4 p-md-5 rounded-4 w-100" method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
+            @csrf
 
+            <div class="text-center mb-4">
+                <div class="brand-logo" style="text-align:center;">
+                    <a href="#">
+                        <img style="width:120px;" src="{{ asset('logo.png') }}" alt="Logo">
+                    </a>
+                    <h3 class="fw-bold mb-2 text-success">Create Account</h3>
+                    <p class="text-muted small">Join us today, it only takes a minute!</p>
+                </div>
+            </div>
 
+            {{-- Global Errors --}}
+            @if($errors->any())
+                <div class="alert alert-danger py-2">
+                    <ul class="mb-0 ps-3">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
+            {{-- First Name --}}
+            <div class="mb-3">
+                <label for="first_name" class="form-label fw-semibold">First Name</label>
+                <input type="text" id="first_name" name="first_name" class="form-control form-control-lg @error('first_name') is-invalid @enderror"
+                       value="{{ old('first_name') }}" placeholder="Enter First Name" required>
+                @error('first_name') <small class="text-danger">{{ $message }}</small> @enderror
+            </div>
 
-<div class="auth-img">
-    <img class="img-fluid auth-bg"
-        src="https://www.agrohandlers.com/uploaded_files/blog-pix/202309180828_ORGANIC-FOOD-STORE-BUSINESS-PLAN-IN-NIGERIA.jpg"
-        alt="auth_bg" />
-    <div class="auth-content">
-        <div>
-            <h2>Create Account</h2>
-            <h4 class="p-0">Join us today, it only takes a minute!</h4>
-        </div>
+            {{-- Last Name --}}
+            <div class="mb-3">
+                <label for="last_name" class="form-label fw-semibold">Last Name</label>
+                <input type="text" id="last_name" name="last_name" class="form-control form-control-lg @error('last_name') is-invalid @enderror"
+                       value="{{ old('last_name') }}" placeholder="Enter First Name" required>
+                @error('last_name') <small class="text-danger">{{ $message }}</small> @enderror
+            </div>
+
+            {{-- Email --}}
+            <div class="mb-3">
+                <label for="email" class="form-label fw-semibold">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control form-control-lg @error('email') is-invalid @enderror"
+                       value="{{ old('email') }}" placeholder="Enter Email" required>
+                @error('email') <small class="text-danger">{{ $message }}</small> @enderror
+            </div>
+
+            {{-- Phone --}}
+            <div class="mb-3">
+                <label for="phone" class="form-label fw-semibold">Phone Number</label>
+                <input type="text" id="phone" name="phone" class="form-control form-control-lg @error('phone') is-invalid @enderror"
+                       value="{{ old('phone') }}" placeholder="Enter Phone Number" required>
+                @error('phone') <small class="text-danger">{{ $message }}</small> @enderror
+            </div>
+
+            {{-- State --}}
+            <div class="mb-3">
+                <label for="state" class="form-label fw-semibold">State</label>
+                <select name="state" id="state" class="form-control form-control-lg @error('state') is-invalid @enderror" required>
+                    <option value="">Loading States...</option>
+                </select>
+                @error('state') <small class="text-danger">{{ $message }}</small> @enderror
+            </div>
+
+            {{-- LGA --}}
+            <div class="mb-3">
+                <label for="lga" class="form-label fw-semibold">Local Government Area (LGA)</label>
+                <select name="lga" id="lga" class="form-control form-control-lg @error('lga') is-invalid @enderror" required>
+                    <option value="">Select State First</option>
+                </select>
+                @error('lga') <small class="text-danger">{{ $message }}</small> @enderror
+            </div>
+
+            <input type="hidden" name="country" value="Nigeria">
+
+            {{-- Password --}}
+            <div class="mb-3 position-relative">
+                <label for="password" class="form-label fw-semibold">Password</label>
+                <input type="password" id="password" name="password" class="form-control form-control-lg ps-5 pe-5 @error('password') is-invalid @enderror"
+                       placeholder="Enter Password" required>
+                <i class="fas fa-lock position-absolute text-muted" style="top:50%; left:15px; transform:translateY(-50%);"></i>
+                <button type="button" class="toggle-password position-absolute text-muted"
+                    onclick="togglePassword('password', this)"
+                    style="right: 15px; top: 50%; transform: translateY(-50%); background:none; border:none;">
+                    <i class="fas fa-eye"></i>
+                </button>
+                @error('password') <small class="text-danger">{{ $message }}</small> @enderror
+            </div>
+
+            {{-- Confirm Password --}}
+            <div class="mb-3 position-relative">
+                <label for="password_confirmation" class="form-label fw-semibold">Confirm Password</label>
+                <input type="password" id="password_confirmation" name="password_confirmation"
+                       class="form-control form-control-lg ps-5 pe-5" placeholder="Re-enter Password" required>
+                <i class="fas fa-lock position-absolute text-muted" style="top:50%; left:15px; transform:translateY(-50%);"></i>
+                <button type="button" class="toggle-password position-absolute text-muted"
+                    onclick="togglePassword('password_confirmation', this)"
+                    style="right: 15px; top: 50%; transform: translateY(-50%); background:none; border:none;">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+
+            {{-- Submit --}}
+            <button type="submit" class="btn btn-orange w-100 py-2 fw-semibold">Create Account</button>
+
+            {{-- Already have account --}}
+            <div class="text-center mt-4">
+                <p class="mb-0 small">Already have an account?
+                    <a href="{{ route('login') }}" class="fw-semibold text-dark text-decoration-none">Sign In</a>
+                </p>
+            </div>
+        </form>
     </div>
 </div>
 
-<form class="auth-form" method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
-    @csrf
-    <div class="custom-container">
-
-        {{-- First Name --}}
-        <div class="form-group">
-            <label for="first_name" class="form-label">First Name</label>
-            <input type="text" id="first_name" name="first_name"
-                class="form-control @error('first_name') is-invalid @enderror"
-                placeholder="Match BVN Name" value="{{ old('first_name') }}" required>
-            @error('first_name')<small class="text-danger">{{ $message }}</small>@enderror
-        </div>
-
-        {{-- Last Name --}}
-        <div class="form-group">
-            <label for="last_name" class="form-label">Last Name</label>
-            <input type="text" id="last_name" name="last_name"
-                class="form-control @error('last_name') is-invalid @enderror"
-                placeholder="Match BVN Name" value="{{ old('last_name') }}" required>
-            @error('last_name')<small class="text-danger">{{ $message }}</small>@enderror
-        </div>
-
-        {{-- Email --}}
-        <div class="form-group">
-            <label for="email" class="form-label">Email Address</label>
-            <input type="email" id="email" name="email"
-                class="form-control @error('email') is-invalid @enderror"
-                placeholder="Enter Email" value="{{ old('email') }}" required>
-            @error('email')<small class="text-danger">{{ $message }}</small>@enderror
-        </div>
-
-        {{-- Phone --}}
-        <div class="form-group">
-            <label for="phone" class="form-label">Phone Number</label>
-            <input type="text" id="phone" name="phone"
-                class="form-control @error('phone') is-invalid @enderror"
-                placeholder="Number linked to your BVN" value="{{ old('phone') }}" required>
-            @error('phone')<small class="text-danger">{{ $message }}</small>@enderror
-        </div>
-
-        {{-- State --}}
-        <div class="form-group">
-            <label for="state" class="form-label">State</label>
-            <select name="state" id="state" class="form-control @error('state') is-invalid @enderror" required>
-                <option value="">Loading States...</option>
-            </select>
-            @error('state')<small class="text-danger">{{ $message }}</small>@enderror
-        </div>
-
-        {{-- LGA --}}
-        <div class="form-group">
-            <label for="lga" class="form-label">Local Government Area (LGA)</label>
-            <select name="lga" id="lga" class="form-control @error('lga') is-invalid @enderror" required>
-                <option value="">Select State First</option>
-            </select>
-            @error('lga')<small class="text-danger">{{ $message }}</small>@enderror
-        </div>
-
-        <input type="hidden" name="country" value="Nigeria">
-
-        {{-- Employee Status --}}
-        <div class="form-group">
-            <label for="employee_status" class="form-label">Employee Status</label>
-            <select id="employee_status" name="employee_status"
-                class="form-control @error('employee_status') is-invalid @enderror" required>
-                <option value="">Select Status</option>
-                <option value="Employed">Employed</option>
-                <option value="Non Student/Non Employed">Non Student / Non Employed</option>
-                <option value="Trader">Trader</option>
-                <option value="Student">Student</option>
-            </select>
-            @error('employee_status')<small class="text-danger">{{ $message }}</small>@enderror
-        </div>
-
-        {{-- Student Fields --}}
-        <div id="student_fields" style="display:none;">
-            <div class="form-group">
-                <label for="student_id" class="form-label">Student ID Card</label>
-                <input type="file" id="student_id" name="student_id"
-                    class="form-control @error('student_id') is-invalid @enderror">
-                @error('student_id')<small class="text-danger">{{ $message }}</small>@enderror
-            </div>
-
-            <div class="form-group">
-                <label for="school_name" class="form-label">School Name</label>
-                <input type="text" id="school_name" name="school_name"
-                    class="form-control @error('school_name') is-invalid @enderror"
-                    placeholder="Enter School Name">
-                @error('school_name')<small class="text-danger">{{ $message }}</small>@enderror
-            </div>
-        </div>
-
-        {{-- Password --}}
-        <div class="form-group position-relative">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" id="password" name="password"
-                class="form-control @error('password') is-invalid @enderror"
-                placeholder="Enter Password" required>
-            <button type="button" class="toggle-password" onclick="togglePassword('password')"
-                style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); border:none; background:transparent; cursor:pointer;">
-                👁
-            </button>
-            @error('password')<small class="text-danger">{{ $message }}</small>@enderror
-        </div>
-
-        {{-- Confirm Password --}}
-        <div class="form-group position-relative">
-            <label for="password_confirmation" class="form-label">Confirm Password</label>
-            <input type="password" id="password_confirmation" name="password_confirmation"
-                class="form-control" placeholder="Re-enter Password" required>
-            <button type="button" class="toggle-password" onclick="togglePassword('password_confirmation')"
-                style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); border:none; background:transparent; cursor:pointer;">
-                👁
-            </button>
-        </div>
-
-        {{-- Proceed Button --}}
-        <div class="submit-btn mt-3">
-            <button type="button" class="btn auth-btn w-100" id="proceedBtn">
-                <i class="fa fa-arrow-right"></i> Proceed
-            </button>
-        </div>
-
-        <h4 class="signup mt-3">
-            Already have an account?
-            <a style="color:black; font-weight:bold;" href="{{ route('login') }}">Sign In</a>
-        </h4>
-    </div>
-</form>
-
-<!-- Terms Modal -->
-<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true"
-     data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="termsModalLabel">Terms of Use</h5>
-      </div>
-
-      <div class="modal-body terms-content" style="max-height: 400px; overflow-y: auto; line-height: 1.6;">
-        {!! $settings->login_terms ?? "Not Set" !!}
-      </div>
-
-      <div class="modal-footer d-flex justify-content-between terms-footer" style="display: none; opacity: 0; transition: opacity 0.3s ease;">
-        <button  type="button" class="btn btn-dark" data-bs-dismiss="modal">Decline</button>
-        <button style="background:darkorange; color:white;" type="button" class="btn btn-warning" id="acceptTermsBtn">Accept</button>
-      </div>
-    </div>
-  </div>
-</div>
-
+{{-- Script --}}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('termsModal');
-
-    modal.addEventListener('shown.bs.modal', function() {
-        const termsBody = modal.querySelector('.terms-content');
-        const footer = modal.querySelector('.terms-footer');
-
-        // Always hide the buttons first when modal opens
-        footer.style.display = 'none';
-        footer.style.opacity = '0';
-
-        if (termsBody && footer) {
-            // When user scrolls
-            termsBody.addEventListener('scroll', function onScroll() {
-                const scrollPosition = termsBody.scrollTop + termsBody.clientHeight;
-                const scrollHeight = termsBody.scrollHeight;
-
-                // If user reaches bottom of scrollable area
-                if (scrollPosition >= scrollHeight - 5) {
-                    footer.style.display = 'flex';
-                    setTimeout(() => footer.style.opacity = '1', 50);
-                } else {
-                    // Hide again if user scrolls back up
-                    footer.style.opacity = '0';
-                    setTimeout(() => footer.style.display = 'none', 300);
-                }
-            });
-        }
-    });
-});
-</script>
-
-{{-- Scripts --}}
-<script>
-function togglePassword(fieldId) {
-    let field = document.getElementById(fieldId);
-    field.type = field.type === "password" ? "text" : "password";
+function togglePassword(id, btn) {
+    const input = document.getElementById(id);
+    const icon = btn.querySelector('i');
+    input.type = input.type === 'password' ? 'text' : 'password';
+    icon.classList.toggle('fa-eye-slash');
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    const employeeStatus = document.getElementById("employee_status");
-    const studentFields = document.getElementById("student_fields");
-    const studentIdInput = document.getElementById("student_id");
-    const schoolNameInput = document.getElementById("school_name");
-
-    function toggleStudentFields() {
-        if (employeeStatus.value === "Student") {
-            studentFields.style.display = "block";
-            studentIdInput.required = true;
-            schoolNameInput.required = true;
-        } else {
-            studentFields.style.display = "none";
-            studentIdInput.required = false;
-            schoolNameInput.required = false;
-            studentIdInput.value = "";
-            schoolNameInput.value = "";
-        }
-    }
-
-    employeeStatus.addEventListener("change", toggleStudentFields);
-    toggleStudentFields();
-
+document.addEventListener('DOMContentLoaded', function() {
     // Load states
     fetch("{{ url('/locations/states') }}")
         .then(res => res.json())
         .then(states => {
-            let stateDropdown = document.getElementById("state");
+            const stateDropdown = document.getElementById("state");
             stateDropdown.innerHTML = '<option value="">Select State</option>';
             states.forEach(state => {
                 stateDropdown.innerHTML += `<option value="${state.id}">${state.name}</option>`;
@@ -244,8 +143,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Load LGAs
     document.getElementById("state").addEventListener("change", function() {
-        let selectedState = this.value;
-        let lgaDropdown = document.getElementById("lga");
+        const selectedState = this.value;
+        const lgaDropdown = document.getElementById("lga");
         if (selectedState) {
             lgaDropdown.innerHTML = '<option>Loading LGAs...</option>';
             fetch("{{ url('/locations/lgas') }}/" + encodeURIComponent(selectedState))
@@ -262,90 +161,56 @@ document.addEventListener("DOMContentLoaded", function () {
             lgaDropdown.innerHTML = '<option value="">Select State First</option>';
         }
     });
-
-    // Proceed Button → Open Terms Modal
-    document.getElementById("proceedBtn").addEventListener("click", function() {
-        let termsModal = new bootstrap.Modal(document.getElementById("termsModal"));
-        termsModal.show();
-    });
-
-    
 });
-
-
 </script>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const form = document.querySelector(".auth-form");
-    const proceedBtn = document.getElementById("proceedBtn");
-    const acceptBtn = document.getElementById("acceptTermsBtn");
+<style>
+    :root {
+        --orange: #f79c42;
+        --orange-hover: #e7892d;
+    }
 
-    acceptBtn.addEventListener("click", async function () {
-        const modalEl = document.getElementById("termsModal");
-        const modalInstance = bootstrap.Modal.getInstance(modalEl);
-        modalInstance.hide();
+    .auth-wrapper {
+        min-height: 100vh;
+    }
 
-        // Clear previous validation messages
-        document.querySelectorAll(".text-danger").forEach(el => el.innerHTML = "");
+    .auth-form-container {
+        flex: 1;
+        padding: 2rem;
+    }
 
-        // Disable the Proceed button and show spinner
-        proceedBtn.disabled = true;
-        proceedBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Processing...';
+    .auth-form {
+        max-width: 480px;
+        background: #c3e6cb;
+    }
 
-        const formData = new FormData(form);
+    .form-control {
+        border: 1.8px solid #e3e6ea;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+    }
 
-        try {
-            const response = await fetch(form.action, {
-                method: "POST",
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest",
-                    "X-CSRF-TOKEN": document.querySelector("input[name='_token']").value,
-                },
-                body: formData
-            });
+    .form-control:focus {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 0.2rem rgba(247, 156, 66, 0.2);
+    }
 
-            const data = await response.json();
+    .btn-orange {
+        background-color: var(--orange);
+        color: #fff;
+        border: none;
+        transition: all 0.25s ease;
+    }
 
-            // Re-enable the Proceed button
-            proceedBtn.disabled = false;
-            proceedBtn.innerHTML = '<i class="fa fa-arrow-right"></i> Proceed';
+    .btn-orange:hover {
+        background-color: var(--orange-hover);
+    }
 
-            if (response.status === 422) {
-                // Validation errors
-                Object.keys(data.errors).forEach(field => {
-                    let input = document.querySelector(`[name="${field}"]`);
-                    if (input) {
-                        let errorTag = input.parentElement.querySelector(".text-danger");
-                        if (!errorTag) {
-                            errorTag = document.createElement("small");
-                            errorTag.classList.add("text-danger");
-                            input.parentElement.appendChild(errorTag);
-                        }
-                        errorTag.innerHTML = data.errors[field][0];
-                    }
-                });
-            } else if (data.status === "success") {
-                showSessionModal('success', data.message + ' Redirecting in 5sec')
-setTimeout(() => {
-        window.location.href = data.redirect;
-    }, 5000);            } else {
-            showSessionModal('error', data.message || "An unexpected error occurred.");
-
-            }
-
-        } catch (error) {
-            console.error(error);
-                        showSessionModal('error', error.message || "Network error, please try again.");
-
-
-            // Restore button if network fails
-            proceedBtn.disabled = false;
-            proceedBtn.innerHTML = '<i class="fa fa-arrow-right"></i> Proceed';
+    @media (max-width: 768px) {
+        .auth-form-container {
+            padding: 2rem 1.5rem;
         }
-    });
-});
-</script>
-
-
+    }
+</style>
 @endsection

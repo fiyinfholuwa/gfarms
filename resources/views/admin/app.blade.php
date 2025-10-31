@@ -7,7 +7,7 @@
 <head>
 
         <meta charset="utf-8" />
-        <title>Aurelious - Dashboard</title>
+        <title>GINELLA - Dashboard</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc."/>
         <meta name="author" content="Zoyothemes"/>
@@ -359,22 +359,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </a>
     </li>
 
-    <!-- Manage Support -->
-    <li class="{{ request()->routeIs('admin.support') ? 'active' : '' }}">
-        <a href="{{ route('admin.support') }}">
-            <i class="fas fa-headset"></i>
-            <span> Manage Support </span>
-        </a>
-    </li>
-
-    <!-- Manage Levels -->
-    <li class="{{ request()->routeIs('manage.account.level') ? 'active' : '' }}">
-        <a href="{{ route('manage.account.level') }}">
-            <i class="fas fa-layer-group"></i>
-            <span> Manage Levels </span>
-        </a>
-    </li>
-
+    
     <!-- Manage Users -->
     <li class="{{ request()->routeIs('manage.user') ? 'active' : '' }}">
         <a href="{{ route('manage.user') }}">
@@ -382,13 +367,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <span> Manage Users </span>
         </a>
     </li>
-    <!-- Manage Users -->
-    <li class="{{ request()->routeIs('manage.loan') ? 'active' : '' }}">
-        <a href="{{ route('manage.loan') }}">
-<i class="fas fa-money-bill-wave"></i>
-            <span> Manage Loans </span>
-        </a>
-    </li>
+    
     <li class="{{ request()->routeIs('platform') ? 'active' : '' }}">
         <a href="{{ route('platform') }}">
 <i class="fas fa-cog"></i>        <!-- simple gear -->

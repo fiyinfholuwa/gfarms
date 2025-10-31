@@ -135,45 +135,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12 col-lg-6 col-xl">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="widget-first">
-
-                                            <div class="d-flex align-items-center mb-2">
-                                                <div
-                                                    class="p-2 border border-success border-opacity-10 bg-success-subtle rounded-2 me-2">
-                                                    <div class="bg-success rounded-circle widget-size text-center">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                            viewBox="0 0 24 24">
-                                                            <g fill="none" stroke="#ffffff" stroke-linecap="round"
-                                                                stroke-linejoin="round" stroke-width="2">
-                                                                <path d="M5 19L19 5" />
-                                                                <circle cx="7" cy="7" r="3" />
-                                                                <circle cx="17" cy="17" r="3" />
-                                                            </g>
-                                                        </svg>
-                                                    </div>
-                                                </div>
-                                                <p class="mb-0 text-dark fs-15">Total Loan Amount</p>
-                                            </div>
-
-
-                                            <div class="d-flex justify-content-between align-items-center">
-<h3 class="mb-0 fs-22 text-dark me-3">₦{{ number_format($total_loan_amount, 2) }}</h3>
-
-                                                {{-- <div class="text-muted">
-                                                    <span class="text-primary fs-14 me-2"><i
-                                                            class="mdi mdi-trending-up fs-14"></i> 5.8%</span>
-                                                    <p class="text-dark fs-13 mb-0">Last 7 days</p>
-                                                </div> --}}
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
+                           
                         </div>
                         <!-- End Main Widgets -->
 

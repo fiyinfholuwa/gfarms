@@ -159,10 +159,10 @@
                         <span class="summary-value" id="items-total">₦{{ number_format($totalAmount) }}</span>
                     </div>
 
-                    <div class="summary-row">
+                    {{-- <div class="summary-row">
                         <span class="summary-label">Delivery</span>
                         <span class="summary-value">₦0.00</span>
-                    </div>
+                    </div> --}}
 
                     <div class="summary-row">
                         <span>Total</span>

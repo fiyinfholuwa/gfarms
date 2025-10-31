@@ -4,6 +4,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\PaymentWebhookController;
@@ -29,9 +31,21 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('/', function () {
-    return view('auth_new.login');
+
+
+Route::controller(FrontendController::class)->group(function () {
+    Route::get('/', 'home')->name('home');
+    Route::get('/about', 'about')->name('about');
+    Route::get('/shop', 'shop')->name('shop');
+    Route::get('/contact', 'contact')->name('contact');
+    Route::get('/shop/detail/{name}',  'shop_detail')->name('shop.detail');
+
 });
+
+Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
+
+
+
 
 Route::get('/dashboard', function () {
     // $recent_orders = Order::where('user_id', Auth::id())->paginate(5);
@@ -60,7 +74,7 @@ Route::post('/resend-otp', [AuthController::class, 'resend'])->name('otp.resend'
 
 
 // ✅ User Dashboard
-Route::middleware(['auth', 'onboard_kyc'])->group(function () {
+Route::middleware(['auth'])->group(function () {
 
     // routes/web.php or routes/api.php
     Route::get('/cart/count', function () {
@@ -89,8 +103,7 @@ Route::middleware(['auth', 'onboard_kyc'])->group(function () {
     Route::get('/apply-plan', [UserDashboardController::class, 'apply'])->name('user.apply.plan');
 
     // Foodstuff Packages
-    Route::get('/shop', [UserDashboardController::class, 'browse'])->name('user.packages');
-    Route::get('/shop/detail/{name}', [UserDashboardController::class, 'shop_detail'])->name('shop.detail');
+    // Route::get('/shop', [UserDashboardController::class, 'browse'])->name('user.packages');
     Route::get('/categories', [UserDashboardController::class, 'category'])->name('category');
     Route::get('/food/category/{name}', [UserDashboardController::class, 'food_category'])->name('food.category');
     Route::get('/my-packages', [UserDashboardController::class, 'myPackages'])->name('user.my.packages');
@@ -162,7 +175,8 @@ Route::delete('/orders/delete/{order}', [OrderController::class, 'delete_user_or
 Route::get('/pay/onboarding', [PackageController::class, 'startPayment'])->name('pay.onboarding');
 
 
-Route::get('/payment/callback', [PackageController::class, 'paymentCallback'])->name('package.callback');
+// Route::get('/payment/callback', [PackageController::class, 'flutterwaveCallback'])->name('package.callback');
+Route::get('/payment/callback', [OrderController::class, 'flutterwaveCallback'])->name('package.callback');
 
 Route::post('/kyc/webhook', [PackageController::class, 'webhook'])->name('kyc.webhook');
 
@@ -217,6 +231,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
 });
 
+
+Route::middleware('auth')->post('/food/{id}/review', [\App\Http\Controllers\FoodReviewController::class, 'store'])->name('food.review.store');
 
 Route::middleware(['auth'])->group(function () {
 

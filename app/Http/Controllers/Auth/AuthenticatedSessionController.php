@@ -41,11 +41,11 @@ public function store(LoginRequest $request): RedirectResponse
         ]);
     }
 
-    // Now safe to regenerate session
-    $request->session()->regenerate();
 
-    // Redirect for active users
-    return redirect()->intended(route('check_login', absolute: false));
+    $request->session()->regenerate();
+    session()->forget('url.intended');
+
+    return redirect()->intended(route('check_login', absolute: true));
 }
 
 

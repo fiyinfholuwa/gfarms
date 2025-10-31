@@ -17,15 +17,13 @@ class OrderController extends Controller
 {
     public function checkout(Request $request)
     {
-        // Decode items if it comes as JSON string
         if ($request->has('items') && is_string($request->items)) {
             $decoded = json_decode($request->items, true);
             if (json_last_error() === JSON_ERROR_NONE) {
                 $request->merge(['items' => $decoded]);
             }
         }
-    
-        // Validate basic cart
+
         $request->validate([
             'items' => 'required|array|min:1',
             'items.*.id' => 'required|integer',
@@ -33,35 +31,17 @@ class OrderController extends Controller
             'items.*.qty' => 'required|integer|min:1',
             'items.*.price' => 'required|numeric|min:0',
             'items.*.total' => 'required|numeric|min:0',
-            'total_amount' => 'required|numeric|min:0|max:500000',
-            'payment_method' => 'required|string|in:wallet,loan',
+            'total_amount' => 'required|numeric|min:0|max:5000000',
         ]);
-    
-        // Extra validation if loan
-        if ($request->payment_method === 'loan') {
-            $request->validate([
-                'bvn' => 'required|string|size:11',
-                'repayment_plan' => 'required|string|in:weekly,bi-weekly,semi-weekly',
-                'repayment_amount' => 'required|numeric|min:1',
-                'bill_image' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-                'bankStatement' => 'required|file|mimes:jpg,jpeg,png,pdf|max:4096',
-            ]);
-        }
-    
+
+
         // Validate items exist and prices are correct
         $foodIds = collect($request->items)->pluck('id');
         $foods = Food::whereIn('id', $foodIds)->get()->keyBy('id');
-    
+
         $calculatedTotal = 0;
 
-        $get_pending_orders = Order::where('status', 'pending')->where('user_id', Auth::user()->id)->count();
-        if($get_pending_orders > 0){
-            return response()->json(['success' => false, 'message' => 'You have an outstanding order, you cannot make a new order.'], 400);
-        }
-        if (Auth::check() && Auth::user()->loan_balance > 0 && $request->payment_method==='loan') {
-            return response()->json(['success' => false, 'message' => 'You have an outstanding loan, you cannot make a new order.'], 400);
-        }
-        
+
         foreach ($request->items as $item) {
             $food = $foods->get($item['id']);
             if (!$food) {
@@ -72,127 +52,199 @@ class OrderController extends Controller
             }
             $calculatedTotal += $item['qty'] * $item['price'];
         }
-    
+
         if (abs($calculatedTotal - $request->total_amount) > 0.01) {
             return response()->json(['success' => false, 'message' => 'Total amount mismatch. Please refresh and try again.'], 400);
         }
-    
         try {
-            DB::beginTransaction();
-    
-            $has_paid_delivery_fee = 'no';
-            $extra_fee = 1000;
-    
-            if ($request->payment_method == 'wallet') {
-                User::where('id', Auth::id())->decrement('wallet_balance', $request->total_amount + $extra_fee);
-                $has_paid_delivery_fee = 'yes';
-                $reference = strtoupper('Wallet') . '_' . Str::uuid();
-    
-                DB::table('payments')->insert([
-                    'user_id'    => Auth::id(),
-                    'package'    => 'purchase',
-                    'reference'  => $reference,
-                    'amount'     => $request->total_amount + $extra_fee,
-                    'status'     => 'success',
-                    'gateway'    => 'wallet',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-    
-            // Handle uploads if loan
-            $utilityBillFile = null;
-            $bankStatement = null;
-    
-            if ($request->payment_method === 'loan') {
-                if ($request->hasFile('bill_image')) {
-                    $file = $request->file('bill_image');
-                    $utilityBillFileName = time() . '_utility.' . $file->getClientOriginalExtension();
-                
-                    $utilityBillPath = 'uploads/utility_bills';
-                    if (!file_exists($utilityBillPath)) {
-                        mkdir($utilityBillPath, 0755, true);
-                    }
-                
-                    $file->move($utilityBillPath, $utilityBillFileName);
-                
-                    // Save full path
-                    $utilityBillFile = $utilityBillPath . '/' . $utilityBillFileName;
-                }
-                
-                if ($request->hasFile('bankStatement')) {
-                    $file = $request->file('bankStatement');
-                    $bankStatementFileName = time() . '_bank.' . $file->getClientOriginalExtension();
-                
-                    $bankStatementPath = 'uploads/bank_statements';
-                    if (!file_exists($bankStatementPath)) {
-                        mkdir($bankStatementPath, 0755, true);
-                    }
-                
-                    $file->move($bankStatementPath, $bankStatementFileName);
-                
-                    // Save full path
-                    $bankStatement = $bankStatementPath . '/' . $bankStatementFileName;
-                }
-                
-            }
-    
-            // Create order
-            $order = Order::create([
+            $orderId = Order::generateOrderNumber();
+            Order::create([
                 'user_id' => Auth::id(),
-                'order_number' => Order::generateOrderNumber(),
+                'order_number' => $orderId,
                 'total_amount' => $request->total_amount,
                 'items' => $request->items,
                 'notes' => $request->notes,
                 'status' => 'pending',
                 'phone_number' => $request->phone_number,
                 'delivery_address' => $request->address,
-                'payment_method' => $request->payment_method,
+                'payment_method' =>  "Online Payment",
                 'repayment_plan' => $request->repayment_plan ?? null,
-                'has_paid_delivery_fee' => $has_paid_delivery_fee,
-                'utility_bill_file' => $utilityBillFile,
-                'bank_statement' => $bankStatement,
-                'bvn' => $request->bvn,
-                'repayment_amount' => $request->repayment_amount,
+                'has_paid_delivery_fee' => "no",
+                'utility_bill_file' => "",
+                'bank_statement' => "",
+                'bvn' => "",
+                'repayment_amount' => 0,
             ]);
-    
-            // Loan balance update
-            $update_loan_amount  = $request->payment_method === 'loan' ? $request->total_amount : 0;
-    
-            // Clear user's cart
             Cart::where('user_id', Auth::id())->delete();
-    
-            User::where('id', Auth::id())->update([
-                'last_payment_method' => $request->payment_method,
-            ]);
-    
-            // if ($update_loan_amount > 0) {
-            //     User::where('id', Auth::id())->increment('loan_balance', $update_loan_amount);
-            // }
-    
             DB::commit();
-    
-            return response()->json([
-                'success' => true,
-                'message' => 'Order placed successfully!',
-                'order' => [
-                    'id' => $order->id,
-                    'order_number' => $order->order_number,
-                    'total_amount' => $order->total_amount,
-                    'status' => $order->status
-                ]
-            ]);
+
+            return response()->json(self::startPayment($request->total_amount, $orderId ));
         } catch (\Exception $e) {
             DB::rollback();
-    
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to place order. Please try again. ' . $e->getMessage()
             ], 500);
         }
     }
-    
 
+
+
+
+    public static function startPayment($amount,$orderId)
+{
+    $user = Auth::user();
+    $reference = 'FLW_' . strtoupper(Str::uuid());
+    // Save pending payment
+    DB::table('payments')->insert([
+        'user_id'    => $user->id,
+        'package'    => $orderId,
+        'reference'  => $reference,
+        'amount'     => $amount,
+        'status'     => 'pending',
+        'gateway'    => 'flutterwave',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    // ✅ Create Flutterwave Payment
+    $paymentResponse = self::createFlutterwavePayment($user, $amount, $reference);
+    if (empty($paymentResponse['url'])) {
+        return ['status' => false, 'message' => 'Payment Service is Down, Kindly Try Again Later or Reach out to Admin for Assistance'];
+    }
+
+    return $paymentResponse;
+}
+
+
+public static function flutterwaveCallback(Request $request)
+{
+    $status = $request->query('status');
+    $tx_ref = $request->query('tx_ref');
+    $transaction_id = $request->query('transaction_id');
+
+    // Fetch the payment record
+    $payment = DB::table('payments')->where('reference', $tx_ref)->first();
+
+    if (!$payment) {
+        return GeneralController::sendNotification(
+            'home',
+            'error',
+            'Payment Not Found!',
+            'We could not locate this payment reference.'
+        );
+    }
+
+    // Proceed only if Flutterwave sent completed/successful status
+    if (in_array($status, ['completed', 'successful'])) {
+        $verify = self::verifyFlutterwavePayment($transaction_id);
+
+        if ($verify['status']) {
+            DB::table('payments')->where('reference', $tx_ref)->update([
+                'status' => 'success',
+                'updated_at' => now(),
+            ]);
+
+            // ✅ If this payment was for an order, update that order status
+            if (!empty($payment->package)) {
+                Order::where('order_number', $payment->package)->update(['status' => 'paid']);
+            }
+
+            return GeneralController::sendNotification(
+                'home',
+                'success',
+                'Payment Successful!',
+                'Your payment was verified successfully.'
+            );
+        }
+    }
+
+    // ❌ If failed or not verified
+    DB::table('payments')->where('reference', $tx_ref)->update([
+        'status' => 'failed',
+        'updated_at' => now(),
+    ]);
+
+    return GeneralController::sendNotification(
+        'home',
+        'error',
+        'Payment Failed!',
+        'Your payment could not be verified.'
+    );
+}
+
+
+private static function verifyFlutterwavePayment($transactionId)
+{
+    $flutterwaveSecret = "FLWSECK_TEST-8b272f9980fbdb0c8432798843b07dfe-X";
+
+    $curl = curl_init();
+    curl_setopt_array($curl, [
+        CURLOPT_URL => "https://api.flutterwave.com/v3/transactions/$transactionId/verify",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER => [
+            "Authorization: Bearer $flutterwaveSecret"
+        ],
+    ]);
+
+    $response = curl_exec($curl);
+    curl_close($curl);
+
+    $result = json_decode($response, true);
+
+    // Debug output for now
+    // dd($result);
+
+    if (!empty($result['status']) && $result['status'] === 'success' && $result['data']['status'] === 'successful') {
+        return ['status' => true, 'data' => $result['data']];
+    }
+
+    return ['status' => false, 'message' => $result['message'] ?? 'Verification failed'];
+}
+
+
+private static function createFlutterwavePayment($user, $amount, $reference)
+{
+    $flutterwaveSecret = "FLWSECK_TEST-8b272f9980fbdb0c8432798843b07dfe-X"; // from .env
+    $callbackUrl = route('package.callback');
+
+    $payload = [
+        "tx_ref" => $reference,
+        "amount" => $amount,
+        "currency" => "NGN",
+        "redirect_url" => $callbackUrl,
+        "customer" => [
+            "email" => $user->email,
+            "name" => $user->name,
+        ],
+        "customizations" => [
+            "title" => "Product Payment",
+        ],
+    ];
+
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => "https://api.flutterwave.com/v3/payments",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => [
+            "Authorization: Bearer $flutterwaveSecret",
+            "Content-Type: application/json"
+        ],
+        CURLOPT_POSTFIELDS => json_encode($payload),
+    ]);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $result = json_decode($response, true);
+
+    if (!empty($result['status']) && $result['status'] === 'success') {
+        return ['url' => $result['data']['link'], 'status' => true, 'message' => 'payment linked generated'];
+    }
+
+    return ['status' => false, 'message' => $result['message'] ?? 'Unknown error'];
+}
 
 
     public function index()
@@ -201,14 +253,14 @@ class OrderController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('user_new.order', compact('orders'));
+        return view('frontend.orders', compact('orders'));
     }
 
     public function show($order)
     {
 
         $order = Order::where('order_number', '=', $order)->first();
-        return view('user_new.order_detail', compact('order'));
+        return view('frontend.order_detail', compact('order'));
     }
     public function admin_order_show($order)
     {
@@ -236,24 +288,25 @@ class OrderController extends Controller
 
 
     public function delete_user_order($orderNumber)
-{
-    $order = Order::where('id', $orderNumber)
-                ->where('user_id', auth()->id())
-                ->firstOrFail();
+    {
+        $order = Order::where('id', $orderNumber)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
 
-    if ($order->status !== 'pending') {
-        return GeneralController::sendNotification('', 'error', '', 'Only pending orders can be deleted.');
+        if ($order->status !== 'pending') {
+            return GeneralController::sendNotification('', 'error', '', 'Only pending orders can be deleted.');
+        }
+
+        $order->delete();
+
+        return GeneralController::sendNotification('', 'success', '', 'Order deleted successfully.');
     }
 
-    $order->delete();
-
-    return GeneralController::sendNotification('', 'success', '', 'Order deleted successfully.');
-}
-
-public function admin_user_repayment($id){
-$payments = Payment::where('user_id', $id)->where('package', 'loan_repayment')->get();
-$info = User::find($id);
-$full_name = $info->first_name . " ". $info->last_name;
-return view('admin.user_repayment', compact('payments', 'full_name'));
-}
+    public function admin_user_repayment($id)
+    {
+        $payments = Payment::where('user_id', $id)->where('package', 'loan_repayment')->get();
+        $info = User::find($id);
+        $full_name = $info->first_name . " " . $info->last_name;
+        return view('admin.user_repayment', compact('payments', 'full_name'));
+    }
 }

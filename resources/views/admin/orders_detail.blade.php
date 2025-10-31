@@ -3,277 +3,147 @@
 @section('content')
 <style>
     :root {
-        --primary-color: #6366f1;
-        --primary-dark: #4338ca;
-        --success-color: #10b981;
-        --success-dark: #059669;
-        --danger-color: #ef4444;
-        --danger-dark: #dc2626;
-        --warning-color: #f59e0b;
-        --warning-dark: #d97706;
-        --text-primary: #1f2937;
-        --text-secondary: #6b7280;
-        --bg-primary: #ffffff;
-        --bg-secondary: #f9fafb;
-        --bg-tertiary: #f3f4f6;
-        --border-color: #e5e7eb;
-        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        --radius-sm: 0.375rem;
-        --radius-md: 0.5rem;
-        --radius-lg: 0.75rem;
-        --radius-xl: 1rem;
+        --primary: #ff9800; /* light orange */
+        --primary-dark: #e68900;
+        --accent: #16a34a; /* green */
+        --accent-dark: #15803d;
+        --text-dark: #1f2937;
+        --text-light: #6b7280;
+        --bg: #fffaf5;
+        --bg-light: #fff;
+        --border: #f3f4f6;
+        --radius: 0.75rem;
+        --shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     }
 
+    
 
-    /* Card-style refinement */
-.order-details, .order-management {
-    background: #ffffff;
-    border-radius: var(--radius-xl);
-    padding: 2rem;
-    box-shadow: var(--shadow-md);
-    border: 1px solid #f1f5f9;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
+    .order-container {
+        margin: 2rem auto;
+        background: var(--bg-light);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+        overflow: hidden;
+    }
 
-.order-details:hover, .order-management:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lg);
-}
-
-/* Section title styling */
-.section-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    border-left: 4px solid var(--primary-color);
-    padding-left: 0.75rem;
-}
-
-/* Info-item refinements */
-.info-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.25rem;
-    background: #f8fafc;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border-color);
-    transition: all 0.2s ease;
-}
-
-.info-item:hover {
-    background: #f1f5f9;
-    border-color: var(--primary-color);
-}
-
-/* Buttons hierarchy */
-.back-btn {
-    background: linear-gradient(135deg, #6366f1, #4338ca);
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--radius-lg);
-    font-weight: 600;
-    box-shadow: var(--shadow-md);
-}
-
-.back-btn:hover {
-    background: linear-gradient(135deg, #4f46e5, #3730a3);
-    transform: translateY(-2px);
-}
-
-/* Order item refinement */
-.order-item {
-    background: #ffffff;
-    border-radius: var(--radius-lg);
-    padding: 1.25rem;
-    border: 1px solid #e5e7eb;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.order-item:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-3px);
-}
-
-/* Notes section enhancement */
-.notes-section {
-    background: #fefce8;
-    border: 1px solid #fef08a;
-    border-radius: var(--radius-lg);
-    padding: 1.5rem;
-    font-style: italic;
-}
-
-
+    /* Header */
     .order-header {
-        margin-bottom: 2rem;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: #fff;
+        padding: 1.5rem 2rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
-        gap: 1rem;
-        background: var(--bg-primary);
-        padding: 2rem;
-        border-radius: var(--radius-xl);
-        box-shadow: var(--shadow-sm);
-        border: 1px solid var(--border-color);
     }
 
-    .order-title {
-        font-size: 2rem;
+    .order-header h2 {
+        font-size: 1.5rem;
         font-weight: 700;
-        color: var(--text-primary);
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
-
-    .order-number {
-        background: var(--primary-color);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: var(--radius-lg);
-        font-size: 0.875rem;
-        font-weight: 600;
     }
 
     .back-btn {
-        background: var(--text-secondary);
-        color: white;
+        background: rgba(255, 255, 255, 0.2);
         border: none;
-        border-radius: var(--radius-lg);
-        padding: 0.75rem 1.25rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s ease;
+        padding: 0.6rem 1rem;
+        border-radius: var(--radius);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 500;
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        text-decoration: none;
+        transition: background 0.3s;
     }
 
     .back-btn:hover {
-        background: var(--text-primary);
-        transform: translateY(-1px);
-        box-shadow: var(--shadow-lg);
+        background: rgba(255, 255, 255, 0.3);
     }
 
-    
-    .order-details {
-        background: var(--bg-primary);
-        border-radius: var(--radius-xl);
-        padding: 2rem;
-        box-shadow: var(--shadow-sm);
-        border: 1px solid var(--border-color);
-    }
-
-    .order-management {
-        background: var(--bg-primary);
-        border-radius: var(--radius-xl);
-        padding: 2rem;
-        box-shadow: var(--shadow-sm);
-        border: 1px solid var(--border-color);
-        position: sticky;
-        top: 2rem;
-    }
-
-    .section-title {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    /* Order Status */
-    .status-display {
+    /* Status badge */
+    .status-badge {
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        padding: 0.75rem 1.25rem;
-        border-radius: var(--radius-lg);
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
         font-weight: 600;
-        font-size: 1rem;
         text-transform: capitalize;
+    }
+
+    .status-pending { background: #fff3cd; color: #856404; }
+    .status-paid { background: #cfe2ff; color: #084298; }
+    .status-confirmed { background: #e0f7fa; color: #006064; }
+    .status-preparing { background: #ffe0b2; color: #e65100; }
+    .status-ready, .status-delivered { background: #d1fae5; color: #065f46; }
+    .status-cancelled { background: #fee2e2; color: #991b1b; }
+
+    /* Body Sections */
+    .order-body {
+        padding: 2rem;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 1rem;
+        border-left: 4px solid var(--accent);
+        padding-left: 0.75rem;
+    }
+
+    .info-card {
+        background: #fafafa;
+        padding: 1.25rem;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
         margin-bottom: 1.5rem;
     }
 
-    .status-pending { background: #fef3c7; color: #92400e; }
-    .status-confirmed { background: #dbeafe; color: #1e40af; }
-    .status-preparing { background: #e0e7ff; color: #3730a3; }
-    .status-ready { background: #dcfce7; color: #166534; }
-    .status-delivered { background: #dcfce7; color: #166534; }
-    .status-cancelled { background: #fee2e2; color: #991b1b; }
-
-    /* Order Info Grid */
-    .info-grid {
-        display: grid;
-        gap: 1rem;
-        margin-bottom: 2rem;
-    }
-
-    .info-item {
+    .info-row {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        padding: 1rem;
-        background: var(--bg-secondary);
-        border-radius: var(--radius-md);
-        border: 1px solid var(--border-color);
+        padding: 0.5rem 0;
+        border-bottom: 1px dashed var(--border);
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
     }
 
     .info-label {
-        font-weight: 600;
-        color: var(--text-secondary);
+        color: var(--text-light);
+        font-weight: 500;
     }
 
     .info-value {
         font-weight: 600;
-        color: var(--text-primary);
+        color: var(--text-dark);
     }
 
-    /* Order Items */
-    .order-items {
-        margin-bottom: 2rem;
-    }
-
+    /* Items */
     .order-item {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        padding: 1.25rem;
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-lg);
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1rem;
         margin-bottom: 1rem;
-        background: var(--bg-primary);
-        transition: all 0.2s ease;
+        box-shadow: var(--shadow);
+        transition: transform 0.2s;
     }
 
     .order-item:hover {
-        box-shadow: var(--shadow-md);
-        transform: translateY(-1px);
+        transform: translateY(-2px);
     }
 
-    .order-item:last-child {
-        margin-bottom: 0;
-    }
-
-    .item-icon {
-        width: 60px;
-        height: 60px;
-        background: var(--bg-tertiary);
-        border-radius: var(--radius-md);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        color: var(--text-secondary);
-        flex-shrink: 0;
+    .order-item img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: var(--radius);
     }
 
     .item-details {
@@ -283,661 +153,159 @@
 
     .item-name {
         font-weight: 600;
-        font-size: 1.125rem;
+        color: var(--text-dark);
         margin-bottom: 0.25rem;
-        color: var(--text-primary);
     }
 
     .item-meta {
-        font-size: 0.875rem;
-        color: var(--text-secondary);
-        display: flex;
-        gap: 1rem;
+        font-size: 0.9rem;
+        color: var(--text-light);
     }
 
     .item-total {
         font-weight: 700;
-        font-size: 1.125rem;
-        color: var(--primary-color);
+        color: var(--accent-dark);
+        font-size: 1rem;
     }
 
-    .total-summary {
-        border-top: 2px solid var(--border-color);
-        padding-top: 1.5rem;
+    .order-total {
         text-align: right;
-    }
-
-    .total-amount {
-        font-size: 1.5rem;
+        margin-top: 1rem;
+        font-size: 1.3rem;
         font-weight: 700;
-        color: var(--text-primary);
+        color: var(--primary-dark);
     }
 
-    /* Management Panel */
-    .management-section {
-        margin-bottom: 2rem;
-        padding: 1.5rem;
-        background: var(--bg-secondary);
-        border-radius: var(--radius-lg);
-        border: 1px solid var(--border-color);
-    }
-
-    .management-section:last-child {
-        margin-bottom: 0;
-    }
-
-    .section-header {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
-    }
-
-    .section-icon {
-        font-size: 1.25rem;
-    }
-
-    .section-label {
-        font-weight: 600;
-        color: var(--text-primary);
-    }
-
-    .current-value {
-        font-size: 0.875rem;
-        color: var(--text-secondary);
-        margin-left: auto;
-    }
-
-    /* Form Controls */
-    .form-group {
-        margin-bottom: 1rem;
-    }
-
-    .form-group:last-child {
-        margin-bottom: 0;
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 0.75rem;
-        border: 2px solid var(--border-color);
-        border-radius: var(--radius-md);
-        font-size: 1rem;
-        transition: all 0.2s ease;
-        background: var(--bg-primary);
-    }
-
-    .form-control:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-    }
-
-    .radio-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-
-    .radio-option {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.75rem;
-        border: 2px solid var(--border-color);
-        border-radius: var(--radius-md);
-        cursor: pointer;
-        transition: all 0.2s ease;
-        background: var(--bg-primary);
-    }
-
-    .radio-option:hover {
-        border-color: var(--primary-color);
-        background: rgba(99, 102, 241, 0.05);
-    }
-
-    .radio-option.selected {
-        border-color: var(--primary-color);
-        background: rgba(99, 102, 241, 0.1);
-    }
-
-    .radio-input {
-        margin: 0;
-    }
-
-    .radio-label {
-        font-weight: 600;
-        color: var(--text-primary);
-        flex: 1;
-    }
-
-    .radio-description {
-        font-size: 0.875rem;
-        color: var(--text-secondary);
-    }
-
-    /* Action Buttons */
-    .action-buttons {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-        margin-top: 2rem;
-    }
-
-    .update-btn {
-        width: 100%;
-        padding: 1rem;
-        border: none;
-        border-radius: var(--radius-lg);
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        font-size: 1rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-    }
-
-    .btn-delivery {
-        background: var(--success-color);
-        color: white;
-    }
-
-    .btn-delivery:hover {
-        background: var(--success-dark);
-        transform: translateY(-1px);
-    }
-
-    .btn-payment {
-        background: var(--warning-color);
-        color: white;
-    }
-
-    .btn-payment:hover {
-        background: var(--warning-dark);
-        transform: translateY(-1px);
-    }
-
-    .btn-fee {
-        background: var(--primary-color);
-        color: white;
-    }
-
-    .btn-fee:hover {
-        background: var(--primary-dark);
-        transform: translateY(-1px);
-    }
-
-    /* Loading & Success States */
-    .loading {
-        opacity: 0.6;
-        pointer-events: none;
-    }
-
-    .spinner {
-        width: 1rem;
-        height: 1rem;
-        border: 2px solid transparent;
-        border-top: 2px solid currentColor;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    /* Alerts */
-    .alert {
-        position: fixed;
-        top: 1rem;
-        right: 1rem;
-        padding: 1rem 1.5rem;
-        border-radius: var(--radius-lg);
-        color: white;
-        font-weight: 600;
-        z-index: 1000;
-        transform: translateX(400px);
-        transition: transform 0.3s ease;
-        max-width: 300px;
-    }
-
-    .alert.show {
-        transform: translateX(0);
-    }
-
-    .alert.error {
-        background: var(--danger-color);
-    }
-
-    .alert.success {
-        background: var(--success-color);
-    }
-
-    /* Notes Display */
     .notes-section {
-        background: #f8fafc;
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-lg);
-        padding: 1.5rem;
-        margin-top: 1.5rem;
-    }
-
-    .notes-title {
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .notes-content {
-        color: var(--text-secondary);
+        background: #fffaf0;
+        border: 1px solid var(--border);
+        border-left: 4px solid var(--primary);
+        padding: 1rem;
+        border-radius: var(--radius);
+        margin-top: 2rem;
         font-style: italic;
-        line-height: 1.5;
+        color: var(--text-light);
     }
 
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .order-content {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
+    /* Modal override */
+    .modal-header {
+        background: var(--primary-dark);
+        color: #fff;
+    }
 
+    .btn-orange {
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        font-weight: 600;
+        border-radius: var(--radius);
+        padding: 0.8rem;
+        width: 100%;
+        transition: background 0.2s;
+    }
+
+    .btn-orange:hover {
+        background: var(--primary-dark);
+    }
+
+    @media (max-width: 768px) {
         .order-header {
             flex-direction: column;
             align-items: flex-start;
         }
-
-        .order-title {
-            font-size: 1.5rem;
-        }
-
-        .order-management {
-            position: static;
-        }
-
-        .item-meta {
+        .info-row {
             flex-direction: column;
-            gap: 0.25rem;
+            align-items: flex-start;
         }
     }
 </style>
 
-<div class="container">
-    <!-- Order Header -->
+<div class="order-container">
+    <!-- Header -->
     <div class="order-header">
-        <div>
-            <h1 class="order-title">
-                Order Management
-                <span class="order-number">{{ $order->order_number }}</span>
-            </h1>
-            <div class="status-display status-{{ $order->status }}">
-                @switch($order->status)
-                    @case('pending')  @break
-                    @case('confirmed')  @break
-                    @case('preparing')  @break
-                    @case('ready')  @break
-                    @case('delivered')  @break
-                    @case('cancelled')  @break
-                @endswitch
-                {{ ucfirst($order->status) }}
-            </div>
-        </div>
-        <a href="{{ route('admin.orders') }}" class="back-btn">
-    <i class="fas fa-arrow-left"></i> Back to Orders
-</a>
-
+        <h2>Order #{{ $order->order_number }}</h2>
+        <a href="{{ route('admin.orders') }}" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Orders</a>
     </div>
 
-    <div class="order-content">
-        <!-- Order Details -->
-        <div class="order-details">
-            <h2 class="section-title"> Order Details</h2>
-            
-            <!-- Order Info -->
-            <div class="info-grid">
-                
-                <div class="info-item">
-    <span class="info-label">Full Name</span>
-    <span class="info-value">
-        {{ optional($order->user)->first_name ?? '' }} {{ optional($order->user)->last_name ?? '' }}
-    </span>
-</div>
-
-<div class="info-item">
-    <span class="info-label">Email</span>
-    <span class="info-value">{{ optional($order->user)->email ?? 'N/A' }}</span>
-</div>
-
-<div class="info-item">
-    <span class="info-label">Phone</span>
-    <span class="info-value">{{ optional($order->user)->phone ?? 'N/A' }}</span>
-</div>
-
-<div class="info-item">
-    <span class="info-label">Alt Phone</span>
-    <span class="info-value">{{ $order->phone_number ?? 'N/A' }}</span>
-</div>
-
-                <div class="info-item">
-                    <span class="info-label">Order Date</span>
-                    <span class="info-value">{{ $order->created_at->format('M d, Y - h:i A') }}</span>
-                </div>
-                {{-- <div class="info-item">
-                    <span class="info-label">Customer</span>
-                    <span class="info-value">{{ $order->user->name ?? 'N/A' }}</span>
-                </div> --}}
-                <div class="info-item">
-                    <span class="info-label">Payment Type</span>
-                    <span class="info-value">{{ $order->payment_method ? ucfirst($order->payment_method) : 'Not Set' }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Home Address</span>
-                    <span class="info-value">{{ $order->delivery_address ? ucfirst($order->delivery_address) : 'Not Set' }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Mandatory Fee</span>
-                    <span class="info-value">{{ $order->has_paid_delivery_fee =='yes' ? 'Yes' : 'No' }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Delivered</span>
-                    <span class="info-value">
-                        {{ $order->delivered_at ? $order->delivered_at->format('M d, Y - h:i A') : 'Not Delivered' }}
-                    </span>
-                </div>
-
-                @if($order->utility_bill_file)
-    <div class="info-item">
-        <span class="info-label">Utility Bill</span>
-        <span class="info-value">
-            <a href="{{ asset($order->utility_bill_file) }}" target="_blank" class="btn btn-sm btn-primary">
-                View File
-            </a>
-        </span>
-    </div>
-    @endif
-
-    @if($order->bank_statement)
-    <div class="info-item">
-        <span class="info-label">Bank Statement</span>
-        <span class="info-value">
-            <a href="{{ asset($order->bank_statement) }}" target="_blank" class="btn btn-sm btn-primary">
-                View File
-            </a>
-        </span>
-    </div>
-    @endif
-
-    @if($order->bvn)
-    <div class="info-item">
-        <span class="info-label">BVN</span>
-        <span class="info-value">{{ $order->bvn }}</span>
-    </div>
-    @endif
-
-    
-    @if($order->repayment_amount)
-    <div class="info-item">
-        <span class="info-label">Repayment Amount</span>
-        <span class="info-value">₦{{ number_format($order->repayment_amount) }}</span>
-    </div>
-    @endif
-            </div>
-
-
-
-            <!-- Order Items -->
-            <div class="order-items">
-                <h3 class="section-title"> Ordered Items</h3>
-                
-                @foreach($order->items as $item)
-                    <div class="order-item">
-                        <div class="item-icon">
-                                                <img src="{{ get_product_image($item['id']) }}" width="80" height="80" alt="Product Image" />
-</div>
-                        
-                        <div class="item-details">
-                            <h4 class="item-name">{{ $item['name'] }}</h4>
-                            <div class="item-meta">
-                                <span>Qty: {{ $item['qty'] }}</span>
-                                <span>Price: ₦{{ number_format($item['price']) }}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="item-total">₦{{ number_format($item['total']) }}</div>
-                    </div>
-                @endforeach
-
-                <div class="total-summary">
-                    <div class="total-amount">
-                        Total: ₦{{ number_format($order->total_amount) }}
-                    </div>
-                </div>
-            </div>
-
-            <!-- Notes Section -->
-            @if($order->notes)
-                <div class="notes-section">
-                    <h4 class="notes-title"> Special Notes</h4>
-                    <div class="notes-content">{{ $order->notes }}</div>
-                </div>
-            @endif
+    <div class="order-body">
+        <!-- Status -->
+        <div class="status-badge status-{{ $order->status }}">
+            <i class="fas fa-circle"></i> {{ ucfirst($order->status) }}
         </div>
 
-        <!-- Management Panel -->
-        
+        <!-- Order Info -->
+        <h3 class="section-title">Order Information</h3>
+        <div class="info-card">
+            <div class="info-row">
+                <span class="info-label">Order Date</span>
+                <span class="info-value">{{ $order->created_at->format('M d, Y - h:i A') }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Payment Method</span>
+                <span class="info-value">{{ ucfirst($order->payment_method ?? 'Not Set') }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Delivery Address</span>
+                <span class="info-value">{{ $order->delivery_address ?? 'Not Set' }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Delivered On</span>
+                <span class="info-value">
+                    {{ $order->delivered_at ? $order->delivered_at->format('M d, Y - h:i A') : 'Not Delivered' }}
+                </span>
+            </div>
+        </div>
+
+        <!-- Items -->
+        <h3 class="section-title">Items Ordered</h3>
+        @foreach($order->items as $item)
+            <div class="order-item">
+                <img src="{{ get_product_image($item['id']) }}" alt="{{ $item['name'] }}">
+                <div class="item-details">
+                    <div class="item-name">{{ $item['name'] }}</div>
+                    <div class="item-meta">Qty: {{ $item['qty'] }} | ₦{{ number_format($item['price']) }}</div>
+                </div>
+                <div class="item-total">₦{{ number_format($item['total']) }}</div>
+            </div>
+        @endforeach
+
+        <div class="order-total">Total: ₦{{ number_format($order->total_amount) }}</div>
+
+        <!-- Notes -->
+        @if($order->notes)
+            <div class="notes-section">
+                <strong>Note:</strong> {{ $order->notes }}
+            </div>
+        @endif
     </div>
 </div>
 
-<!-- CSRF Token -->
-<meta name="csrf-token" content="{{ csrf_token() }}">
-
-<script>
-const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-const orderId = {{ $order->id }};
-
-function showAlert(message, type = 'error') {
-    const alert = document.createElement('div');
-    alert.className = `alert ${type}`;
-    alert.textContent = message;
-    document.body.appendChild(alert);
-    
-    setTimeout(() => alert.classList.add('show'), 100);
-    setTimeout(() => {
-        alert.classList.remove('show');
-        setTimeout(() => document.body.removeChild(alert), 300);
-    }, 3000);
-}
-
-function setLoading(element, isLoading) {
-    if (isLoading) {
-        element.classList.add('loading');
-        element.disabled = true;
-    } else {
-        element.classList.remove('loading');
-        element.disabled = false;
-    }
-}
-
-// Radio button interactions
-document.addEventListener('DOMContentLoaded', function() {
-    // Payment type radio buttons
-    const paymentRadios = document.querySelectorAll('input[name="payment_type"]');
-    const paymentOptions = document.querySelectorAll('.radio-option');
-    
-    paymentRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            paymentOptions.forEach(option => {
-                if (option.querySelector('input[name="payment_type"]')) {
-                    option.classList.toggle('selected', option.querySelector('input').checked);
-                }
-            });
-        });
-    });
-
-    // Mandatory fee radio buttons
-    const feeRadios = document.querySelectorAll('input[name="mandatory_fee"]');
-    
-    feeRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            paymentOptions.forEach(option => {
-                if (option.querySelector('input[name="mandatory_fee"]')) {
-                    option.classList.toggle('selected', option.querySelector('input').checked);
-                }
-            });
-        });
-    });
-});
-
-async function markAsDelivered() {
-    const btn = document.querySelector('.btn-delivery');
-    setLoading(btn, true);
-
-    try {
-        const response = await fetch(`/orders/${orderId}/delivery`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ delivered: true })
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            showAlert('✅ Order marked as delivered!', 'success');
-            setTimeout(() => window.location.reload(), 1500);
-        } else {
-            showAlert(result.message, 'error');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showAlert('Failed to update delivery status', 'error');
-    } finally {
-        setLoading(btn, false);
-    }
-}
-
-async function unmarkDelivered() {
-    if (!confirm('Are you sure you want to unmark this order as delivered?')) {
-        return;
-    }
-
-    const btn = document.querySelector('.btn-delivery');
-    setLoading(btn, true);
-
-    try {
-        const response = await fetch(`/orders/${orderId}/delivery`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ delivered: false })
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            showAlert('↩️ Delivery status removed!', 'success');
-            setTimeout(() => window.location.reload(), 1500);
-        } else {
-            showAlert(result.message, 'error');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showAlert('Failed to update delivery status', 'error');
-    } finally {
-        setLoading(btn, false);
-    }
-}
-
-async function updatePaymentType() {
-    const selectedPaymentType = document.querySelector('input[name="payment_type"]:checked')?.value;
-
-    if (!selectedPaymentType) {
-        showAlert('Please select a payment type', 'error');
-        return;
-    }
-
-    const btn = document.querySelector('.btn-payment');
-    setLoading(btn, true);
-
-    try {
-        const response = await fetch("{{ route('order.processing') }}", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                payment_type: selectedPaymentType,
-                order_id: orderId
-            })
-        });
-
-        const result = await response.json();
-
-        if (result.status === "success") {
-            // 🚀 redirect user to the payment page
-            window.location.href = result.url;
-        } else {
-            showAlert(result.message || 'Something went wrong', 'error');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showAlert('Failed to update payment type', 'error');
-    } finally {
-        setLoading(btn, false);
-    }
-}
-
-
-async function updateMandatoryFee() {
-    const selectedFee = document.querySelector('input[name="mandatory_fee"]:checked')?.value;
-    
-    if (selectedFee === undefined) {
-        showAlert('Please select a mandatory fee option', 'error');
-        return;
-    }
-
-    const btn = document.querySelector('.btn-fee');
-    setLoading(btn, true);
-
-    try {
-        const response = await fetch(`/orders/${orderId}/mandatory-fee`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ mandatory_fee: selectedFee === '1' })
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            showAlert(`💸 Mandatory fee updated!`, 'success');
-            setTimeout(() => window.location.reload(), 1500);
-        } else {
-            showAlert(result.message, 'error');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showAlert('Failed to update mandatory fee', 'error');
-    } finally {
-        setLoading(btn, false);
-    }
-}
-</script>
-
+<!-- Processing Fee Modal -->
+<div class="modal fade" id="processingFeeModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 rounded-4 shadow">
+      <div class="modal-header">
+        <h5 class="modal-title">Processing Fee</h5>
+      </div>
+      <div class="modal-body text-center">
+        <p class="mb-3">You must pay a <strong>₦1,000 processing fee</strong> to continue.</p>
+        <div class="form-check text-start mb-2">
+          <input class="form-check-input" type="radio" name="gateway" id="paystack" value="paystack" checked>
+          <label for="paystack" class="form-check-label">Pay with Paystack</label>
+        </div>
+        <div class="form-check text-start mb-2">
+          <input class="form-check-input" type="radio" name="gateway" id="fincra" value="fincra">
+          <label for="fincra" class="form-check-label">Pay with Fincra</label>
+        </div>
+        <div class="form-check text-start">
+          <input class="form-check-input" type="radio" name="gateway" id="wallet" value="wallet">
+          <label for="wallet" class="form-check-label">Pay with Wallet</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="proceedPaymentBtn" class="btn-orange">Proceed to Payment</button>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection

@@ -47,22 +47,25 @@ class UserDashboardController extends Controller
     }
     public function my_cart(){
         $carts = Cart::where('user_id', '=', Auth::user()->id)->get();
-        return view('user_new.cart', compact('carts'));
+        return view('frontend.cart', compact('carts'));
     }
 
     public function search_food(Request $request)
 {
     $query = $request->input('query');
 
-    $foods = Food::when($query, function ($q) use ($query) {
+    $products = Food::when($query, function ($q) use ($query) {
         $q->where('name', 'LIKE', '%' . $query . '%');
-    })->get();
+    })
+    ->orderBy('created_at', 'desc')
+    ->paginate(12);
 
-    return view('user_new.shop_search', compact('foods', 'query'));
+    return view('frontend.shop_search', compact('products', 'query'));
 }
 
+
 public function user_profile(){
-    return view('user_new.profile');
+    return view('frontend.profile');
 }
 
 public function updateAltContact(Request $request, $id)

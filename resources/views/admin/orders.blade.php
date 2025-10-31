@@ -52,6 +52,7 @@
                                             @elseif($order->status == 'ready') bg-secondary 
                                             @elseif($order->status == 'delivered') bg-success 
                                             @elseif($order->status == 'cancelled') bg-danger 
+                                            @elseif($order->status == 'paid') bg-success 
                                             @endif
                                             px-3 py-2 rounded-pill">
                                             {{ ucfirst($order->status) }}
