@@ -12,6 +12,8 @@
                     <a href="#">
                         <img style="width:120px;" src="{{ asset('logo.png') }}" alt="Logo">
                     </a>
+                                                        <a style="text-decoration:none; color:black;" href="{{ route("home") }}">Go Home</a>
+
                     <h3 class="fw-bold mb-2 text-success">Create Account</h3>
                     <p class="text-muted small">Join us today, it only takes a minute!</p>
                 </div>

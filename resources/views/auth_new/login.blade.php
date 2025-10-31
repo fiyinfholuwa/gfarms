@@ -15,7 +15,10 @@
                  <div style="text-align:center;" class="brand-logo">
                 <a href="#">
                     <img style="width:120px; text-align:center;" src="{{ asset('logo.png') }}" alt="Logo">
+
                 </a>
+                                    <a style="text-decoration:none; color:black;" href="{{ route("home") }}">Go Home</a>
+
                                 <h3 class="fw-bold mb-2 text-success">Sign In</h3>
 
             </div>

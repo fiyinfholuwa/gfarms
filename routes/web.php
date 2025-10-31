@@ -88,6 +88,7 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard
 
 
+
     Route::get('/support', [SupportTicketController::class, 'index'])->name('support.index');
     Route::post('/support/store', [SupportTicketController::class, 'store'])->name('support.store');
     Route::post('/support/update/{id}', [SupportTicketController::class, 'update'])->name('support.update');

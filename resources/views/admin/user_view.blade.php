@@ -3,153 +3,178 @@
 @section('content')
 <style>
 :root {
-    --primary-color: #6366f1;
-    --primary-dark: #4f46e5;
+    --primary-color: #ff8c00; /* orange */
+    --primary-dark: #e67e00;
     --success-color: #10b981;
-    --success-light: #d1fae5;
     --danger-color: #ef4444;
-    --danger-light: #fee2e2;
-    --text-primary: #1f2937;
+    --text-primary: #1f1f1f;
     --text-secondary: #6b7280;
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8fafc;
-    --border-color: #e2e8f0;
-    --radius-md: 12px;
-    --shadow-md: 0 8px 20px rgba(0,0,0,0.05);
-    --transition: 0.3s ease;
+    --bg-light: #f5f5f5;
+    --bg-white: #ffffff;
+    --border-color: #e0e0e0;
+    --radius: 14px;
+    --shadow: 0 8px 25px rgba(0,0,0,0.08);
+    --transition: all 0.3s ease;
+}
+
+body {
+    background: var(--bg-light);
+    color: var(--text-primary);
+    font-family: 'Poppins', sans-serif;
 }
 
 .container {
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 2rem auto;
-    padding: 0 1rem;
+    padding: 1.5rem;
 }
 
+/* Go Back Button */
 .go-back-btn {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.6rem 1.2rem;
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    border-radius: var(--radius-md);
+    padding: 0.65rem 1.3rem;
+    border-radius: var(--radius);
+    background: var(--bg-white);
     border: 1px solid var(--border-color);
-    font-weight: 500;
-    text-decoration: none;
-    transition: var(--transition);
+    font-weight: 600;
+    color: var(--text-primary);
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: var(--transition);
+    text-decoration: none;
 }
-
+.go-back-btn:hover {
+    background: var(--primary-color);
+    color: #fff;
+    transform: translateY(-2px);
+}
 .go-back-btn i {
     transition: transform var(--transition);
 }
-
-.go-back-btn:hover {
-    background: var(--primary-color);
-    color: white;
-    transform: translateY(-2px);
-}
-
 .go-back-btn:hover i {
-    transform: translateX(-2px);
+    transform: translateX(-3px);
 }
 
+/* Header */
 .user-header {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
+    justify-content: space-between;
+    background: linear-gradient(120deg, #000000 0%, #ff8c00 100%);
+    color: white;
+    border-radius: var(--radius);
+    padding: 2rem;
+    margin-top: 2rem;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.user-header::after {
+    content: "";
+    position: absolute;
+    top: -40%;
+    right: -20%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    filter: blur(60px);
 }
 
 .avatar-circle {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #6366f1, #4f46e5);
-    color: white;
+    background: white;
+    color: var(--primary-dark);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
-    font-size: 1.75rem;
-    box-shadow: var(--shadow-md);
-}
-
-.user-name {
+    font-weight: 800;
     font-size: 2rem;
+    box-shadow: var(--shadow);
+    flex-shrink: 0;
+}
+
+.user-info {
+    margin-left: 1.5rem;
+}
+.user-name {
+    font-size: 1.75rem;
     font-weight: 700;
-    margin: 0;
-    color: var(--text-primary);
+    margin-bottom: 0.25rem;
 }
-
 .user-subtitle {
-    color: var(--text-secondary);
+    color: rgba(255,255,255,0.85);
     font-size: 0.95rem;
-    margin-top: 0.25rem;
 }
 
+/* Grid Layout */
 .user-details-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
     gap: 1.75rem;
+    margin-top: 2.5rem;
 }
 
+/* Detail Cards */
 .detail-card {
-    background: var(--bg-primary);
-    border-radius: var(--radius-md);
-    padding: 1.5rem 1.75rem;
-    box-shadow: var(--shadow-md);
-    transition: transform var(--transition), box-shadow var(--transition);
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
 }
-
 .detail-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.1);
 }
 
 .detail-card h6 {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--primary-dark);
     margin-bottom: 1rem;
-    font-weight: 600;
-    font-size: 1.05rem;
-    color: var(--text-primary);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 2px solid var(--border-color);
     padding-bottom: 0.5rem;
 }
 
+/* Items */
 .detail-item {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 0.7rem;
+    margin-bottom: 0.8rem;
     font-size: 0.95rem;
 }
-
 .detail-label {
     color: var(--text-secondary);
     font-weight: 500;
 }
-
 .detail-value {
-    font-weight: 600;
     color: var(--text-primary);
+    font-weight: 600;
 }
 
+/* Status Badge */
 .status-badge {
-    padding: 0.3rem 0.85rem;
+    padding: 0.35rem 0.8rem;
     border-radius: 9999px;
     font-size: 0.75rem;
     font-weight: 600;
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    border: 1px solid transparent;
+    border: none;
+    text-transform: capitalize;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
-
 .verified {
     background: linear-gradient(135deg, #10b981, #34d399);
     color: white;
 }
-
 .unverified {
     background: linear-gradient(135deg, #ef4444, #f87171);
     color: white;
@@ -159,28 +184,35 @@
     .user-header {
         flex-direction: column;
         align-items: flex-start;
+        text-align: left;
+    }
+    .user-info {
+        margin-left: 0;
+        margin-top: 1rem;
     }
 }
 </style>
 
 <div class="container-fluid">
-    <!-- Go Back Button -->
-    <a href="{{ url()->previous() }}" class="go-back-btn">
+    <!-- Go Back -->
+    <a href="{{ url()->previous() }}" class="go-back-btn mb-4">
         <i class="fas fa-arrow-left"></i> Go Back
     </a>
 
-    <!-- User Header -->
+    <!-- Header -->
     <div class="user-header">
-        <div class="avatar-circle">
-            {{ strtoupper(substr($user->first_name, 0, 1) . substr($user->last_name, 0, 1)) }}
-        </div>
-        <div>
-            <h1 class="user-name">{{ $user->first_name }} {{ $user->last_name }}</h1>
-            <p class="user-subtitle">User ID: #{{ $user->id }}</p>
+        <div class="flex items-center gap-4">
+            <div class="avatar-circle">
+                {{ strtoupper(substr($user->first_name, 0, 1) . substr($user->last_name, 0, 1)) }}
+            </div>
+            <div class="user-info">
+                <h1 class="user-name">{{ $user->first_name }} {{ $user->last_name }}</h1>
+                <p class="user-subtitle">User ID: #{{ $user->id }}</p>
+            </div>
         </div>
     </div>
 
-    <!-- User Details Grid -->
+    <!-- Grid -->
     <div class="user-details-grid">
         <!-- Personal Info -->
         <div class="detail-card">
@@ -214,7 +246,7 @@
                     </span>
                 @else
                     <span class="status-badge unverified">
-                        <i class="fas fa-exclamation-circle"></i> Not verified
+                        <i class="fas fa-exclamation-circle"></i> Not Verified
                     </span>
                 @endif
             </div>
@@ -222,14 +254,7 @@
                 <span class="detail-label">Member Since</span>
                 <span class="detail-value">{{ $user->created_at->format('M j, Y g:i A') }}</span>
             </div>
-            <div class="detail-item">
-                <span class="detail-label">Wallet Balance</span>
-                <span class="detail-value">₦{{ number_format($user->wallet_balance, 2) }}</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Loan Balance</span>
-                <span class="detail-value">₦{{ number_format($user->loan_balance, 2) }}</span>
-            </div>
+            
         </div>
 
         <!-- Location -->
@@ -248,17 +273,6 @@
                 <span class="detail-value">{{ $user->lga ?? 'Not provided' }}</span>
             </div>
         </div>
-
-        <!-- KYC -->
-        @if($user->kyc_reference)
-        <div class="detail-card">
-            <h6>KYC Information</h6>
-            <div class="detail-item">
-                <span class="detail-label">KYC Reference</span>
-                <span class="detail-value">{{ $user->kyc_reference }}</span>
-            </div>
-        </div>
-        @endif
     </div>
 </div>
 @endsection

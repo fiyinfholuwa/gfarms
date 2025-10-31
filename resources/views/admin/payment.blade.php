@@ -571,29 +571,7 @@ background: linear-gradient(
 
 <div class="container">
     <!-- Enhanced Payment Header -->
-    <div class="payment-header">
-        <div class="header-content">
-            <div class="header-left">
-                <h1>Payment History</h1>
-                <p class="header-subtitle">Track and manage all your payment transactions</p>
-            </div>
-            <div class="payment-stats">
-                <div class="stat-item">
-                    <span class="stat-value">₦{{ number_format($totalAmount ?? 0, 2) }}</span>
-                    <span class="stat-label">Total Paid</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">{{ $totalPayments ?? 0 }}</span>
-                    <span class="stat-label">Transactions</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">{{ $successfulPayments ?? 0 }}</span>
-                    <span class="stat-label">Successful</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
+   
     <!-- Enhanced Filter Section -->
     <div class="filter-section">
         <div class="filter-left">

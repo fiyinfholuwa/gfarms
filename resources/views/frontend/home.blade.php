@@ -668,7 +668,7 @@ $testimonials = [
 ];
 ?>
 
-<section class="overflow-hidden bg-smoke2" id="testi-sec">
+{{-- <section class="overflow-hidden bg-smoke2" id="testi-sec">
     <div class="shape-mockup testi-shape1" data-top="0" data-left="0">
         <img src="{{ asset('https://www.pihappiness.com/wp-content/uploads/2025/01/customer-feedback.webp') }}" alt="shape">
     </div>
@@ -709,7 +709,7 @@ $testimonials = [
             </div>
         </div>
     </div>
-</section>
+</section> --}}
 
     <!--==============================
 

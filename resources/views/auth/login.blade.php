@@ -77,6 +77,7 @@
             <div class="brand-logo">
                 <a href="#">
                     <img src="https://fingo.smartrobtech.co.uk/wp-content/uploads/2025/07/Fingo-Aurelius-LTD-Logo.png" alt="Logo">
+                    <a href="{{ route("home") }}">Go Home</a>
                 </a>
             </div>
 
