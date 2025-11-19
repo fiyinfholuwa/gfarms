@@ -65,7 +65,7 @@ class UserDashboardController extends Controller
 
 
 public function user_profile(){
-    return view('frontend.profile');
+    return view('frontendf.profile');
 }
 
 public function updateAltContact(Request $request, $id)

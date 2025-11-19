@@ -81,19 +81,23 @@ Hero Area
                     <div class="container">
                         <div class="hero-style1">
                             <span class="sub-title" data-ani="slideinup" data-ani-delay="0.2s">
-                                100% Quality Foods
+                            Fresh From the Farm,
                             </span>
                             <h1 class="hero-title">
                                 <span class="title1" data-ani="slideinup" data-ani-delay="0.4s">
-                                    Naturally   <span class="text-theme">Raised,</span>
+                                    Delivered     <span class="text-theme">to</span>
                                 </span>
-                                <span class="title2" data-ani="slideinup" data-ani-delay="0.5s">Carefully Packed</span>
+                                <span class="title2" data-ani="slideinup" data-ani-delay="0.5s">Your Table</span>
                             </h1>
-                            <a href="about.html" class="th-btn" data-ani="slideinup" data-ani-delay="0.7s">Discover More<i class="fas fa-chevrons-right ms-2"></i></a>
+                            <a href="{{ route('shop') }}" class="th-btn" data-ani="slideinup" data-ani-delay="0.7s">Shop Now<i class="fas fa-chevrons-right ms-2"></i></a>
                         </div>
                     </div>
-                    <div class="hero-img" data-ani="slideinright" data-ani-delay="0.5s">
-<img src="https://cdn.mafrservices.com/sys-master-root/he9/h21/26756542660638/100535_2.jpg" alt="Image" >
+                    <div style=" padding:20px;" class="hero-img" data-ani="slideinright" data-ani-delay="0.5s">
+    <img 
+        src="{{ asset('bg_farm.png') }}" 
+        alt="Image"
+        style="object-fit:cover; border-radius:30px;"
+    >
                     </div>
                     <div class="hero-shape1" data-ani="slideinup" data-ani-delay="0.5s">
                         <img src="{{ asset('frontend/assets/img/hero/hero_shape_1_1.png') }}" alt="shape">
@@ -114,18 +118,21 @@ Hero Area
                             <span class="sub-title" data-ani="slideinup" data-ani-delay="0.2s">
                                 <img src="{{ asset('frontend/assets/img/theme-img/title_icon.svg') }}" alt="shape">
                             </span>
+                            <span class="sub-title" data-ani="slideinup" data-ani-delay="0.2s">
+                            Premium Chicken, Beef, Snails,
+                            </span>
                             <h1 class="hero-title">
                                 <span class="title1" data-ani="slideinup" data-ani-delay="0.4s">
                                     <img class="title-img" src="{{ asset('frontend/assets/img/hero/hero_title_shape.svg') }}" alt="icon">
-                                    From Farms <span class="text-theme">to your</span>
+                                    Crayfish &  <span class="text-theme">Fresh </span>
                                 </span>
-                                <span class="title2" data-ani="slideinup" data-ani-delay="0.5s">DoorSteps</span>
+                                <span class="title2" data-ani="slideinup" data-ani-delay="0.5s">Foods for Every Household</span>
                             </h1>
-                            <a href="about.html" class="th-btn" data-ani="slideinup" data-ani-delay="0.7s">Discover More<i class="fas fa-chevrons-right ms-2"></i></a>
+                            <a href="about.html" class="th-btn" data-ani="slideinup" data-ani-delay="0.7s">Contact Us<i class="fas fa-chevrons-right ms-2"></i></a>
                         </div>
                     </div>
                     <div class="hero-img" data-ani="slideinright" data-ani-delay="0.5s">
-                        <img src="https://www.shutterstock.com/image-photo/basket-colorful-chicken-eggs-on-260nw-2270711821.jpg" alt="shape" >
+                        <img src="https://chillax.com.ua/wp-content/uploads/2024/12/ravlykova-ferma-5.jpg" alt="Image" >
                     </div>
                     <div class="hero-shape1" data-ani="slideinup" data-ani-delay="0.5s">
                         <img src="{{ asset('frontend/assets/img/hero/hero_shape_1_1.png') }}" alt="shape">
@@ -152,11 +159,16 @@ Hero Area
                                 </span>
                                 <span class="title2" data-ani="slideinup" data-ani-delay="0.5s">Fresh</span>
                             </h1>
-                            <a href="about.html" class="th-btn" data-ani="slideinup" data-ani-delay="0.7s">Discover More<i class="fas fa-chevrons-right ms-2"></i></a>
+                            <a href="{{ route('shop') }}" class="th-btn" data-ani="slideinup" data-ani-delay="0.7s">Discover More<i class="fas fa-chevrons-right ms-2"></i></a>
                         </div>
                     </div>
                     <div class="hero-img" data-ani="slideinright" data-ani-delay="0.5s">
-                        <img src="https://chillax.com.ua/wp-content/uploads/2024/12/ravlykova-ferma-5.jpg" alt="Image" >
+
+                        <img 
+        src="{{ asset('bg_farm.png') }}" 
+        alt="Image"
+        style="object-fit:cover; border-radius:30px;"
+    >
                     </div>
                     <div class="hero-shape1" data-ani="slideinup" data-ani-delay="0.5s">
                         <img src="{{ asset('frontend/assets/img/hero/hero_shape_1_1.png') }}" alt="shape">
@@ -248,7 +260,7 @@ Hero Area
                         </span>
                         <h2 class="sec-title">Feeding Families With Quality Protein & Fresh Foods</h2>
                         <p class="sec-text">
-                            We specialize in providing fresh, high-quality protein sources — including chicken and chicken products, eggs, beef, snails, crayfish, and more. With over 23 years of experience, our mission is to deliver clean, nutritious, and trustworthy food items to homes and businesses.
+At Ginella Farms, we are committed to feeding families with clean, nutritious and affordable protein. Whether you need live broilers, frozen chicken, eggs, beef, snails or fresh seafood condiments, our products are handled with the highest hygiene and delivered fresh to your home.
                         </p>
                     </div>
                     <div class="about-feature-wrap">
@@ -387,29 +399,37 @@ Feature Area
                                 <div class="box-icon">
                                     <img src="{{ asset('frontend/assets/img/icon/choose_feature_1.svg') }}" alt="Icon">
                                 </div>
-                                <h3 class="box-title">Top-Grade Quality</h3>
-                                <p class="box-text">All our products are sourced with strict quality assurance to ensure top nutrition.</p>
+                                <h3 class="box-title">Superior Quality Assurance</h3>
+                                <p class="box-text">
+All our products undergo rigorous hygiene and safety checks to ensure freshness and high nutritional value.
+                                </p>
                             </div>
                             <div class="choose-feature">
                                 <div class="box-icon">
                                     <img src="{{ asset('frontend/assets/img/icon/choose_feature_2.svg') }}" alt="Icon">
                                 </div>
-                                <h3 class="box-title">Freshly Delivered</h3>
-                                <p class="box-text">We deliver fresh chicken, beef, eggs, and more right to your doorstep—fast and safe.</p>
+                                <h3 class="box-title">Farm-Fresh Delivery</h3>
+                                <p class="box-text">
+We deliver your chicken, beef, snails, eggs and other items swiftly and in perfect condition.
+                                </p>
                             </div>
                             <div class="choose-feature">
                                 <div class="box-icon">
                                     <img src="{{ asset('frontend/assets/img/icon/choose_feature_3.svg') }}" alt="Icon">
                                 </div>
-                                <h3 class="box-title">Trusted by Families</h3>
-                                <p class="box-text">Thousands of households rely on us for their daily protein and grocery needs.</p>
+                                <h3 class="box-title"> Trusted by Families Nationwide</h3>
+                                <p class="box-text">
+Households, caterers and food vendors rely on us daily because we provide consistency and honesty in our services.
+                                </p>
                             </div>
                             <div class="choose-feature">
                                 <div class="box-icon">
                                     <img src="{{ asset('frontend/assets/img/icon/choose_feature_4.svg') }}" alt="Icon">
                                 </div>
                                 <h3 class="box-title">Secure Payment</h3>
-                                <p class="box-text">Shop safely on our platform with secure payment gateways and data protection.</p>
+                                <p class="box-text">
+Shop with confidence using safe and reliable payment channels on our website.
+                                </p>
                             </div>
                         </div>
                     </div>
