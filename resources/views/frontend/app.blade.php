@@ -627,7 +627,52 @@ function closeClipboardModal(event) {
     <!-- Main Js File -->
     <script src="{{ asset('frontend/assets/js/main.js') }} "></script>
 
+<!-- Floating WhatsApp Button -->
+<a 
+    href="https://wa.me/2347032572535" 
+    target="_blank" 
+    class="floating-whatsapp"
+>
+    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" alt="WhatsApp">
+</a>
+<style>
 
+.floating-whatsapp {
+    position: fixed;
+    bottom: 100px;
+    right: 25px;
+    width: 65px;
+    height: 65px;
+    background-color: #25D366;
+    border-radius: 50%;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.floating-whatsapp img {
+    width: 35px;
+    filter: brightness(0) invert(1);
+}
+
+.floating-whatsapp:hover {
+    transform: scale(1.12);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+}
+
+.floating-whatsapp {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+</style>
 
 
 <script>
