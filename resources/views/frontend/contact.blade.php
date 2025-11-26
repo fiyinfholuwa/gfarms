@@ -24,7 +24,7 @@ Contact Section
                     <div class="icon mb-3">
                         <i class="fas fa-map-marker-alt"></i>
                     </div>
-                    <p class="text-muted small mb-0">123 Protein Street, Ibadan, Nigeria</p>
+                    <p class="text-muted small mb-0">No 7 alaafia estate opp Cosmos city halls Ajibode Ibadan</p>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
@@ -33,8 +33,8 @@ Contact Section
                         <i class="fas fa-phone"></i>
                     </div>
                     <p class="text-muted small mb-0">
-                        <a href="tel:+2340000000000" class="text-muted text-decoration-none">+234 000 000 0000</a><br>
-                        <a href="tel:+2340000000000" class="text-muted text-decoration-none">+234 000 000 0000</a>
+                        <a href="tel:+2347032572535" class="text-muted text-decoration-none">+2347032572535</a><br>
+                        <a href="tel:+2348022167384" class="text-muted text-decoration-none">+2348022167384</a>
                     </p>
                 </div>
             </div>
@@ -44,9 +44,8 @@ Contact Section
                         <i class="fas fa-envelope"></i>
                     </div>
                     <p class="text-muted small mb-0">
-                        <a href="mailto:info@ginellafarms.com.ng" class="text-muted text-decoration-none">
-                            info@ginellafarms.com.ng
-                        </a>
+                        <a href="mailto:ginellafarms25@gmail.com" class="text-muted text-decoration-none">
+ginellafarms25@gmail.com                        </a>
                     </p>
                 </div>
             </div>
@@ -55,10 +54,8 @@ Contact Section
                     <div class="icon mb-3" style="color:#ff8c00;">
                     </div>
                     <div class="d-flex justify-content-center gap-3 mt-2">
-                        <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+                        <a target='_blank' href="https://www.instagram.com/ginellafarms" class="social-btn"><i class="fab fa-instagram"></i></a>
+
                     </div>
                 </div>
             </div>

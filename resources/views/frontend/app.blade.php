@@ -272,10 +272,10 @@ function closeClipboardModal(event) {
 
     <div class="popup-search-box d-none d-lg-block">
         <button class="searchClose"><i class="fal fa-times"></i></button>
-        <form method="get"  action="{{ route('food.search') }}">
+        {{-- <form method="get"  action="{{ route('food.search') }}">
             <input name="query" type="text" placeholder="What are you looking for?">
             <button type="submit"><i class="fal fa-search"></i></button>
-        </form>
+        </form> --}}
     </div><!--==============================
     Mobile Menu
   ============================== -->
@@ -475,7 +475,7 @@ function closeClipboardModal(event) {
                         </div>
                         <div class="col-auto d-none d-xl-block">
                             <div class="header-button">
-                                <button type="button" class="simple-icon searchBoxToggler"><i class="far fa-search"></i></button>
+                                {{-- <button type="button" class="simple-icon searchBoxToggler"><i class="far fa-search"></i></button> --}}
                                 <a href="{{ route('cart') }}" class="simple-icon">
                                     <span class="badge" id="cart-count">0</span>
                                     <i class="fa-regular fa-cart-shopping"></i>
@@ -525,10 +525,10 @@ function closeClipboardModal(event) {
 
                                 </p>
                                 <div class="th-social">
-                                    <a href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a>
-                                    <a href="https://www.twitter.com/"><i class="fab fa-twitter"></i></a>
-                                    <a href="https://www.linkedin.com/"><i class="fab fa-linkedin-in"></i></a>
-                                    <a href="https://www.whatsapp.com/"><i class="fab fa-whatsapp"></i></a>
+                                    {{-- <a href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a> --}}
+                                    {{-- <a href="https://www.twitter.com/"><i class="fab fa-twitter"></i></a> --}}
+                                    <a target='_blank' href="https://www.instagram.com/ginellafarms"><i class="fab fa-instagram"></i></a>
+                                    {{-- <a href="https://www.whatsapp.com/"><i class="fab fa-whatsapp"></i></a> --}}
                                 </div>
                             </div>
                         </div>
@@ -542,9 +542,9 @@ function closeClipboardModal(event) {
                                     {{-- <li><a href="{{ route('about') }}">About</a></li> --}}
                                     <li><a href="{{ route('shop') }}">Shop</a></li>
                                     <li><a href="{{ route('contact') }}">Contact Us</a></li>
-                                    <li><a href="{{ route('contact') }}">Faq</a></li>
-                                    <li><a href="{{ route('contact') }}">Term &   Conditions</a></li>
-                                    <li><a href="{{ route('contact') }}">Policy</a></li>
+                                    {{-- <li><a href="{{ route('faq') }}">Faq</a></li> --}}
+                                    <li><a href="{{ route('t&c') }}">Term &   Conditions</a></li>
+                                    <li><a href="{{ route('policy') }}">Policy</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -557,14 +557,14 @@ function closeClipboardModal(event) {
                                     <div class="info-box_icon">
                                         <i class="fas fa-location-dot"></i>
                                     </div>
-                                    <p class="info-box_text">Oyo State, Ibadan</p>
+                                    <p class="info-box_text">No 7 alaafia estate opp Cosmos city halls Ajibode Ibadan</p>
                                 </div>
                                 <div class="info-box">
                                     <div class="info-box_icon">
                                         <i class="fas fa-phone"></i>
                                     </div>
                                     <p class="info-box_text">
-                                        <a href="tel:+16326543564" class="info-box_link">+(163)-2654-3564</a>
+                                        <a href="tel:+2347032572535" class="info-box_link">2347032572535</a>
                                     </p>
                                 </div>
                                 <div class="info-box">
@@ -572,7 +572,7 @@ function closeClipboardModal(event) {
                                         <i class="fas fa-envelope"></i>
                                     </div>
                                     <p class="info-box_text">
-                                        <a href="mailto:help24/7@frutin.com" class="info-box_link">gfarm@gmail.com</a>
+                                        <a href="mailto:ginellafarms25@gmail.com" class="info-box_link">ginellafarms25@gmail.com</a>
                                     </p>
                                 </div>
                             </div>

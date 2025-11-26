@@ -38,6 +38,9 @@ Route::controller(FrontendController::class)->group(function () {
     Route::get('/about', 'about')->name('about');
     Route::get('/shop', 'shop')->name('shop');
     Route::get('/contact', 'contact')->name('contact');
+    Route::get('/faq', 'faq')->name('faq');
+    Route::get('/policy', 'policy')->name('policy');
+    Route::get('/t&c', 't_c')->name('t&c');
     Route::get('/shop/detail/{name}',  'shop_detail')->name('shop.detail');
 
 });

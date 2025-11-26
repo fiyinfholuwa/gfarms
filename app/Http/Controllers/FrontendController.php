@@ -63,6 +63,12 @@ class FrontendController extends Controller
     }
 
 
+    public function policy(){
+        return view('frontend.policy');
+    }
+    public function t_c(){
+        return view('frontend.t_c');
+    }
     public function shop_detail($name){
 
         
